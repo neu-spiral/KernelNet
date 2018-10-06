@@ -9,6 +9,7 @@ import itertools
 import socket
 
 sys.path.append('./src')
+sys.path.append('./src/helper')
 sys.path.append('./src/models')
 sys.path.append('./src/optimizer')
 sys.path.append('./tests')

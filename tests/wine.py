@@ -15,7 +15,7 @@ class test_code(test_parent):
 		db['recompute_10_fold'] = False
 
 
-		test_parent.__init__(self)
+		test_parent.__init__(self, db)
 
 
 
