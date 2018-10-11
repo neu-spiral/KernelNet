@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from path_tools import *
+import numpy as np
 import os
 
 def gen_10_fold_data(db):
@@ -23,6 +24,24 @@ def gen_10_fold_data(db):
 		split_folder = ('%s/10_fold/split_%d'%(db['data_path'],i))
 		ensure_path_exists(split_folder)
 
+	loc = 0
+	inc = int(np.floor(db['N']/10.0))
+	rp = np.random.permutation(db['N']).tolist()
 
-	#	Split data into 10 and save them accordingly
+
+	for i in range(10):
+		train_path = ('%s/10_fold/split_%d/train.csv'%(db['data_path'],i))
+		test_path = ('%s/10_fold/split_%d/test.csv'%(db['data_path'],i))
+		train_label_path = ('%s/10_fold/split_%d/train_label.csv'%(db['data_path'],i))
+		test_label_path = ('%s/10_fold/split_%d/test_label.csv'%(db['data_path'],i))
+
+
+		test_set_id = rp[loc:loc+inc]
+		loc = loc+inc
+
+		train_set_id = list(set(rp) - set(test_set_id))
+		np.savetxt(train_path, db['DManager'].X[train_set_id,:], delimiter=',', fmt='%f') 
+		np.savetxt(test_path, db['DManager'].X[test_set_id,:], delimiter=',', fmt='%f') 
+		np.savetxt(train_label_path, db['DManager'].Y[train_set_id], delimiter=',', fmt='%d') 
+		np.savetxt(test_label_path, db['DManager'].Y[test_set_id], delimiter=',', fmt='%d') 
 
