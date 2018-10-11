@@ -5,6 +5,8 @@ sys.path.append('./src')
 sys.path.append('./tests')
 sys.path.append('./src/models')
 sys.path.append('./src/helper')
+sys.path.append('./src/optimizer')
+
 
 import matplotlib
 import numpy as np
@@ -12,7 +14,9 @@ import random
 import itertools
 import socket
 from dataset_manipulate import *
+from pretrain import *
 from AE import *
+from storage import *
 from DManager import *
 
 if socket.gethostname().find('login') != -1:
@@ -29,15 +33,28 @@ def initialize_data(db):
 	gen_train_validate_data(db)
 	db['train_data'] = DManager(db['train_path'], db['train_label_path'])
 	db['valid_data'] = DManager(db["valid_path"], db['valid_label_path'])
+	db['train_loader'] = DataLoader(dataset=db['train_data'], batch_size=db['batch_size'], shuffle=True)
+	db['valid_loader'] = DataLoader(dataset=db['valid_data'], batch_size=db['batch_size'], shuffle=True)
 
 def initialize_network(db):
 	db['net_input_size'] = db['train_data'].d
 	db['net_depth'] = db['kernel_net_depth']
 	db['net_output_dim'] = db['output_dim']
 
-
 	db['knet'] = db['kernel_model'](db)
 
+	if not import_pretrained_network(db, 'knet', 'rbm'):
+		pretrain(db['knet'], db)
+		export_pretrained_network(db, 'knet', 'rbm')
+
+
+	print('\tRunning End to End Autoencoder training...')
+	[avgLoss, avgGrad, progression_slope] = basic_optimizer(db['knet'], db, loss_callback='autoencoder_loss', data_loader_name='train_loader')
+
+	X = numpy2Variable(db['train_data'].X, db['dataType'])
+	[x_hat, φ_x] = db['knet'](X)
+	print(X[0:2,0:4])
+	print(x_hat[0:2,0:4])
 	import pdb; pdb.set_trace()
 
 if __name__ == "__main__":
@@ -57,9 +74,12 @@ if __name__ == "__main__":
 
 	# hyperparams
 	db["output_dim"]=3
-	db["kernel_net_depth"]=7
+	#db["kernel_net_depth"]=7
+	db["kernel_net_depth"]=2
 	db["σ_ratio"]=1.0
 	db["λ_ratio"]=0.0
+	db['pretrain_repeats'] = 1
+	db['batch_size'] = 5
 
 	# knet info
 	db['kernel_model'] = AE

@@ -15,9 +15,11 @@ class test_code(test_parent):
 		#	Data settings
 		db['data_name'] = 'wine'
 		db['dataType'] = torch.FloatTensor				
+		db['batch_size'] = 5
 		db['center_and_scale'] = True
 		db['recompute_10_fold'] = False
 		db['kernel_model'] = AE
+		db['pretrain_repeats'] = 1
 
 		test_parent.__init__(self, db)
 
