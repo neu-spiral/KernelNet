@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from test_parent import *
+from AE import *
 from termcolor import colored
 import sklearn.metrics
 import numpy as np
@@ -13,9 +14,10 @@ class test_code(test_parent):
 		db = {}
 		#	Data settings
 		db['data_name'] = 'wine'
+		db['dataType'] = torch.FloatTensor				
 		db['center_and_scale'] = True
 		db['recompute_10_fold'] = False
-
+		db['kernel_model'] = AE
 
 		test_parent.__init__(self, db)
 
