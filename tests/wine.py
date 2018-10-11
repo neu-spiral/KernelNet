@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
 from test_parent import *
-import sklearn.metrics
 from termcolor import colored
+import sklearn.metrics
 import numpy as np
+import random
 
 
 class test_code(test_parent):
@@ -12,16 +13,32 @@ class test_code(test_parent):
 		db = {}
 		#	Data settings
 		db['data_name'] = 'wine'
+		db['center_and_scale'] = True
 		db['recompute_10_fold'] = False
 
 
 		test_parent.__init__(self, db)
 
+	def parameter_ranges(self):
+		output_dim = [3]
+		kernel_net_depth = [7]
+		sigma_ratio = [1]
+		extra_repeat = range(1)
+		id_10_fold = [0]
+	
+		#lambda_ratio = np.arange(0.1, 3, 0.1)
+		#random.shuffle(lambda_ratio)
+		#lambda_ratio = [0] + list(lambda_ratio)
+	
+		lambda_ratio = [0]
 
 
-
-
-
+		random.shuffle(output_dim)
+		random.shuffle(kernel_net_depth)
+		random.shuffle(sigma_ratio)
+	
+		return [output_dim, kernel_net_depth, sigma_ratio, extra_repeat, lambda_ratio, id_10_fold]
+	
 
 
 
