@@ -9,19 +9,17 @@ from terminal_print import *
 import numpy as np
 
 class DManager(Dataset):
-	def __init__(self, db):
+	def __init__(self, data_path, label_path, center_data=True):
 		self.dtype = np.float64				#np.float32
 		self.array_format = 'numpy'			# numpy, pytorch
 
-		self.X = np.loadtxt(db['orig_data_file_name'], delimiter=',', dtype=self.dtype)			
-		self.Y = np.loadtxt(db['orig_label_file_name'], delimiter=',', dtype=np.int32)
-		if db['center_and_scale']: self.X = preprocessing.scale(self.X)
+		self.X = np.loadtxt(data_path, delimiter=',', dtype=self.dtype)			
+		self.Y = np.loadtxt(label_path, delimiter=',', dtype=np.int32)
+		if center_data: self.X = preprocessing.scale(self.X)
 
-		db['N'] = self.X.shape[0]					# num of samples
-		db['d']  = self.X.shape[1]					# num of Dims
-		db['mpd'] = float(median_of_pairwise_distance(self.X))
-		self.db = db
-
+		self.N = self.X.shape[0]
+		self.d = self.X.shape[1]
+		
 	def __getitem__(self, index):
 		return self.X[index], self.Y[index], index
 

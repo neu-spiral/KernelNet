@@ -19,7 +19,8 @@ class test_parent():
 		db['data_path'] = './datasets/' + db['data_name'] + '/'
 		db['orig_data_file_name']  = db['data_path'] +  db['data_name'] + '.csv'
 		db['orig_label_file_name'] = db['data_path'] +  db['data_name'] + '_label.csv'
-		db['DManager'] = DManager(db)
+		db['DManager'] = DManager(db['orig_data_file_name'], db['orig_label_file_name'])
+
 		ensure_path_exists('./tmp')
 		self.remove_tmp_files()
 
@@ -38,6 +39,12 @@ class test_parent():
 			db['kernel_net_depth'] = kernel_net_depth
 			db['σ_ratio'] = float(σ_ratio)
 			db['λ_ratio'] = float(λ_ratio)
+			db['data_folder']  = db['data_path'] +  '10_fold/split_' + str(id_10_fold) + '/'
+			db['train_data_file_name']  = db['data_path'] +  '10_fold/split_' + str(id_10_fold) + '/train.csv'
+			db['train_label_file_name']  = db['data_path'] +  '10_fold/split_' + str(id_10_fold) + '/train_label.csv'
+			db['test_data_file_name']  = db['data_path'] +  '10_fold/split_' + str(id_10_fold) + '/test.csv'
+			db['test_label_file_name']  = db['data_path'] +  '10_fold/split_' + str(id_10_fold) + '/test_label.csv'
+
 
 			export_db = self.output_db_to_text(id_10_fold, count)
 			self.export_bash_file(id_10_fold, db['data_name'], export_db)

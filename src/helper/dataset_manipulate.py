@@ -1,7 +1,41 @@
 #!/usr/bin/env python
 from path_tools import *
+from numpy import genfromtxt
 import numpy as np
+import sys
 import os
+
+
+def gen_train_validate_data(db):
+	db['train_validate_folder'] = db['data_folder'] + 'train_validate/'
+	ensure_path_exists(db['train_validate_folder'])
+
+	db['train_path'] = ('%strain.csv'%(db['train_validate_folder']))
+	db['valid_path'] = ('%svalid.csv'%(db['train_validate_folder']))
+	db['train_label_path'] = ('%strain_label.csv'%(db['train_validate_folder']))
+	db['valid_label_path'] = ('%svalid_label.csv'%(db['train_validate_folder']))
+
+
+	tran_valid_exist = True
+	path_list = [db['train_path'], db['valid_path'], db['train_label_path'], db['valid_label_path']] 
+	if not path_list_exists(path_list): tran_valid_exist = False
+	if tran_valid_exist == True: return
+	x = genfromtxt(db['train_data_file_name'], delimiter=',')
+	y = genfromtxt(db['train_label_file_name'], delimiter=',')
+	N = x.shape[0]
+
+
+	rp = np.random.permutation(N).tolist()
+	num_of_train = int(0.80*N)
+	train_set_indx = rp[0:num_of_train]
+	valid_set_indx = list(set(rp) - set(train_set_indx))
+
+	np.savetxt(db['train_path'], x[train_set_indx,:], delimiter=',', fmt='%f') 
+	np.savetxt(db['valid_path'], x[valid_set_indx,:], delimiter=',', fmt='%f') 
+	np.savetxt(db['train_label_path'], y[train_set_indx], delimiter=',', fmt='%d') 
+	np.savetxt(db['valid_label_path'], y[valid_set_indx], delimiter=',', fmt='%d') 
+
+
 
 def gen_10_fold_data(db):
 	#	Does the 10 fold path exist
@@ -24,9 +58,10 @@ def gen_10_fold_data(db):
 		split_folder = ('%s/10_fold/split_%d'%(db['data_path'],i))
 		ensure_path_exists(split_folder)
 
+	N = db['DManager'].N
 	loc = 0
-	inc = int(np.floor(db['N']/10.0))
-	rp = np.random.permutation(db['N']).tolist()
+	inc = int(np.floor(N/10.0))
+	rp = np.random.permutation(N).tolist()
 
 
 	for i in range(10):
@@ -44,4 +79,15 @@ def gen_10_fold_data(db):
 		np.savetxt(test_path, db['DManager'].X[test_set_id,:], delimiter=',', fmt='%f') 
 		np.savetxt(train_label_path, db['DManager'].Y[train_set_id], delimiter=',', fmt='%d') 
 		np.savetxt(test_label_path, db['DManager'].Y[test_set_id], delimiter=',', fmt='%d') 
+
+
+def load_db():
+	db = {}
+	fin = open(sys.argv[1],'r')
+	cmds = fin.readlines()
+	fin.close()
+	
+	for i in cmds: exec(i)
+	return db
+
 
