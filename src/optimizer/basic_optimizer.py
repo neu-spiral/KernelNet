@@ -6,13 +6,19 @@ import sys
 from terminal_print import *
 from torch.autograd import Variable
 from classifier import *
+from format_conversion import *
 import collections
 
 
 
-def basic_optimizer(model, db, loss_callback='compute_loss', epoc_loop=5000, data_loader_name='data_loader'):
+def basic_optimizer(model, db, data_loader_name, loss_callback='compute_loss', epoc_loop=5000):
 	optimizer = model.get_optimizer()
 	avgLoss_cue = collections.deque([], 400)
+
+	X = numpy2Variable(db[data_loader_name].dataset.X, db['dataType'])
+	[x_out,z] = model(X)
+	error_before = torch.norm(X-x_out).item()
+
 
 	for epoch in range(epoc_loop):
 		running_avg = []
@@ -52,7 +58,13 @@ def basic_optimizer(model, db, loss_callback='compute_loss', epoc_loop=5000, dat
 		loss_optimization_printout(db, epoch, maxLoss, avgGrad, epoc_loop, progression_slope)
 
 		if len(avgLoss_cue) > 300 and progression_slope > 0: break;
-	
+
+	X = numpy2Variable(db[data_loader_name].dataset.X, db['dataType'])
+	[x_out,z] = model(X)
+	error_after = torch.norm(X-x_out).item()
+	print('\nError before %.3f,  Error after %.3f'%(error_before, error_after))
+
+
 	clear_current_line()
 	return [maxLoss, avgGrad, progression_slope]
 

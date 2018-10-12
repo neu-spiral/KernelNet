@@ -7,7 +7,7 @@ import torch.nn.functional as F
 
 
 class rbm(torch.nn.Module):
-	def __init__(self, num_input, num_hidden, activation, use_denoising=True, sparse=False, learning_rate=0.001):
+	def __init__(self, num_input, num_hidden, activation, use_denoising=False, sparse=False, learning_rate=0.001):
 		super(rbm, self).__init__()
 
 		self.l1 = torch.nn.Linear(num_input, num_hidden, bias=True)
@@ -15,7 +15,7 @@ class rbm(torch.nn.Module):
 
 		self.use_denoising = use_denoising
 		self.sparsity = sparse
-		self.criterion = torch.nn.MSELoss(size_average=False)
+		self.criterion = torch.nn.MSELoss()
 		#self.criterion = torch.nn.CrossEntropyLoss(size_average=False)
 
 		self.learning_rate = learning_rate
@@ -86,7 +86,7 @@ class rbm(torch.nn.Module):
 		else:
 			xout = self.forward(inputs)
 			loss = self.criterion(xout, inputs)
-
+	
 		#l1_reg = Variable( torch.FloatTensor(1), requires_grad=False)
 		#for W in self.parameters(): 
 		#	l1_reg = l1_reg + W.norm(2)

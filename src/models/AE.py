@@ -41,6 +41,7 @@ class AE(autoencoder):
 		db = self.db
 		[x_hat, φ_x] = self.forward(x)
 		auto_cost = self.mse_loss(x_hat, x)
+		
 		return auto_cost
 
 	def compute_loss(self, x, label, indices):

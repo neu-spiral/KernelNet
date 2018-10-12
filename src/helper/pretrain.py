@@ -8,11 +8,17 @@ from format_conversion import *
 from torch.utils.data import Dataset, DataLoader
 
 
-def pretrain(model, db, sparcity=False, sparcity_percentage=0.002):
+def pretrain(model, db, loader_id, sparcity=False, sparcity_percentage=0.002):
+	def quick_error_check(model, db, data_loader_name):
+		X = numpy2Variable(db[data_loader_name].dataset.X, db['dataType'])
+		x_out = model(X)
+		return (torch.norm(X-x_out).item())
+
+
 	#	Read the network, for each layer, create a RBM, train it and set the weights to the value of the RBM
 	tmpDB = db.copy()	
 	pps = True
-	tmpX = np.copy(db['train_data'].X)
+	tmpX = np.copy(db[loader_id].dataset.X)
 
 
 	count = 0
@@ -31,7 +37,10 @@ def pretrain(model, db, sparcity=False, sparcity_percentage=0.002):
 		for l in range(db['pretrain_repeats']):		#	Run rbm 5 times and pick the lowest cost as best_rbm
 			if pps: print('\t\tCurrently running ' , l , ' out of ' , db['pretrain_repeats'], ' iteration')
 			rbmLayer = rbm(inDim, hiddenDim, activation=layer.activation, sparse=sparcity)
-			[avgLoss, avgGrad, progression_slope] = basic_optimizer(rbmLayer, db, data_loader_name='train_loader')
+
+			error_before = quick_error_check(rbmLayer, db, loader_id)
+			[avgLoss, avgGrad, progression_slope] = basic_optimizer(rbmLayer, db, data_loader_name=loader_id)
+			error_after = quick_error_check(rbmLayer, db, loader_id)
 
 			if False: study_model_output(rbmLayer, tmpDB)
 			if avgLoss < smallest_loss or type(best_rbm) == type(None): 
@@ -41,7 +50,7 @@ def pretrain(model, db, sparcity=False, sparcity_percentage=0.002):
 
 			if pps: clear_previous_line()
 
-		if pps: print('\t\trun ' , pl, ' was chosen, with loss : ', smallest_loss, '\n')
+		if pps: print('\t\trun ' , pl, ' was chosen, with loss : %.3f,  error before : %.3f, error after : %.3f'%(smallest_loss, error_before, error_after), '\n')
 
 		x = numpy2Variable(tmpDB['train_data'].X, db['dataType'])
 		tmpDB['train_data'].X = (best_rbm.innerLayer_out(x)).data.numpy()
