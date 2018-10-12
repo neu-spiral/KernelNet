@@ -44,7 +44,7 @@ class autoencoder(torch.nn.Module):
 	
 			for l, item in enumerate(in_out_list):
 				c = l + self.net_depth + 1
-				if c == self.net_depth:
+				if c == self.net_depth*2:
 					lr = 'self.l' + str(c) + ' = torch.nn.Linear(' + str(item[0]) + ', ' + str(item[1]) + ' , bias=True)'
 					exec(lr)
 					exec('self.l' + str(c) + '.activation = "none"')		#softmax, relu, tanh, sigmoid, none
@@ -132,7 +132,6 @@ class autoencoder(torch.nn.Module):
 				exec(cmd)
 				#exec(cmd2)
 
-		
 		exec('self.fx = y' + str(self.net_depth))
 		return [self.y_pred, self.fx]
 

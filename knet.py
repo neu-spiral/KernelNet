@@ -31,8 +31,12 @@ np.set_printoptions(suppress=True)
 
 def initialize_data(db):
 	gen_train_validate_data(db)
+
+	db['orig_data'] = DManager(db['orig_data_file_name'], db['orig_label_file_name'])
 	db['train_data'] = DManager(db['train_path'], db['train_label_path'])
 	db['valid_data'] = DManager(db["valid_path"], db['valid_label_path'])
+
+	db['orig_data_loader'] = DataLoader(dataset=db['orig_data'], batch_size=db['batch_size'], shuffle=True)
 	db['train_loader'] = DataLoader(dataset=db['train_data'], batch_size=db['batch_size'], shuffle=True)
 	db['valid_loader'] = DataLoader(dataset=db['valid_data'], batch_size=db['batch_size'], shuffle=True)
 
@@ -40,16 +44,15 @@ def initialize_network(db):
 	db['net_input_size'] = db['train_data'].d
 	db['net_depth'] = db['kernel_net_depth']
 	db['net_output_dim'] = db['output_dim']
-
 	db['knet'] = db['kernel_model'](db)
 
+	dataLoader = 'train_loader'
 	if not import_pretrained_network(db, 'knet', 'rbm'):
-		pretrain(db['knet'], db)
+		pretrain(db['knet'], db, dataLoader)
 		export_pretrained_network(db, 'knet', 'rbm')
 
-
 	print('\tRunning End to End Autoencoder training...')
-	[avgLoss, avgGrad, progression_slope] = basic_optimizer(db['knet'], db, loss_callback='autoencoder_loss', data_loader_name='train_loader')
+	[avgLoss, avgGrad, progression_slope] = basic_optimizer(db['knet'], db, loss_callback='autoencoder_loss', data_loader_name=dataLoader)
 
 	X = numpy2Variable(db['train_data'].X, db['dataType'])
 	[x_hat, φ_x] = db['knet'](X)
@@ -73,9 +76,9 @@ if __name__ == "__main__":
 	db['dataType'] = torch.FloatTensor				
 
 	# hyperparams
-	db["output_dim"]=3
+	db["output_dim"]=6
 	#db["kernel_net_depth"]=7
-	db["kernel_net_depth"]=2
+	db["kernel_net_depth"]=3
 	db["σ_ratio"]=1.0
 	db["λ_ratio"]=0.0
 	db['pretrain_repeats'] = 1
