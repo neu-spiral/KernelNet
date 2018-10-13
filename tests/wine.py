@@ -2,6 +2,7 @@
 
 from test_parent import *
 from AE import *
+from opt_Kernel import *
 from termcolor import colored
 import sklearn.metrics
 import numpy as np

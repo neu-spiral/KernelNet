@@ -91,6 +91,7 @@ def train_kernel_net(db):
 	for count in itertools.count():
 		db['opt_K'].run(count)
 		db['opt_U'].run(count)
+		import pdb; pdb.set_trace()
 		count = db['exit_cond'](db)
 		if count > 99: break;
 
@@ -111,7 +112,7 @@ if __name__ == "__main__":
 	db["test_label_file_name"]="./datasets/wine/10_fold/split_0/test_label.csv"
 
 	# debug tracking
-	db['objective_tracker'] = True
+	db['objective_tracker'] = []
 
 	# hyperparams
 	db["output_dim"]=5
@@ -138,6 +139,6 @@ else:
 initialize_data(db)
 initialize_embedding(db)
 initialize_network(db)
-#train_kernel_net(db)
+train_kernel_net(db)
 import pdb; pdb.set_trace()
 
