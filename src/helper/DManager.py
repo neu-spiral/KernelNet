@@ -10,6 +10,7 @@ import numpy as np
 
 class DManager(Dataset):
 	def __init__(self, data_path, label_path, dataType, center_data=True):
+		print('\tLoading : %s'%data_path)
 		self.dtype = np.float64				#np.float32
 		self.array_format = 'numpy'			# numpy, pytorch
 

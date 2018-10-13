@@ -29,14 +29,14 @@ def kmeans(k, U, Y=None):
 		return [allocation, nmi]
 
 def centered_spectral_clustering(data, k, σ, Y=None):
-	L = normalized_rbk_sklearn(data, σ)
+	[L,D] = normalized_rbk_sklearn(data, σ)
 	[U, U_λ] = eig_solver(L, k, mode='largest')
 	U_normed = normalize_U(U)
 
 	return kmeans(k, U_normed, Y)
 
 def my_spectral_clustering(data, k, σ, H=None, Y=None):
-	L = normalized_rbk_sklearn(data, σ)
+	[L,D] = normalized_rbk_sklearn(data, σ)
 	if H is not None:
 		L = H.dot(L).dot(H)
 

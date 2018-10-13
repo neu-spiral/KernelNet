@@ -27,8 +27,8 @@ def pretrain(model, db, loader_id, sparcity=False, sparcity_percentage=0.002):
 		if count > model.num_of_linear_layers: break
 		if pps: print('\tLayer ' , count, layer)
 
-		hiddenDim = layer.weight.data.numpy().shape[0]
-		inDim = layer.weight.data.numpy().shape[1]
+		hiddenDim = layer.weight.shape[0]
+		inDim = layer.weight.shape[1]
 
 		smallest_loss = 100
 		best_rbm = None
@@ -36,7 +36,9 @@ def pretrain(model, db, loader_id, sparcity=False, sparcity_percentage=0.002):
 
 		for l in range(db['pretrain_repeats']):		#	Run rbm 5 times and pick the lowest cost as best_rbm
 			if pps: print('\t\tCurrently running ' , l , ' out of ' , db['pretrain_repeats'], ' iteration')
-			rbmLayer = rbm(inDim, hiddenDim, activation=layer.activation, sparse=sparcity)
+
+			if(db['cuda']): rbmLayer = rbm(inDim, hiddenDim, activation=layer.activation, sparse=sparcity).cuda()
+			else: rbmLayer = rbm(inDim, hiddenDim, activation=layer.activation, sparse=sparcity)
 
 			error_before = quick_error_check(rbmLayer, db, loader_id)
 			[avgLoss, avgGrad, progression_slope] = basic_optimizer(rbmLayer, db, data_loader_name=loader_id)
@@ -53,7 +55,8 @@ def pretrain(model, db, loader_id, sparcity=False, sparcity_percentage=0.002):
 		if pps: print('\t\trun ' , pl, ' was chosen, with loss : %.3f,  error before : %.3f, error after : %.3f'%(smallest_loss, error_before, error_after), '\n')
 
 		x = numpy2Variable(tmpDB['train_data'].X, db['dataType'])
-		tmpDB['train_data'].X = (best_rbm.innerLayer_out(x)).data.numpy()
+
+		tmpDB['train_data'].X = ensure_matrix_is_numpy(best_rbm.innerLayer_out(x))
 		tmpDB['data_loader'] = DataLoader(dataset=tmpDB['train_data'], batch_size=tmpDB['batch_size'], shuffle=True)
 
 		layer.weight = best_rbm.l1.weight

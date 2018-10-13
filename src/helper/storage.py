@@ -14,8 +14,9 @@ def import_pretrained_network(db, keyVal, stage_name):
 			test1 = itm.input_size == db[keyVal].input_size
 			test2 = itm.output_dim == db[keyVal].output_dim
 			test3 = itm.net_depth == db[keyVal].net_depth
+			test4 = itm.dataType == db[keyVal].dataType
 
-			if test1 and test2 and test3:
+			if test1 and test2 and test3 and test4:
 				db[keyVal] = itm
 				print('\t\tSucessful...')
 				return True
