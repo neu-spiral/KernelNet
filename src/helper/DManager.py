@@ -9,7 +9,7 @@ from terminal_print import *
 import numpy as np
 
 class DManager(Dataset):
-	def __init__(self, data_path, label_path, center_data=True):
+	def __init__(self, data_path, label_path, dataType, center_data=True):
 		self.dtype = np.float64				#np.float32
 		self.array_format = 'numpy'			# numpy, pytorch
 
@@ -20,6 +20,13 @@ class DManager(Dataset):
 		self.N = self.X.shape[0]
 		self.d = self.X.shape[1]
 		
+
+		self.X_Var = torch.tensor(self.X)
+		self.Y_Var = torch.tensor(self.Y)
+		self.X_Var = Variable(self.X_Var.type(dataType), requires_grad=False)
+		self.Y_Var = Variable(self.Y_Var.type(dataType), requires_grad=False)
+
+
 	def __getitem__(self, index):
 		return self.X[index], self.Y[index], index
 
