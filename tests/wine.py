@@ -15,18 +15,28 @@ class test_code(test_parent):
 		#	Data settings
 		db['data_name'] = 'wine'
 		db['dataType'] = torch.FloatTensor				
-		db['batch_size'] = 5
 		db['center_and_scale'] = True
 		db['recompute_10_fold'] = False
-		db['kernel_model'] = AE
+		db['use_Degree_matrix'] = True
 		db['pretrain_repeats'] = 1
+
+		#	hyperparams
+		db['batch_size'] = 5
+		db['num_of_clusters'] = 3
+		db['use_Degree_matrix'] = True
+
+		# objs
+		db['kernel_model'] = AE
+		db['opt_K_class'] = opt_K
+		db['opt_U_class'] = opt_U
+		db['exit_cond_class'] = exit_cond
 
 		test_parent.__init__(self, db)
 
 	def parameter_ranges(self):
 		output_dim = [3]
 		kernel_net_depth = [7]
-		sigma_ratio = [1]
+		σ_ratio = [1]
 		extra_repeat = range(1)
 		id_10_fold = [0]
 	
@@ -39,9 +49,9 @@ class test_code(test_parent):
 
 		random.shuffle(output_dim)
 		random.shuffle(kernel_net_depth)
-		random.shuffle(sigma_ratio)
+		random.shuffle(σ_ratio)
 	
-		return [output_dim, kernel_net_depth, sigma_ratio, extra_repeat, lambda_ratio, id_10_fold]
+		return [output_dim, kernel_net_depth, σ_ratio, extra_repeat, lambda_ratio, id_10_fold]
 	
 
 

@@ -3,9 +3,7 @@
 import sklearn.metrics
 import numpy as np
 from sklearn.preprocessing import normalize			# version : 0.17
-
-
-
+from format_conversion import *
 
 def Y_2_allocation(Y):
 	i = 0
@@ -37,6 +35,15 @@ def Allocation_2_Y(allocation):
 
 	return Y
 
+def getLaplacian(db, data, σ, H=None):
+	[L,D] = normalized_rbk_sklearn(data, σ)
+
+	if H is not None:
+		L = center_matrix(db, L)
+
+	return L
+
+
 def Kx_D_given_W(db, setX=None, setW=None):
 	if setX is None: outX = db['Dloader'].X.dot(db['W'])
 	else: outX = setX.dot(db['W'])
@@ -65,7 +72,7 @@ def normalized_rbk_sklearn(X, σ):
 	Kx = rbk_sklearn(X, σ)       	
 	np.fill_diagonal(Kx, 0)			#	Set diagonal of adjacency matrix to 0
 	D = compute_inverted_Degree_matrix(Kx)
-	return D.dot(Kx).dot(D)
+	return [D.dot(Kx).dot(D), D]
 
 def rbk_sklearn(data, sigma):
 	gammaV = 1.0/(2*sigma*sigma)
@@ -123,4 +130,17 @@ def eig_solver(L, k, mode='smallest'):
 		raise ValueError('unrecognized mode : ' + str(mode) + ' found.')
 	
 	return [U, U_λ]
+
+def L_to_U(db, L, return_eig_val=False):
+	L = ensure_matrix_is_numpy(L)
+	eigenValues,eigenVectors = np.linalg.eigh(L)
+
+	n2 = len(eigenValues)
+	n1 = n2 - db['num_of_clusters']
+	U = eigenVectors[:, n1:n2]
+	U_lambda = eigenValues[n1:n2]
+	U_normalized = normalize(U, norm='l2', axis=1)
+	
+	if return_eig_val: return [U, U_normalized, U_lambda]
+	else: return [U, U_normalized]
 

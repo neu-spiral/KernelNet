@@ -15,7 +15,8 @@ class autoencoder(torch.nn.Module):
 		self.input_size = db['net_input_size']
 		self.output_dim = db['net_output_dim']
 		self.net_depth = db['net_depth']
-		
+		self.dataType = db['dataType']
+
 		diff = float(self.input_size - self.output_dim)/self.net_depth
 		sn = np.sign(diff)
 		diff = sn*np.floor(np.absolute(diff))
@@ -58,7 +59,7 @@ class autoencoder(torch.nn.Module):
 		self.output_network()
 
 	def output_network(self):
-		print('\tDimension Reduction Network')
+		print('\tConstructing Kernel Net')
 		for i in self.children():
 			try:
 				print('\t\t%s , %s'%(i,i.activation))
