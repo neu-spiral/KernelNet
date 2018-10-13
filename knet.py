@@ -32,9 +32,9 @@ np.set_printoptions(suppress=True)
 def initialize_data(db):
 	gen_train_validate_data(db)
 
-	db['orig_data'] = DManager(db['orig_data_file_name'], db['orig_label_file_name'])
-	db['train_data'] = DManager(db['train_path'], db['train_label_path'])
-	db['valid_data'] = DManager(db["valid_path"], db['valid_label_path'])
+	db['orig_data'] = DManager(db['orig_data_file_name'], db['orig_label_file_name'], db['dataType'])
+	db['train_data'] = DManager(db['train_path'], db['train_label_path'], db['dataType'])
+	db['valid_data'] = DManager(db["valid_path"], db['valid_label_path'], db['dataType'])
 
 	db['orig_data_loader'] = DataLoader(dataset=db['orig_data'], batch_size=db['batch_size'], shuffle=True)
 	db['train_loader'] = DataLoader(dataset=db['train_data'], batch_size=db['batch_size'], shuffle=True)
@@ -52,13 +52,12 @@ def initialize_network(db):
 		export_pretrained_network(db, 'knet', 'rbm')
 
 	print('\tRunning End to End Autoencoder training...')
-	[avgLoss, avgGrad, progression_slope] = basic_optimizer(db['knet'], db, loss_callback='autoencoder_loss', data_loader_name=dataLoader)
+	prev_loss = db['knet'].autoencoder_loss(db['train_data'].X_Var, None, None)
 
-	X = numpy2Variable(db['train_data'].X, db['dataType'])
-	[x_hat, φ_x] = db['knet'](X)
-	print(X[0:2,0:4])
-	print(x_hat[0:2,0:4])
-	import pdb; pdb.set_trace()
+	[avgLoss, avgGrad, progression_slope] = basic_optimizer(db['knet'], db, loss_callback='autoencoder_loss', data_loader_name=dataLoader)
+	post_loss = db['knet'].autoencoder_loss(db['train_data'].X_Var, None, None)
+	print('\n\tError of End to End AE , Before %.3f, After %.3f'%(prev_loss.item(), post_loss.item()))
+
 
 if __name__ == "__main__":
 	db = {}
@@ -76,9 +75,8 @@ if __name__ == "__main__":
 	db['dataType'] = torch.FloatTensor				
 
 	# hyperparams
-	db["output_dim"]=6
-	#db["kernel_net_depth"]=7
-	db["kernel_net_depth"]=3
+	db["output_dim"]=5
+	db["kernel_net_depth"]=7
 	db["σ_ratio"]=1.0
 	db["λ_ratio"]=0.0
 	db['pretrain_repeats'] = 1

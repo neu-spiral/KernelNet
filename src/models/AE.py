@@ -46,12 +46,13 @@ class AE(autoencoder):
 
 	def compute_loss(self, x, label, indices):
 		db = self.db
+		[x_hat, φ_x] = self.forward(x)
+
 
 		[x_hat1, z] = db['dim_reducer_obj'](x)
 		expanded_z = torch.mm(z, self.dim_expansion_matrix)
 		[z_hat, φ_z] = self.forward(expanded_z)
 
-		[x_hat2, φ_x] = self.forward(x)
 
 		#	using RFF
 		Kx = self.rff.get_rbf(φ_x, db['φ_x_mpd'], True, db['dataType'])
