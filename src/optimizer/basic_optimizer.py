@@ -52,7 +52,7 @@ def basic_optimizer(model, db, data_loader_name, loss_callback='compute_loss', e
 		progression_slope = get_slope(avgLoss_cue)
 		loss_optimization_printout(db, epoch, maxLoss, avgGrad, epoc_loop, progression_slope)
 
-		if len(avgLoss_cue) > 300 and progression_slope > 0: break;
+		if len(avgLoss_cue) > 300 and progression_slope >= 0: break;
 
 	clear_current_line()
 	return [maxLoss, avgGrad, progression_slope]

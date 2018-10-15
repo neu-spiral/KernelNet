@@ -72,27 +72,28 @@ def initialize_network(db):
 		pretrain(db['knet'], db, dataLoader)
 		export_pretrained_network(db, 'knet', 'rbm')
 
-	print('\tRunning End to End Autoencoder training...')
-	prev_loss = db['knet'].autoencoder_loss(db['train_data'].X_Var, None, None)
-	[avgLoss, avgGrad, progression_slope] = basic_optimizer(db['knet'], db, loss_callback='autoencoder_loss', data_loader_name=dataLoader)
-	post_loss = db['knet'].autoencoder_loss(db['train_data'].X_Var, None, None)
-	print('\n\tError of End to End AE , Before %.3f, After %.3f'%(prev_loss.item(), post_loss.item()))
+	if not import_pretrained_network(db, 'knet', 'end2end'):
+		print('\tRunning End to End Autoencoder training...')
+		prev_loss = db['knet'].autoencoder_loss(db['train_data'].X_Var, None, None)
+		[avgLoss, avgGrad, progression_slope] = basic_optimizer(db['knet'], db, loss_callback='autoencoder_loss', data_loader_name=dataLoader)
+		post_loss = db['knet'].autoencoder_loss(db['train_data'].X_Var, None, None)
+		print('\n\tError of End to End AE , Before %.3f, After %.3f'%(prev_loss.item(), post_loss.item()))
+		export_pretrained_network(db, 'knet', 'end2end')
 
-	db['knet'].initialize_variables()
-	db['knet'].get_current_state()
-
+	db['knet'].initialize_variables(db)
+	db['knet'].get_current_state(db)
 
 def train_kernel_net(db):
 	db['opt_K'] = db['opt_K_class'](db)
 	db['opt_U'] = db['opt_U_class'](db)
 	db['exit_cond'] = db['exit_cond_class']
+	db['converge_list'] = []
 
 	start_time = time.time() 
 	for count in itertools.count():
 		db['opt_K'].run(count)
 		db['opt_U'].run(count)
-		import pdb; pdb.set_trace()
-		count = db['exit_cond'](db)
+		count = db['exit_cond'](db, count)
 		if count > 99: break;
 
 
