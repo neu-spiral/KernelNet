@@ -68,10 +68,13 @@ def exit_cond(db, count):
 
 
 	if exit_count > 99 or 'objective_tracker' in db:
+		[db['current_loss'], db['current_hsic'], db['current_AE_loss']] = db['knet'].get_current_state(db)
+
 		current_label = kmeans(db['num_of_clusters'], db['U'])
-		nmi = normalized_mutual_info_score(current_label, db['train_data'].Y)
-		print('\t\t%d , current nmmi : %.3f'%(count, nmi))
+		db['test_nmi'] = normalized_mutual_info_score(current_label, db['train_data'].Y)
+		print('\t\t%d , current nmmi : %.3f'%(count, db['test_nmi']))
 	
+
 
 	return exit_count
 

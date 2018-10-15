@@ -34,6 +34,7 @@ class test_parent():
 		for count, single_instance in enumerate(every_combination):
 			[output_dim, kernel_net_depth, σ_ratio, extra_repeat, λ_ratio, id_10_fold] = single_instance
 
+			db['running_batch_mode'] = True
 			db['10_fold_id'] = id_10_fold
 			db['output_dim'] = output_dim
 			db['kernel_net_depth'] = kernel_net_depth
