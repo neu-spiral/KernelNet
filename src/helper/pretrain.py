@@ -2,6 +2,7 @@
 
 import sys
 import torch
+import debug
 from rbm import *
 from basic_optimizer import *
 from format_conversion import *
@@ -63,9 +64,5 @@ def pretrain(model, db, loader_id, sparcity=False, sparcity_percentage=0.002):
 		layer.bias = best_rbm.l1.bias
 		clear_previous_line()
 
-		##	debug
-		#tmpX_var = numpy2Variable(tmpX, db['dataType'])
-		#outX = model(tmpX_var)
-
-
+		#debug.layer_wise(db, best_rbm)
 	db['train_data'].X = tmpX

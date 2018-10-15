@@ -22,3 +22,12 @@ def loss_optimization_printout(db, epoch, avgLoss, avgGrad, epoc_loop, slope):
 	sys.stdout.write("\r\t\t%d/%d, MaxLoss : %f, AvgGra : %f, progress slope : %f" % (epoch, epoc_loop, avgLoss, avgGrad, slope))
 	sys.stdout.flush()
 
+def dictionary_to_str(dic):
+	for i,j in dic.items():
+		if type(j) == str: return (i + ' : ' + str(j) + '"\n')
+		elif type(j) == bool: return (i + ' : ' + str(j) + '"\n')
+		elif type(j) == type: return (i + ' : ' + j.__name__ + '"\n')
+		elif type(j) == float: return (i + ' : ' + str(j) + '"\n')
+		elif type(j) == int: return (i + ' : ' + str(j) + '"\n')
+		else: pass
+

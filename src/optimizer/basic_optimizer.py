@@ -34,10 +34,8 @@ def basic_optimizer(model, db, data_loader_name, loss_callback='compute_loss', e
 			#	size of the gradient norm
 			grad_norm = 0	
 			for i, param in enumerate(model.parameters()):
-				try:
-					grad_norm += param.grad.data.norm()
-				except:
-					import pdb; pdb.set_trace()
+				try: grad_norm += param.grad.data.norm()
+				except: import pdb; pdb.set_trace()
 
 
 			running_avg_grad.append(grad_norm)

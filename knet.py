@@ -6,6 +6,7 @@ sys.path.append('./tests')
 sys.path.append('./src/models')
 sys.path.append('./src/helper')
 sys.path.append('./src/optimizer')
+sys.path.append('./src/validation')
 
 
 import matplotlib
@@ -13,9 +14,12 @@ import numpy as np
 import random
 import itertools
 import socket
+import time
+import debug
 from dataset_manipulate import *
 from pretrain import *
 from AE import *
+from AE_validate import *
 from storage import *
 from DManager import *
 from opt_Kernel import *
@@ -69,16 +73,25 @@ def initialize_network(db):
 
 	dataLoader = 'train_loader'
 	if not import_pretrained_network(db, 'knet', 'rbm'):
+		start_time = time.time() 
 		pretrain(db['knet'], db, dataLoader)
+		db['knet'].pretrain_time = time.time() - start_time
 		export_pretrained_network(db, 'knet', 'rbm')
+
 
 	if not import_pretrained_network(db, 'knet', 'end2end'):
 		print('\tRunning End to End Autoencoder training...')
 		prev_loss = db['knet'].autoencoder_loss(db['train_data'].X_Var, None, None)
-		[avgLoss, avgGrad, progression_slope] = basic_optimizer(db['knet'], db, loss_callback='autoencoder_loss', data_loader_name=dataLoader)
+		start_time = time.time() 
+
+		basic_optimizer(db['knet'], db, loss_callback='autoencoder_loss', data_loader_name=dataLoader)
+
+		db['knet'].end2end_time = time.time() - start_time
 		post_loss = db['knet'].autoencoder_loss(db['train_data'].X_Var, None, None)
 		print('\n\tError of End to End AE , Before %.3f, After %.3f'%(prev_loss.item(), post_loss.item()))
 		export_pretrained_network(db, 'knet', 'end2end')
+
+	debug.end2end(db)
 
 	db['knet'].initialize_variables(db)
 	db['knet'].get_current_state(db)
@@ -95,6 +108,9 @@ def train_kernel_net(db):
 		db['opt_U'].run(count)
 		count = db['exit_cond'](db, count)
 		if count > 99: break;
+
+	db['knet'].train_time = time.time() - start_time
+	db['validate_function'](db)
 
 
 
@@ -120,18 +136,18 @@ if __name__ == "__main__":
 	db["kernel_net_depth"]=7
 	db["σ_ratio"]=1.0
 	db["λ_ratio"]=0.0
-	db['pretrain_repeats'] = 1
+	db['pretrain_repeats'] = 4
 	db['batch_size'] = 5
 	db['num_of_clusters'] = 3
 	db['use_Degree_matrix'] = True
 
-	# objs
+	# code
+	db['kernel_model'] = AE
 	db['opt_K_class'] = opt_K
 	db['opt_U_class'] = opt_U
 	db['exit_cond_class'] = exit_cond
-
-	# knet info
-	db['kernel_model'] = AE
+	db['validate_function'] = AE_validate
+	
 else:
 	db = load_db()
 

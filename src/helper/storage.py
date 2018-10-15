@@ -53,4 +53,49 @@ def export_pretrained_network(db, keyVal, stage_name):
 
 
 
-
+#def write_rand_file(wpath):
+#	print('Waiting for write access....')
+#	while os.path.exists(wpath): 
+#		print '.',
+#		time.sleep(65*np.random.rand())
+#
+#	v = str(int(10000000*np.random.rand()))
+#	fin = open(wpath,'w')
+#	fin.write(v)
+#	fin.close()
+#
+#
+#def store_best_results(db, my_results):	
+#	v = str(int(10000000*np.random.rand()))
+#
+#	ensure_path_exists(db['best_path'])
+#	ensure_path_exists(db['best_path'] + 'saved_weights/')
+#	fpath = db['best_path'] + db['data_name'] + '.pk'
+#	fpath_tmp = db['best_path'] + db['data_name'] + '_' + v + '.pk'
+#	wpath = db['best_path'] + db['data_name'] + '_writing.tmp'
+#
+#	write_rand_file(wpath)
+#	
+#	try:
+#		all_results = safe_pickle_load(fpath)
+#
+#		if all_results['best_kernel']['NMI_avg'] < my_results['NMI_avg']:
+#			#my_results['kernel_net'] = db['kernel_net']
+#			all_results['best_kernel'] = my_results
+#			copy_best_weights(db)
+#
+#		all_results['result_list'].append(my_results)
+#		safe_pickle_dump(fpath_tmp, all_results)
+#		
+#		shutil.move(fpath_tmp, fpath)
+#	except:
+#		#my_results['kernel_net'] = db['kernel_net']
+#		all_results = {}	
+#		all_results['best_kernel'] = my_results
+#		all_results['result_list'] = [my_results]
+#		safe_pickle_dump(fpath, all_results)
+#		copy_best_weights(db)
+#		
+#	delete_file(wpath)
+#
+#

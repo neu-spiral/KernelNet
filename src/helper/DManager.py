@@ -27,6 +27,7 @@ class DManager(Dataset):
 		self.X_Var = Variable(self.X_Var.type(dataType), requires_grad=False)
 		self.Y_Var = Variable(self.Y_Var.type(dataType), requires_grad=False)
 
+		print('\t\tData of size %dx%d was loaded ....'%(self.N, self.d))
 
 	def __getitem__(self, index):
 		return self.X[index], self.Y[index], index

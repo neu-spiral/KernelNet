@@ -71,7 +71,8 @@ class autoencoder(torch.nn.Module):
 		return torch.optim.Adam(self.parameters(), lr=self.learning_rate)
 
 	def mse_loss(self, x, y):
-	    return torch.sum((x - y) ** 2)
+		return ((x-y)**2).mean()
+	    #return torch.sum((x - y) ** 2)
 		
 
 	def initialize_network(self):
