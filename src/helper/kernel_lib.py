@@ -69,6 +69,7 @@ def poly_sklearn(data, p, c):
 	return poly
 
 def normalized_rbk_sklearn(X, σ):
+	X = ensure_matrix_is_numpy(X)
 	Kx = rbk_sklearn(X, σ)       	
 	np.fill_diagonal(Kx, 0)			#	Set diagonal of adjacency matrix to 0
 	D = compute_inverted_Degree_matrix(Kx)
