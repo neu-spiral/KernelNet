@@ -25,6 +25,7 @@ class autoencoder(torch.nn.Module):
 		outFeatures = int(inFeatures - diff)
 		in_out_list = []
 
+
 		for l in range(1, self.net_depth+1):
 			if l == self.net_depth:
 				in_out_list.append((self.output_dim ,inFeatures))

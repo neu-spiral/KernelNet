@@ -1,5 +1,7 @@
 
 import sys
+import types
+import numpy as np
 
 def clear_current_line():
 	sys.stdout.write("\r")
@@ -23,11 +25,17 @@ def loss_optimization_printout(db, epoch, avgLoss, avgGrad, epoc_loop, slope):
 	sys.stdout.flush()
 
 def dictionary_to_str(dic):
+	outstr = ''
 	for i,j in dic.items():
-		if type(j) == str: return (i + ' : ' + str(j) + '"\n')
-		elif type(j) == bool: return (i + ' : ' + str(j) + '"\n')
-		elif type(j) == type: return (i + ' : ' + j.__name__ + '"\n')
-		elif type(j) == float: return (i + ' : ' + str(j) + '"\n')
-		elif type(j) == int: return (i + ' : ' + str(j) + '"\n')
-		else: pass
+		if type(j) == str: outstr += 	('\t' + i + ' : ' + str(j) + '\n')
+		elif type(j) == np.float64: outstr += 	('\t' + i + ' : ' + str(j) + '\n')
+		elif type(j) == bool: outstr += ('\t' + i + ' : ' + str(j) + '\n')
+		elif type(j) == type: outstr += ('\t' + i + ' : ' + j.__name__ + '\n')
+		elif type(j) == types.FunctionType: outstr += ('\t' + i + ' : ' + j.__name__ + '\n')
+		elif type(j) == float: outstr += ('\t' + i + ' : ' + str(j) + '\n')
+		elif type(j) == int: outstr += 	('\t' + i + ' : ' + str(j) + '\n')
+		else:
+			print('%s , %s is not recognized'%(i, str(type(j))))
+			import pdb; pdb.set_trace()	
 
+	return outstr

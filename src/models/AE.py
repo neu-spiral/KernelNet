@@ -18,11 +18,11 @@ class AE(autoencoder):
 
 	def initialize_variables(self, db):
 		self.db = db
-		self.total_X = numpy2Variable(db['train_data'].X, db['dataType'])
 			
-		[x_hat, φ_x] = self.forward(self.total_X)
+		[x_hat, φ_x] = self.forward(db['train_data'].X_Var)
 		φ_x = ensure_matrix_is_numpy(φ_x)
 		db['φ_x_mpd'] = float(median_of_pairwise_distance(φ_x))
+		#db['σ'] = float(db['φ_x_mpd']*db['σ_ratio'])
 
 		N = db['train_data'].N
 		self.H = np.eye(N) - (1.0/N)*np.ones((N, N))
@@ -30,21 +30,22 @@ class AE(autoencoder):
 	def set_Y(self, Y):
 		self.Y = Y
 
-	def get_current_state(self, db):
-		[x_hat, φ_x] = self.forward(self.total_X)
+	def get_current_state(self, db, in_x):
+		[x_hat, φ_x] = self.forward(in_x)
 		φ_x = ensure_matrix_is_numpy(φ_x)
 
-		[DKxD, db['D_inv']] = normalized_rbk_sklearn(φ_x, db['φ_x_mpd'])
+		[DKxD, Dinv] = normalized_rbk_sklearn(φ_x, db['φ_x_mpd'])
 		HDKxDH = center_matrix(db, DKxD)
-		Ku = db['U'].dot(db['U'].T)
-		current_hsic = -np.sum(HDKxDH*Ku)
-		current_AE_loss = ensure_matrix_is_numpy(self.autoencoder_loss(self.total_X, None, None))
+		[U, U_normalized] = L_to_U(db, HDKxDH)
+		Ku = U_normalized.dot(U_normalized.T)
+		current_hsic = -float(np.sum(HDKxDH*Ku))
+		current_AE_loss = float(ensure_matrix_is_numpy(self.autoencoder_loss(in_x, None, None)))
 
 		if 'λ_obj_ratio' not in db:
-			db['λ_obj_ratio'] = np.abs(current_hsic/current_AE_loss)
+			db['λ_obj_ratio'] = float(np.abs(current_hsic/current_AE_loss))
 			db['λ'] = float(db["λ_ratio"]*db['λ_obj_ratio'])
 
-		current_loss = current_hsic + db['λ']*current_AE_loss
+		current_loss = float(current_hsic + db['λ']*current_AE_loss)
 		print('\t\tCurrent obj loss : %.5f from %.5f +  (%.3f)(%.3f)[%.5f]'%(current_loss, current_hsic, db["λ_ratio"], db['λ_obj_ratio'], current_AE_loss))
 		return [current_loss, current_hsic, current_AE_loss]
 

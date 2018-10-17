@@ -36,12 +36,12 @@ def Allocation_2_Y(allocation):
 	return Y
 
 def getLaplacian(db, data, σ, H=None):
-	[L,D] = normalized_rbk_sklearn(data, σ)
+	[L, Dinv] = normalized_rbk_sklearn(data, σ)
 
 	if H is not None:
 		L = center_matrix(db, L)
 
-	return L
+	return [L, Dinv]
 
 
 def Kx_D_given_W(db, setX=None, setW=None):

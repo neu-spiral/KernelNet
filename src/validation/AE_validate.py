@@ -1,58 +1,80 @@
 
+
+from dataset_manipulate import *
+from terminal_print import *
 from path_tools import *
+from storage import *
+from classifier import *
+import pickle
 
 
 def AE_validate(db):
+	#	get loss objective
+	[db['train_loss'], db['train_hsic'], db['train_AE_loss']] = db['knet'].get_current_state(db, db['train_data'].X_Var)
+	[db['valid_loss'], db['valid_hsic'], db['valid_AE_loss']] = db['knet'].get_current_state(db, db['valid_data'].X_Var)
+
+	#	get training nmi
+	current_label = kmeans(db['num_of_clusters'], db['U'])
+	db['train_nmi'] = normalized_mutual_info_score(current_label, db['train_data'].Y)
+
+	#	get validation nmi
+	[x_hat, U] = db['knet'](db['valid_data'].X_Var)		# <- update this to be used in opt_K
+	current_label = kmeans(db['num_of_clusters'], U)
+	db['valid_nmi'] = normalized_mutual_info_score(current_label, db['valid_data'].Y)
+
+
+	#	setting up paths
 	result_path = './results/' + db["data_name"] + '/'
 	most_recent_result_path = result_path + 'most_recent.txt'
+	run_history_path = result_path + 'run_history'
 	ensure_path_exists('./results')
 	ensure_path_exists(result_path)
 	output_str = ''
 
-	#	initial settings
+	#	settings that doesn't change often
 	packet_1 = {}
-	packet_1['data_name'] = db["data_name"]
-	packet_1['center_and_scale'] = db["center_and_scale"]
-	packet_1['output_dim'] = db["output_dim"]
-	packet_1["kernel_net_depth"] = db["kernel_net_depth"]
-	packet_1["σ_ratio"] = db["σ_ratio"]
-	packet_1["λ_ratio"] = db["λ_ratio"]
-	packet_1['pretrain_repeats'] = db['pretrain_repeats']
-	packet_1['batch_size'] = db['batch_size']
-	packet_1['num_of_clusters'] = db['num_of_clusters']
-	packet_1['use_Degree_matrix'] = db['use_Degree_matrix']
-	packet_1['λ_obj_ratio'] = db['λ_obj_ratio']
-	packet_1['λ'] = db['λ']
+	list_of_keys = ['data_name', 'center_and_scale', 'pretrain_repeats', 'batch_size', 'num_of_clusters', 'use_Degree_matrix']
+	fill_dictionary(db, packet_1, list_of_keys)
+	output_str = dictionary_to_str(packet_1)
 
-
-	#	Components used
+	#	settings that changes often
 	packet_2 = {}
-	packet_2['kernel_model'] = db['kernel_model'].__name__
-	packet_2['opt_K_class'] = db['opt_K_class'].__name__
-	packet_2['opt_U_class'] = db['opt_U_class'].__name__
-	packet_2['exit_cond_class'] = db['exit_cond_class'].__name__
-	packet_2['validate_class'] = db['validate_class'].__name__
+	list_of_keys = ['output_dim', "kernel_net_depth", "σ_ratio", "λ_ratio", 'λ_obj_ratio', 'λ']
+	fill_dictionary(db, packet_2, list_of_keys)
 	output_str += '\n' + dictionary_to_str(packet_2)
 
-
-	#	results
+	#	object components
 	packet_3 = {}
-	packet_3['knet'] = db["knet"]
-	packet_3['train_time'] = db['knet'].train_time
-	packet_3['end2end_time'] = db['knet'].end2end_time
-	packet_3['pretrain_time'] = db['knet'].pretrain_time
-	packet_3['test_nmi'] = db['test_nmi']
-	packet_3['current_loss'] = db['current_loss']
-	packet_3['current_hsic'] = db['current_hsic']
-	packet_3['current_AE_loss'] = db['current_AE_loss']
+	list_of_keys = ['kernel_model','opt_K_class','opt_U_class','exit_cond','validate_function']
+	fill_dictionary(db, packet_3, list_of_keys)
 	output_str += '\n' + dictionary_to_str(packet_3)
 
-	result = {**packet_1, **packet_2, **packet_3}
+	#	time results
+	packet_4 = {}
+	list_of_keys = ['train_time', 'end2end_time','pretrain_time']
+	db['train_time'] = db['knet'].train_time
+	db['end2end_time'] = db['knet'].end2end_time
+	db['pretrain_time'] = db['knet'].pretrain_time
+	fill_dictionary(db, packet_4, list_of_keys)
+	output_str += '\n' + dictionary_to_str(packet_4)
+
+	#	objective results
+	packet_5 = {}
+	list_of_keys = ['train_loss','train_hsic','train_AE_loss','valid_loss','valid_hsic','valid_AE_loss']
+	fill_dictionary(db, packet_5, list_of_keys)
+	output_str += '\n' + dictionary_to_str(packet_5)
+
+	#	NMI results
+	packet_6 = {}
+	list_of_keys = ['train_nmi','valid_nmi']
+	fill_dictionary(db, packet_6, list_of_keys)
+	output_str += '\n' + dictionary_to_str(packet_6)
+
+	result = {**packet_1, **packet_2, **packet_3, **packet_4, **packet_5, **packet_6}
 	print(output_str)
 
 
-	#	Save results to text file
-	if running_batch_mode not in db: 
-		fin = open(most_recent_result_path, 'w')
-		fin.write(output_str)
-		fin.close()
+	save_results_to_text_file(db, most_recent_result_path, output_str)
+	save_result_to_history(db, result, run_history_path)
+
+

@@ -1,8 +1,12 @@
 
 from path_tools import *
+import numpy as np
 import pickle
+import shutil
 
 def import_pretrained_network(db, keyVal, stage_name):
+	if 'running_batch_mode' in db: return False
+
 	ensure_path_exists('./pretrained')
 	path_list = ['./pretrained/' + db['data_name'] + '_' + stage_name + '.pk']
 
@@ -27,6 +31,8 @@ def import_pretrained_network(db, keyVal, stage_name):
 
 
 def export_pretrained_network(db, keyVal, stage_name):
+	if 'running_batch_mode' in db: return
+
 	ensure_path_exists('./pretrained')
 	pth = './pretrained/' + db['data_name'] + '_' + stage_name + '.pk'
 	path_list = [pth]
@@ -50,52 +56,51 @@ def export_pretrained_network(db, keyVal, stage_name):
 	list_of_networks.append(db[keyVal])
 	pickle.dump( list_of_networks, open(pth, "wb" ) )
 
+def save_results_to_text_file(db, most_recent_result_path, output_str):
+	if 'running_batch_mode' not in db: 
+		fin = open(most_recent_result_path, 'w')
+		fin.write(output_str)
+		fin.close()
+
+def save_result_to_history(db, result, run_history_path):
+	file_path = run_history_path + '.pk'
+	mutex = run_history_path + '.writing'
+	tmp_writing = run_history_path + '.' + str(int(10000000*np.random.rand()))
 
 
+	if path_list_exists([file_path]):
+		past_runs = pickle.load( open( file_path, "rb" ) )
 
-#def write_rand_file(wpath):
-#	print('Waiting for write access....')
-#	while os.path.exists(wpath): 
-#		print '.',
-#		time.sleep(65*np.random.rand())
-#
-#	v = str(int(10000000*np.random.rand()))
-#	fin = open(wpath,'w')
-#	fin.write(v)
-#	fin.close()
-#
-#
-#def store_best_results(db, my_results):	
-#	v = str(int(10000000*np.random.rand()))
-#
-#	ensure_path_exists(db['best_path'])
-#	ensure_path_exists(db['best_path'] + 'saved_weights/')
-#	fpath = db['best_path'] + db['data_name'] + '.pk'
-#	fpath_tmp = db['best_path'] + db['data_name'] + '_' + v + '.pk'
-#	wpath = db['best_path'] + db['data_name'] + '_writing.tmp'
-#
-#	write_rand_file(wpath)
-#	
-#	try:
-#		all_results = safe_pickle_load(fpath)
-#
-#		if all_results['best_kernel']['NMI_avg'] < my_results['NMI_avg']:
-#			#my_results['kernel_net'] = db['kernel_net']
-#			all_results['best_kernel'] = my_results
-#			copy_best_weights(db)
-#
-#		all_results['result_list'].append(my_results)
-#		safe_pickle_dump(fpath_tmp, all_results)
-#		
-#		shutil.move(fpath_tmp, fpath)
-#	except:
-#		#my_results['kernel_net'] = db['kernel_net']
-#		all_results = {}	
-#		all_results['best_kernel'] = my_results
-#		all_results['result_list'] = [my_results]
-#		safe_pickle_dump(fpath, all_results)
-#		copy_best_weights(db)
-#		
-#	delete_file(wpath)
-#
-#
+		past_runs['list_of_runs'].append(result)
+
+		if past_runs['best_train_nmi']['train_nmi'] < result['train_nmi']:
+			past_runs['best_train_nmi'] = result
+
+		if past_runs['best_valid_nmi']['valid_nmi'] < result['valid_nmi']:
+			past_runs['best_valid_nmi'] = result
+
+		if past_runs['best_train_loss']['train_loss'] > result['train_loss']:
+			past_runs['best_train_loss'] = result
+
+		if past_runs['best_valid_loss']['valid_loss'] > result['valid_loss']:
+			past_runs['best_valid_loss'] = result
+
+	else:
+		result['knet'] = db["knet"]
+
+		past_runs = {}
+		past_runs['list_of_runs'] = [result]
+		past_runs['best_train_nmi'] = result
+		past_runs['best_valid_nmi'] = result
+		past_runs['best_train_loss'] = result
+		past_runs['best_valid_loss'] = result
+
+
+	pickle.dump( past_runs, open(tmp_writing, "wb" ) )
+
+
+	while os.path.exists(mutex): time.sleep(20*np.random.rand())
+	create_file(mutex)
+	shutil.move(tmp_writing, file_path)
+	delete_file(mutex)
+

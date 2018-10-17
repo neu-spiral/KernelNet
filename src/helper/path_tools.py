@@ -14,3 +14,11 @@ def path_list_exists(path_list):
 
 	return True
 
+def create_file(path):
+	fin = open(path,'w')
+	fin.close()
+
+def delete_file(path):
+	if os.path.exists(path):
+		os.remove(path)
+
