@@ -15,7 +15,6 @@ class test_code(test_parent):
 		db = {}
 		#	Data settings
 		db['data_name'] = 'wine'
-		db['dataType'] = torch.FloatTensor				
 		db['center_and_scale'] = True
 		db['recompute_10_fold'] = False
 		db['use_Degree_matrix'] = True
@@ -35,10 +34,10 @@ class test_code(test_parent):
 		test_parent.__init__(self, db)
 
 	def parameter_ranges(self):
-		output_dim = [3]
-		kernel_net_depth = [7]
+		output_dim = [3,4,5,6,7]
+		kernel_net_depth = [4,5,6,7,8]
 		σ_ratio = [1]
-		extra_repeat = range(1)
+		extra_repeat = range(20)
 		id_10_fold = [0]
 	
 		#lambda_ratio = np.arange(0.1, 3, 0.1)

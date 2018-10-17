@@ -5,10 +5,10 @@ import dataset_manipulate
 import random
 import string
 from termcolor import colored
-from DManager import *
 from path_tools import *
 import numpy as np
 import itertools
+import types
 import socket
 
 
@@ -19,8 +19,6 @@ class test_parent():
 		db['data_path'] = './datasets/' + db['data_name'] + '/'
 		db['orig_data_file_name']  = db['data_path'] +  db['data_name'] + '.csv'
 		db['orig_label_file_name'] = db['data_path'] +  db['data_name'] + '_label.csv'
-		db['DManager'] = DManager(db['orig_data_file_name'], db['orig_label_file_name'], db['dataType'])
-
 
 		ensure_path_exists('./tmp')
 		self.remove_tmp_files()
@@ -71,6 +69,8 @@ class test_parent():
 				fin.write('db["' + i + '"]=' + str(j) + '\n')
 			elif type(j) == type:
 				fin.write('db["' + i + '"]=' + j.__name__ + '\n')
+			elif type(j) == types.FunctionType:
+				fin.write('db["' + i + '"]=' + j.__name__ + '\n')
 			elif type(j) == float:
 				fin.write('db["' + i + '"]=' + str(j) + '\n')
 			elif type(j) == int:
@@ -78,9 +78,9 @@ class test_parent():
 			elif j is None:
 				fin.write('db["' + i + '"]=None\n')
 			else:
-				pass
-				#print('unrecognized type : ' + str(type(j)) + ' found.')
-				#raise ValueError('unrecognized type : ' + str(type(j)) + ' found.')
+				print('unrecognized type : ' + str(type(j)) + ' found.')
+				import pdb; pdb.set_trace()
+				raise ValueError('unrecognized type : ' + str(type(j)) + ' found.')
 
 		fin.close()
 		return db['db_file']
