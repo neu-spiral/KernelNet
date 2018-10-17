@@ -5,6 +5,7 @@ from sklearn.cluster import KMeans
 from sklearn.cluster import SpectralClustering
 from kernel_lib import *
 from sklearn import linear_model
+from format_conversion import *
 
 		
 def use_svm(X,Y,W=None, k='rbf'):
@@ -19,7 +20,7 @@ def use_svm(X,Y,W=None, k='rbf'):
 	return [out_allocation, nmi]
 
 def kmeans(k, U, Y=None):
-
+	U = ensure_matrix_is_numpy(U)
 	allocation = KMeans(k).fit_predict(U)
 
 	if Y is None:

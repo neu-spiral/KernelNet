@@ -35,8 +35,9 @@ np.set_printoptions(linewidth=300)
 np.set_printoptions(suppress=True)
 
 def initialize_data(db):
-	print('\nRunning %s\n\tLoading datasets...'%(db["data_name"]))
 	db['cuda'] = torch.cuda.is_available()
+	print('\nRunning %s with cuda=%s\n\tLoading datasets...'%(db["data_name"], str(db['cuda'])))
+
 	if(db['cuda']): db['dataType'] = torch.cuda.FloatTensor
 	else: db['dataType'] = torch.FloatTensor				
 	#db['dataType'] = torch.FloatTensor
@@ -57,11 +58,12 @@ def initialize_embedding(db):
 
 	X = db['train_data'].X
 	db['x_mpd'] = float(median_of_pairwise_distance(X))
-	L = getLaplacian(db, X, db['x_mpd'], H=H)
+
+	σ = float(db['x_mpd']*db["σ_ratio"])
+	[L, db['D_inv']] = getLaplacian(db, X, σ, H=H)
 	[db['U'], U_normalized] = L_to_U(db, L)
 	[allocation, db['init_spectral_nmi']] = kmeans(db['num_of_clusters'], db['U'], Y=db['train_data'].Y)
 	print('\t\tInitial Spectral Clustering NMI on raw data : %.3f'%db['init_spectral_nmi'])
-	
 
 def initialize_network(db):
 	db['net_input_size'] = db['train_data'].d
@@ -91,25 +93,28 @@ def initialize_network(db):
 		print('\n\tError of End to End AE , Before %.3f, After %.3f'%(prev_loss.item(), post_loss.item()))
 		export_pretrained_network(db, 'knet', 'end2end')
 
-	debug.end2end(db)
-
+	#debug.end2end(db)
 	db['knet'].initialize_variables(db)
-	db['knet'].get_current_state(db)
+	db['knet'].get_current_state(db, db['train_data'].X_Var)
 
 def train_kernel_net(db):
 	db['opt_K'] = db['opt_K_class'](db)
 	db['opt_U'] = db['opt_U_class'](db)
-	db['exit_cond'] = db['exit_cond_class']
 	db['converge_list'] = []
 
-	start_time = time.time() 
-	for count in itertools.count():
-		db['opt_K'].run(count)
-		db['opt_U'].run(count)
-		count = db['exit_cond'](db, count)
-		if count > 99: break;
 
-	db['knet'].train_time = time.time() - start_time
+	if not import_pretrained_network(db, 'knet', 'last'):
+		start_time = time.time() 
+		for count in itertools.count():
+			db['opt_K'].run(count)
+			db['opt_U'].run(count)
+			count = db['exit_cond'](db, count)
+			if count > 99: break;
+	
+		db['knet'].train_time = time.time() - start_time
+		export_pretrained_network(db, 'knet', 'last')
+
+
 	db['validate_function'](db)
 
 
@@ -132,9 +137,9 @@ if __name__ == "__main__":
 	db['objective_tracker'] = []
 
 	# hyperparams
-	db["output_dim"]=5
+	db["output_dim"]=7
 	db["kernel_net_depth"]=7
-	db["σ_ratio"]=1.0
+	db["σ_ratio"]=1
 	db["λ_ratio"]=0.0
 	db['pretrain_repeats'] = 4
 	db['batch_size'] = 5
@@ -145,7 +150,7 @@ if __name__ == "__main__":
 	db['kernel_model'] = AE
 	db['opt_K_class'] = opt_K
 	db['opt_U_class'] = opt_U
-	db['exit_cond_class'] = exit_cond
+	db['exit_cond'] = exit_cond
 	db['validate_function'] = AE_validate
 	
 else:
@@ -157,5 +162,4 @@ initialize_data(db)
 initialize_embedding(db)
 initialize_network(db)
 train_kernel_net(db)
-import pdb; pdb.set_trace()
 

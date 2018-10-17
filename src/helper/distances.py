@@ -12,6 +12,7 @@ def median_of_pairwise_distance(U):
 		print('Error : every sample is now identical')
 		import pdb; pdb.set_trace()
 
-	return np.median(sklearn.metrics.pairwise.pairwise_distances(U))
+	vv = np.median(sklearn.metrics.pairwise.pairwise_distances(U))
+	return vv
 
 

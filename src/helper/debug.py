@@ -1,4 +1,5 @@
 
+import torch
 
 def end2end(db):
 	X = db['train_data'].X_Var
