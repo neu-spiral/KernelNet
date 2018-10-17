@@ -30,7 +30,7 @@ class test_code(test_parent):
 		db['kernel_model'] = AE
 		db['opt_K_class'] = opt_K
 		db['opt_U_class'] = opt_U
-		db['exit_cond_class'] = exit_cond
+		db['exit_cond'] = exit_cond
 
 		test_parent.__init__(self, db)
 
