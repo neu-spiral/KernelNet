@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 
+import sys
+sys.path.append('./src/validation')
+
 from test_parent import *
-from AE import *
 from opt_Kernel import *
 from AE_validate import *
 from termcolor import colored
 import sklearn.metrics
+from AE import *
 import numpy as np
 import random
 
@@ -35,11 +38,32 @@ class test_code(test_parent):
 
 		test_parent.__init__(self, db)
 
+#	def parameter_ranges(self):
+#		output_dim = [3,4,5,6,7]
+#		kernel_net_depth = [4,5,6,7,8]
+#		σ_ratio = [1]
+#		extra_repeat = range(20)
+#		id_10_fold = [0]
+#	
+#		#lambda_ratio = np.arange(0.1, 3, 0.1)
+#		#random.shuffle(lambda_ratio)
+#		#lambda_ratio = [0] + list(lambda_ratio)
+#	
+#		lambda_ratio = [0]
+#
+#
+#		random.shuffle(output_dim)
+#		random.shuffle(kernel_net_depth)
+#		random.shuffle(σ_ratio)
+#	
+#		return [output_dim, kernel_net_depth, σ_ratio, extra_repeat, lambda_ratio, id_10_fold]
+
+
 	def parameter_ranges(self):
-		output_dim = [3,4,5,6,7]
-		kernel_net_depth = [4,5,6,7,8]
+		output_dim = [7]
+		kernel_net_depth = [8]
 		σ_ratio = [1]
-		extra_repeat = range(20)
+		extra_repeat = range(2)
 		id_10_fold = [0]
 	
 		#lambda_ratio = np.arange(0.1, 3, 0.1)

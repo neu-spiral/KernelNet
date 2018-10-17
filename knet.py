@@ -8,7 +8,6 @@ sys.path.append('./src/helper')
 sys.path.append('./src/optimizer')
 sys.path.append('./src/validation')
 
-
 import matplotlib
 import numpy as np
 import random
@@ -26,8 +25,7 @@ from opt_Kernel import *
 
 if socket.gethostname().find('login') != -1:
 	print('\nError : you cannot run program on login node.......\n\n')
-	sys.exit()
-
+	sys.exit() 
 
 np.set_printoptions(precision=4)
 np.set_printoptions(threshold=np.nan)
@@ -122,7 +120,7 @@ def train_kernel_net(db):
 
 
 
-if __name__ == "__main__":
+def define_settings():
 	db = {}
 	# Data info
 	db["data_name"]="wine"
@@ -156,9 +154,11 @@ if __name__ == "__main__":
 	db['exit_cond'] = exit_cond
 	db['validate_function'] = AE_validate
 	
-	db = load_db()
+	db = load_db(db)
+	return db
 
 
+db = define_settings()
 initialize_data(db)
 initialize_embedding(db)
 initialize_network(db)

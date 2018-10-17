@@ -20,8 +20,18 @@ class test_parent():
 		db['orig_data_file_name']  = db['data_path'] +  db['data_name'] + '.csv'
 		db['orig_label_file_name'] = db['data_path'] +  db['data_name'] + '_label.csv'
 
+		tmp_path = './tmp/' + db['data_name'] + '/'
+		db_output_path = tmp_path + 'db_files/'
+		batch_output_path = tmp_path + 'batch_outputs/'
+
 		ensure_path_exists('./tmp')
-		self.remove_tmp_files()
+		ensure_path_exists(tmp_path)
+		ensure_path_exists(db_output_path)
+		ensure_path_exists(batch_output_path)
+
+		remove_files(tmp_path)
+		remove_files(db_output_path)
+		remove_files(batch_output_path)
 
 	def run(self):
 		db = self.db
@@ -57,8 +67,7 @@ class test_parent():
 
 	def output_db_to_text(self, i, count):
 		db = self.db
-		#db['db_file']  = './tmp/' + db['data_name'] + '_' +  str(int(10000*np.random.rand())) + '.txt'
-		db['db_file']  = './tmp/' + db['data_name'] + '_' +  str(i) + '_' + str(count) + '.txt'
+		db['db_file']  = './tmp/' + db['data_name'] + '/db_files/' + db['data_name'] + '_' +  str(i) + '_' + str(count) + '.txt'
 
 		fin = open(db['db_file'], 'w')
 
@@ -85,12 +94,6 @@ class test_parent():
 		fin.close()
 		return db['db_file']
 
-	def remove_tmp_files(self):
-		db = self.db
-		file_in_tmp = os.listdir('./tmp')
-		for i in file_in_tmp:
-			if i.find(db['data_name']) == 0:
-				os.remove('./tmp/' + i)
 
 
 	def export_bash_file(self, i, test_name, export_db):
@@ -102,10 +105,10 @@ class test_parent():
 		cmd += "\n#SBATCH --job-name=%d_%s_%s"%(i, test_name, run_name)
 		cmd += "\n#################  "
 		cmd += "\n#a file for job output, you can check job progress"
-		cmd += "\n#SBATCH --output=./tmp/%d_%s_%s.out"%(i, test_name, run_name)
+		cmd += "\n#SBATCH --output=./tmp/%s/batch_outputs/%d_%s_%s.out"%(test_name, i, test_name, run_name)
 		cmd += "\n#################"
 		cmd += "\n# a file for errors from the job"
-		cmd += "\n#SBATCH --error=./tmp/%d_%s_%s.err"%(i, test_name, run_name)
+		cmd += "\n#SBATCH --error=./tmp/%s/batch_output_path/%d_%s_%s.err"%(test_name, i, test_name, run_name)
 		cmd += "\n#################"
 		cmd += "\n#time you think you need; default is one day"
 		cmd += "\n#in minutes in this case, hh:mm:ss"
