@@ -3,6 +3,7 @@
 from test_parent import *
 from AE import *
 from opt_Kernel import *
+from AE_validate import *
 from termcolor import colored
 import sklearn.metrics
 import numpy as np
@@ -30,6 +31,7 @@ class test_code(test_parent):
 		db['opt_K_class'] = opt_K
 		db['opt_U_class'] = opt_U
 		db['exit_cond'] = exit_cond
+		db['validate_function'] = AE_validate
 
 		test_parent.__init__(self, db)
 
