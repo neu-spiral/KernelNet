@@ -108,7 +108,7 @@ class test_parent():
 		cmd += "\n#SBATCH --output=./tmp/%s/batch_outputs/%d_%s_%s.out"%(test_name, i, test_name, run_name)
 		cmd += "\n#################"
 		cmd += "\n# a file for errors from the job"
-		cmd += "\n#SBATCH --error=./tmp/%s/batch_output_path/%d_%s_%s.err"%(test_name, i, test_name, run_name)
+		cmd += "\n#SBATCH --error=./tmp/%s/batch_outputs/%d_%s_%s.err"%(test_name, i, test_name, run_name)
 		cmd += "\n#################"
 		cmd += "\n#time you think you need; default is one day"
 		cmd += "\n#in minutes in this case, hh:mm:ss"
