@@ -95,7 +95,11 @@ def initialize_network(db):
 
 	#debug.end2end(db)
 	db['knet'].initialize_variables(db)
-	db['knet'].get_current_state(db, db['train_data'].X_Var)
+	[db['initial_loss'], db['initial_hsic'], db['initial_AE_loss'], φ_x] = db['knet'].get_current_state(db, db['train_data'].X_Var)
+	[allocation, db['init_AE+Kmeans_nmi']] = kmeans(db['num_of_clusters'], φ_x, Y=db['train_data'].Y)
+	print('\t\tInitial AE + Kmeans NMI : %.3f'%db['init_AE+Kmeans_nmi'])
+
+
 
 def train_kernel_net(db):
 	db['opt_K'] = db['opt_K_class'](db)
@@ -105,11 +109,10 @@ def train_kernel_net(db):
 
 	if not import_pretrained_network(db, 'knet', 'last'):
 		start_time = time.time() 
-		for count in itertools.count():
+		for count in range(100):
 			db['opt_K'].run(count)
 			db['opt_U'].run(count)
-			count = db['exit_cond'](db, count)
-			if count > 99: break;
+			if db['exit_cond'](db, count) > 99: break;
 	
 		db['knet'].train_time = time.time() - start_time
 		export_pretrained_network(db, 'knet', 'last')
