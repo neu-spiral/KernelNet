@@ -19,7 +19,8 @@ class test_parent():
 		db['data_path'] = './datasets/' + db['data_name'] + '/'
 		db['orig_data_file_name']  = db['data_path'] +  db['data_name'] + '.csv'
 		db['orig_label_file_name'] = db['data_path'] +  db['data_name'] + '_label.csv'
-		db['DManager'] = DManager(db['orig_data_file_name'], db['orig_label_file_name'])
+		db['DManager'] = DManager(db['orig_data_file_name'], db['orig_label_file_name'], db['dataType'])
+
 
 		ensure_path_exists('./tmp')
 		self.remove_tmp_files()

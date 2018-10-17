@@ -156,9 +156,7 @@ if __name__ == "__main__":
 	db['exit_cond'] = exit_cond
 	db['validate_function'] = AE_validate
 	
-else:
 	db = load_db()
-
 
 
 initialize_data(db)
