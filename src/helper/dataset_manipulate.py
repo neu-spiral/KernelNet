@@ -81,15 +81,6 @@ def gen_10_fold_data(db):
 		np.savetxt(test_label_path, db['DManager'].Y[test_set_id], delimiter=',', fmt='%d') 
 
 
-def load_db():
-	db = {}
-	fin = open(sys.argv[1],'r')
-	cmds = fin.readlines()
-	fin.close()
-	
-	for i in cmds: exec(i)
-	return db
-
 
 def fill_dictionary(db, dictionary, list_of_keys):
 	for i in list_of_keys:

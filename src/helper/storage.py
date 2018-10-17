@@ -1,7 +1,10 @@
 
 from path_tools import *
+from opt_Kernel import *
+from AE import *
 import numpy as np
 import pickle
+import sys
 import shutil
 import time
 
@@ -120,4 +123,14 @@ def save_result_to_history(db, result, result_path, fname, output_str):
 	create_file(mutex)
 	shutil.move(tmp_writing, file_path)
 	delete_file(mutex)
+
+def load_db():
+	db = {}
+	fin = open(sys.argv[1],'r')
+	cmds = fin.readlines()
+	fin.close()
+	
+	for i in cmds: exec(i)
+	return db
+
 
