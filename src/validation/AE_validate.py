@@ -3,10 +3,8 @@
 from dataset_manipulate import *
 from terminal_print import *
 from path_tools import *
-from storage import *
 from classifier import *
 import pickle
-
 
 def AE_validate(db):
 	#	get loss objective
@@ -89,5 +87,4 @@ def AE_validate(db):
 
 	save_results_to_text_file(db, result_path,  'most_recent.txt', output_str)
 	save_result_to_history(db, result, result_path, 'run_history', output_str)
-
 

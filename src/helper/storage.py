@@ -1,12 +1,17 @@
 
+import sys
+sys.path.append('./src/validation')
+
 from path_tools import *
 from opt_Kernel import *
+from AE_validate import *
 from AE import *
 import numpy as np
 import pickle
 import sys
 import shutil
 import time
+
 
 def import_pretrained_network(db, keyVal, stage_name):
 	if 'running_batch_mode' in db: return False
@@ -124,13 +129,16 @@ def save_result_to_history(db, result, result_path, fname, output_str):
 	shutil.move(tmp_writing, file_path)
 	delete_file(mutex)
 
-def load_db():
-	db = {}
+def load_db(db):
 	fin = open(sys.argv[1],'r')
 	cmds = fin.readlines()
 	fin.close()
 	
-	for i in cmds: exec(i)
+	for i in cmds: 
+		try:
+			exec(i)
+		except:
+			import pdb; pdb.set_trace()
 	return db
 
 
