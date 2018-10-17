@@ -27,7 +27,7 @@ class opt_K():
 
 		if 'objective_tracker' in db:
 			if 'running_batch_mode' in db: return
-			[current_loss, current_hsic, current_AE_loss] = db['knet'].get_current_state(db, db['train_data'].X_Var)
+			[current_loss, current_hsic, current_AE_loss, φ_x] = db['knet'].get_current_state(db, db['train_data'].X_Var)
 			db['objective_tracker'] = np.append(db['objective_tracker'], current_loss)
 
 
@@ -47,7 +47,7 @@ class opt_U():
 	
 		if 'objective_tracker' in db:
 			if 'running_batch_mode' in db: return
-			[current_loss, current_hsic, current_AE_loss] = db['knet'].get_current_state(db, db['train_data'].X_Var)
+			[current_loss, current_hsic, current_AE_loss, φ_x] = db['knet'].get_current_state(db, db['train_data'].X_Var)
 			db['objective_tracker'] = np.append(db['objective_tracker'], current_loss)
 	
 
@@ -62,7 +62,7 @@ def exit_cond(db, count):
 	clear_previous_line()
 	print('\t\tBetween U, Kx error Per element : ' + str(db['converge_list']))
 	if float(error_per_element) <= 0.01:
-		db['itr_til_converge'] = count
+		db['knet'].itr_til_converge = count
 		exit_count = 100
 	else:
 		exit_count = count

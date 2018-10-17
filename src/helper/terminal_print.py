@@ -27,13 +27,13 @@ def loss_optimization_printout(db, epoch, avgLoss, avgGrad, epoc_loop, slope):
 def dictionary_to_str(dic):
 	outstr = ''
 	for i,j in dic.items():
-		if type(j) == str: outstr += 	('\t' + i + ' : ' + str(j) + '\n')
-		elif type(j) == np.float64: outstr += 	('\t' + i + ' : ' + str(j) + '\n')
-		elif type(j) == bool: outstr += ('\t' + i + ' : ' + str(j) + '\n')
-		elif type(j) == type: outstr += ('\t' + i + ' : ' + j.__name__ + '\n')
-		elif type(j) == types.FunctionType: outstr += ('\t' + i + ' : ' + j.__name__ + '\n')
-		elif type(j) == float: outstr += ('\t' + i + ' : ' + str(j) + '\n')
-		elif type(j) == int: outstr += 	('\t' + i + ' : ' + str(j) + '\n')
+		if type(j) == str: outstr += 	('\t\t' + i + ' : ' + str(j) + '\n')
+		elif type(j) == np.float64: outstr += 	('\t\t' + i + ' : ' + str(j) + '\n')
+		elif type(j) == bool: outstr += ('\t\t' + i + ' : ' + str(j) + '\n')
+		elif type(j) == type: outstr += ('\t\t' + i + ' : ' + j.__name__ + '\n')
+		elif type(j) == types.FunctionType: outstr += ('\t\t' + i + ' : ' + j.__name__ + '\n')
+		elif type(j) == float: outstr += ('\t\t' + i + ' : ' + str(j) + '\n')
+		elif type(j) == int: outstr += 	('\t\t' + i + ' : ' + str(j) + '\n')
 		else:
 			print('%s , %s is not recognized'%(i, str(type(j))))
 			import pdb; pdb.set_trace()	
