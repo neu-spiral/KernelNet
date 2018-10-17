@@ -14,10 +14,6 @@ sys.path.append('./src/models')
 sys.path.append('./src/optimizer')
 sys.path.append('./tests')
 
-if socket.gethostname().find('login') != -1:
-	print('\nError : you cannot run program on login node.......\n\n')
-	sys.exit()
-
 
 np.set_printoptions(precision=4)
 np.set_printoptions(threshold=np.nan)
