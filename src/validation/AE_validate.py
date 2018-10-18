@@ -21,27 +21,26 @@ def fill_dictionary(db, dictionary, list_of_keys):
 			dictionary[i] = db[i]
 
 def save_results_to_text_file(db, result_path, fname, output_str):
-	if 'running_batch_mode' not in db: 
-		most_recent_result_path = result_path + fname
-		mr_mutex = result_path + fname + '.writing_mutex'
+	most_recent_result_path = result_path + fname
+	mr_mutex = result_path + fname + '.writing_mutex'
 
-		while os.path.exists(mr_mutex): time.sleep(20*np.random.rand())
+	while os.path.exists(mr_mutex): time.sleep(20*np.random.rand())
 
-		create_file(mr_mutex)
-		fin = open(most_recent_result_path, 'w')
-		fin.write(output_str)
-		fin.close()
-		delete_file(mr_mutex)
+	create_file(mr_mutex)
+	fin = open(most_recent_result_path, 'w')
+	fin.write(output_str)
+	fin.close()
+	delete_file(mr_mutex)
 
 def save_result_to_history(db, result, result_path, fname, output_str):
 	file_path = result_path + fname + '.pk'
 	mutex = result_path + fname + '.writing'
 	tmp_writing = result_path + fname + '.' + str(int(10000000*np.random.rand()))
 
-	knet_best_train_nmi = result_path + 'knet_best_train_nmi.pk'
-	knet_best_valid_nmi = result_path + 'knet_best_valid_nmi.pk'
-	knet_lowest_train_loss = result_path + 'knet_lowest_train_loss.pk'
-	knet_lowest_valid_loss = result_path + 'knet_lowest_valid_loss.pk'
+	knet_best_train_nmi = result_path + str(db['10_fold_id']) + '_knet_best_train_nmi.pk'
+	knet_best_valid_nmi = result_path + str(db['10_fold_id']) + '_knet_best_valid_nmi.pk'
+	knet_lowest_train_loss = result_path + str(db['10_fold_id']) + '_knet_lowest_train_loss.pk'
+	knet_lowest_valid_loss = result_path + str(db['10_fold_id']) + '_knet_lowest_valid_loss.pk'
 
 	if path_list_exists([file_path]):
 		past_runs = pickle.load( open( file_path, "rb" ) )
@@ -50,22 +49,22 @@ def save_result_to_history(db, result, result_path, fname, output_str):
 
 		if past_runs['best_train_nmi']['train_nmi'] < result['train_nmi']:
 			past_runs['best_train_nmi'] = result
-			save_results_to_text_file(db, result_path, 'best_train_nmi.txt' , output_str)
+			save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_best_train_nmi.txt' , output_str)
 			pickle.dump( db['knet'] , open(knet_best_train_nmi, "wb" ) )
 
 		if past_runs['best_valid_nmi']['valid_nmi'] < result['valid_nmi']:
 			past_runs['best_valid_nmi'] = result
-			save_results_to_text_file(db, result_path, 'best_valid_nmi.txt' , output_str)
+			save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_best_valid_nmi.txt' , output_str)
 			pickle.dump( db['knet'] , open(knet_best_valid_nmi, "wb" ) )
 
 		if past_runs['best_train_loss']['train_loss'] > result['train_loss']:
 			past_runs['best_train_loss'] = result
-			save_results_to_text_file(db, result_path, 'lowest_train_loss.txt' , output_str)
+			save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_lowest_train_loss.txt' , output_str)
 			pickle.dump( db['knet'] , open(knet_lowest_train_loss, "wb" ) )
 
 		if past_runs['best_valid_loss']['valid_loss'] > result['valid_loss']:
 			past_runs['best_valid_loss'] = result
-			save_results_to_text_file(db, result_path, 'lowest_valid_loss.txt' , output_str)
+			save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_lowest_valid_loss.txt' , output_str)
 			pickle.dump( db['knet'] , open(knet_lowest_valid_loss, "wb" ) )
 
 	else:
@@ -78,10 +77,10 @@ def save_result_to_history(db, result, result_path, fname, output_str):
 		past_runs['best_train_loss'] = result
 		past_runs['best_valid_loss'] = result
 
-		save_results_to_text_file(db, result_path, 'best_train_nmi.txt' , output_str)
-		save_results_to_text_file(db, result_path, 'best_valid_nmi.txt' , output_str)
-		save_results_to_text_file(db, result_path, 'lowest_train_loss.txt' , output_str)
-		save_results_to_text_file(db, result_path, 'lowest_valid_loss.txt' , output_str)
+		save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_best_train_nmi.txt' , output_str)
+		save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_best_valid_nmi.txt' , output_str)
+		save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_lowest_train_loss.txt' , output_str)
+		save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_lowest_valid_loss.txt' , output_str)
 		
 		pickle.dump( db['knet'] , open(knet_best_train_nmi, "wb" ) )
 		pickle.dump( db['knet'] , open(knet_best_valid_nmi, "wb" ) )
@@ -175,6 +174,8 @@ def AE_validate(db):
 	print(output_str)
 
 
-	save_results_to_text_file(db, result_path,  'most_recent.txt', output_str)
-	save_result_to_history(db, result, result_path, 'run_history', output_str)
+	most_recent_path = str(db['10_fold_id']) + '_most_recent.txt'
+	run_history_path = str(db['10_fold_id']) + '_run_history'
+	save_results_to_text_file(db, result_path,  most_recent_path, output_str)
+	save_result_to_history(db, result, result_path, run_history_path, output_str)
 
