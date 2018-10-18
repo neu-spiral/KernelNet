@@ -23,6 +23,7 @@ class test_parent():
 		tmp_path = './tmp/' + db['data_name'] + '/'
 		db_output_path = tmp_path + 'db_files/'
 		batch_output_path = tmp_path + 'batch_outputs/'
+		result_path = './results/' + db["data_name"] + '/'
 
 		ensure_path_exists('./tmp')
 		ensure_path_exists(tmp_path)
@@ -32,6 +33,7 @@ class test_parent():
 		remove_files(tmp_path)
 		remove_files(db_output_path)
 		remove_files(batch_output_path)
+		remove_files(result_path)
 
 	def run(self):
 		db = self.db

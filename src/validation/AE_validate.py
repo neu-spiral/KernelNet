@@ -4,8 +4,21 @@ from dataset_manipulate import *
 from terminal_print import *
 from path_tools import *
 from classifier import *
+import types
+import os
+import shutil
 import time
 import pickle
+
+
+def fill_dictionary(db, dictionary, list_of_keys):
+	for i in list_of_keys:
+		if type(db[i]) == type: 
+			dictionary[i] = db[i].__name__
+		elif type(db[i]) == types.FunctionType:
+			dictionary[i] = db[i].__name__
+		else:
+			dictionary[i] = db[i]
 
 def save_results_to_text_file(db, result_path, fname, output_str):
 	if 'running_batch_mode' not in db: 
@@ -25,6 +38,10 @@ def save_result_to_history(db, result, result_path, fname, output_str):
 	mutex = result_path + fname + '.writing'
 	tmp_writing = result_path + fname + '.' + str(int(10000000*np.random.rand()))
 
+	knet_best_train_nmi = result_path + 'knet_best_train_nmi.pk'
+	knet_best_valid_nmi = result_path + 'knet_best_valid_nmi.pk'
+	knet_lowest_train_loss = result_path + 'knet_lowest_train_loss.pk'
+	knet_lowest_valid_loss = result_path + 'knet_lowest_valid_loss.pk'
 
 	if path_list_exists([file_path]):
 		past_runs = pickle.load( open( file_path, "rb" ) )
@@ -34,21 +51,25 @@ def save_result_to_history(db, result, result_path, fname, output_str):
 		if past_runs['best_train_nmi']['train_nmi'] < result['train_nmi']:
 			past_runs['best_train_nmi'] = result
 			save_results_to_text_file(db, result_path, 'best_train_nmi.txt' , output_str)
+			pickle.dump( db['knet'] , open(knet_best_train_nmi, "wb" ) )
 
 		if past_runs['best_valid_nmi']['valid_nmi'] < result['valid_nmi']:
 			past_runs['best_valid_nmi'] = result
 			save_results_to_text_file(db, result_path, 'best_valid_nmi.txt' , output_str)
+			pickle.dump( db['knet'] , open(knet_best_valid_nmi, "wb" ) )
 
 		if past_runs['best_train_loss']['train_loss'] > result['train_loss']:
 			past_runs['best_train_loss'] = result
 			save_results_to_text_file(db, result_path, 'lowest_train_loss.txt' , output_str)
+			pickle.dump( db['knet'] , open(knet_lowest_train_loss, "wb" ) )
 
 		if past_runs['best_valid_loss']['valid_loss'] > result['valid_loss']:
 			past_runs['best_valid_loss'] = result
 			save_results_to_text_file(db, result_path, 'lowest_valid_loss.txt' , output_str)
+			pickle.dump( db['knet'] , open(knet_lowest_valid_loss, "wb" ) )
 
 	else:
-		result['knet'] = db["knet"]
+		#result['knet'] = db["knet"]
 
 		past_runs = {}
 		past_runs['list_of_runs'] = [result]
@@ -61,6 +82,11 @@ def save_result_to_history(db, result, result_path, fname, output_str):
 		save_results_to_text_file(db, result_path, 'best_valid_nmi.txt' , output_str)
 		save_results_to_text_file(db, result_path, 'lowest_train_loss.txt' , output_str)
 		save_results_to_text_file(db, result_path, 'lowest_valid_loss.txt' , output_str)
+		
+		pickle.dump( db['knet'] , open(knet_best_train_nmi, "wb" ) )
+		pickle.dump( db['knet'] , open(knet_best_valid_nmi, "wb" ) )
+		pickle.dump( db['knet'] , open(knet_lowest_train_loss, "wb" ) )
+		pickle.dump( db['knet'] , open(knet_lowest_valid_loss, "wb" ) )
 
 	pickle.dump( past_runs, open(tmp_writing, "wb" ) )
 
