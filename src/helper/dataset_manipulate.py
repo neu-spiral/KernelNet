@@ -82,11 +82,3 @@ def gen_10_fold_data(db):
 
 
 
-def fill_dictionary(db, dictionary, list_of_keys):
-	for i in list_of_keys:
-		if type(db[i]) == type: 
-			dictionary[i] = db[i].__name__
-		elif type(j) == types.FunctionType:
-			dictionary[i] = db[i].__name__
-		else:
-			dictionary[i] = db[i]
