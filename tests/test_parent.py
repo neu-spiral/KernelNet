@@ -52,10 +52,10 @@ class test_parent():
 			db['σ_ratio'] = float(σ_ratio)
 			db['λ_ratio'] = float(λ_ratio)
 			db['data_folder']  = db['data_path'] +  '10_fold/split_' + str(id_10_fold) + '/'
-			db['train_data_file_name']  = db['data_path'] +  '10_fold/split_' + str(id_10_fold) + '/train.csv'
-			db['train_label_file_name']  = db['data_path'] +  '10_fold/split_' + str(id_10_fold) + '/train_label.csv'
-			db['test_data_file_name']  = db['data_path'] +  '10_fold/split_' + str(id_10_fold) + '/test.csv'
-			db['test_label_file_name']  = db['data_path'] +  '10_fold/split_' + str(id_10_fold) + '/test_label.csv'
+			db['train_data_file_name']  = db['data_folder'] + 'train.csv'
+			db['train_label_file_name']  = db['data_folder'] + 'train_label.csv'
+			db['test_data_file_name']  = db['data_folder'] + 'test.csv'
+			db['test_label_file_name']  = db['data_folder'] + 'test_label.csv'
 
 
 			export_db = self.output_db_to_text(id_10_fold, count)
@@ -65,6 +65,15 @@ class test_parent():
 				call(["sbatch", "execute_combined.bash"])
 			else:
 				call(["bash", "./execute_combined.bash"])
+
+		self.aggregate_results()
+
+	def aggregate_results(self):
+		db = self.db
+		for i in range(10):
+			file_path  = db['data_path'] +  '10_fold/split_' + str(i) + '/'
+
+
 
 
 	def output_db_to_text(self, i, count):

@@ -15,6 +15,7 @@ import itertools
 import socket
 import time
 import debug
+import warnings
 from dataset_manipulate import *
 from pretrain import *
 from AE import *
@@ -31,6 +32,7 @@ np.set_printoptions(precision=4)
 np.set_printoptions(threshold=np.nan)
 np.set_printoptions(linewidth=300)
 np.set_printoptions(suppress=True)
+warnings.filterwarnings("ignore")
 
 def initialize_data(db):
 	db['cuda'] = torch.cuda.is_available()
@@ -133,6 +135,7 @@ def define_settings():
 	db["train_label_file_name"]="./datasets/wine/10_fold/split_0/train_label.csv"
 	db["test_data_file_name"]="./datasets/wine/10_fold/split_0/test.csv"
 	db["test_label_file_name"]="./datasets/wine/10_fold/split_0/test_label.csv"
+	db['10_fold_id'] = 0
 
 	# debug tracking
 	db['objective_tracker'] = []
