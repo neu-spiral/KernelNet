@@ -45,7 +45,8 @@ def export_pretrained_network(db, keyVal, stage_name):
 
 	ensure_path_exists('./pretrained')
 	ensure_path_exists('./pretrained/' + db['data_name'])
-	path_list = ['./pretrained/' + db['data_name'] + '/' + db['data_name'] + '_' + stage_name + '.pk']
+	pth = './pretrained/' + db['data_name'] + '/' + db['data_name'] + '_' + stage_name + '.pk'
+	path_list = [pth]
 
 	if path_list_exists(path_list):
 		list_of_networks = pickle.load( open( path_list[0], "rb" ) )
