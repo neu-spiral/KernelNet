@@ -45,10 +45,10 @@ class test_code(test_parent):
 		extra_repeat = range(30)
 		id_10_fold = range(10)
 	
-		lambda_ratio = np.arange(0.1, 3, 0.1)
-		random.shuffle(lambda_ratio)
-		lambda_ratio = [0] + list(lambda_ratio)
-		#lambda_ratio = [0]
+		#lambda_ratio = np.arange(0.1, 3, 0.1)
+		#random.shuffle(lambda_ratio)
+		#lambda_ratio = [0] + list(lambda_ratio)
+		lambda_ratio = [1]
 
 		random.shuffle(output_dim)
 		random.shuffle(kernel_net_depth)
