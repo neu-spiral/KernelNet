@@ -39,18 +39,16 @@ class test_code(test_parent):
 		test_parent.__init__(self, db)
 
 	def parameter_ranges(self):
-		output_dim = [3,4,5,6,7]
-		kernel_net_depth = [4,5,6,7,8]
+		output_dim = [3]
+		kernel_net_depth = [8]
 		σ_ratio = [1]
-		extra_repeat = range(20)
-		id_10_fold = range(1)
+		extra_repeat = range(30)
+		id_10_fold = range(10)
 	
-		#lambda_ratio = np.arange(0.1, 3, 0.1)
-		#random.shuffle(lambda_ratio)
-		#lambda_ratio = [0] + list(lambda_ratio)
-	
-		lambda_ratio = [0]
-
+		lambda_ratio = np.arange(0.1, 3, 0.1)
+		random.shuffle(lambda_ratio)
+		lambda_ratio = [0] + list(lambda_ratio)
+		#lambda_ratio = [0]
 
 		random.shuffle(output_dim)
 		random.shuffle(kernel_net_depth)
