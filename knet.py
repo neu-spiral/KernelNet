@@ -65,7 +65,7 @@ def initialize_embedding(db):
 	[allocation, db['init_spectral_nmi']] = kmeans(db['num_of_clusters'], db['U'], Y=db['train_data'].Y)
 	print('\t\tInitial Spectral Clustering NMI on raw data : %.3f'%db['init_spectral_nmi'])
 
-def initialize_network(db, pretrain=True):
+def initialize_network(db, pretrain_knet=True):
 	db['net_input_size'] = db['train_data'].d
 	db['net_depth'] = db['kernel_net_depth']
 	db['net_output_dim'] = db['output_dim']
@@ -73,7 +73,7 @@ def initialize_network(db, pretrain=True):
 	if(db['cuda']): db['knet'] = db['kernel_model'](db).cuda()
 	else: db['knet'] = db['kernel_model'](db)
 
-	if pretrain:
+	if pretrain_knet:
 		dataLoader = 'train_loader'
 		if not import_pretrained_network(db, 'knet', 'rbm'):
 			start_time = time.time() 
@@ -94,7 +94,7 @@ def initialize_network(db, pretrain=True):
 			print('\n\tError of End to End AE , Before %.3f, After %.3f'%(prev_loss.item(), post_loss.item()))
 			export_pretrained_network(db, 'knet', 'end2end')
 
-		#debug.end2end(db)
+		debug.end2end(db)
 
 	db['knet'].initialize_variables(db)
 	[db['initial_loss'], db['initial_hsic'], db['initial_AE_loss'], φ_x] = db['knet'].get_current_state(db, db['train_data'].X_Var)
@@ -143,10 +143,10 @@ def define_settings():
 	db['objective_tracker'] = []
 
 	# hyperparams
-	db["output_dim"]=7
-	db["kernel_net_depth"]=7
+	db["output_dim"]=13
+	db["kernel_net_depth"]=3
 	db["σ_ratio"]=1
-	db["λ_ratio"]=1.0
+	db["λ_ratio"]=0.0
 	db['pretrain_repeats'] = 4
 	db['batch_size'] = 5
 	db['num_of_clusters'] = 3
@@ -166,6 +166,6 @@ def define_settings():
 db = define_settings()
 initialize_data(db)
 initialize_embedding(db)
-initialize_network(db, pretrain=False)
+initialize_network(db, pretrain_knet=True)
 train_kernel_net(db)
 
