@@ -11,7 +11,9 @@ import collections
 
 
 
-def basic_optimizer(model, db, data_loader_name, loss_callback='compute_loss', epoc_loop=5000):
+def basic_optimizer(model, db, data_loader_name, loss_callback='compute_loss', epoc_loop=5000, zero_is_min=False):
+	#	zero_is_min	: This means that the objective cannot go below 0. Cause an earlier exit
+
 	optimizer = model.get_optimizer()
 	avgLoss_cue = collections.deque([], 400)
 
@@ -51,6 +53,8 @@ def basic_optimizer(model, db, data_loader_name, loss_callback='compute_loss', e
 		loss_optimization_printout(db, epoch, maxLoss, avgGrad, epoc_loop, progression_slope)
 
 		if len(avgLoss_cue) > 300 and progression_slope >= 0: break;
+		if zero_is_min: 
+			if maxLoss < 0.00001: break;
 
 	clear_current_line()
 	return [maxLoss, avgGrad, progression_slope]
