@@ -61,7 +61,7 @@ def exit_cond(db, count):
 
 	clear_previous_line()
 	print('\t\tBetween U, Kx error Per element : ' + str(db['converge_list']))
-	if float(error_per_element) <= 0.01:
+	if float(error_per_element) <= 0.05:
 		db['knet'].itr_til_converge = count
 		exit_count = 100
 	else:
