@@ -25,26 +25,30 @@ for i in range(20):
 	
 	
 	print('\nRun ID : %s with Num of runs : %d'%(fold_id, num_of_runs))
-	print('\tBest nmi based on train loss')
-	print('\t\ttrain nmi : %.3f'%best_train_loss['train_nmi'])
-	print('\t\tvalid nmi : %.3f'%best_train_loss['valid_nmi'])
-	print('\t\ttrain loss : %.3f'%best_train_loss['train_loss'])
-	print('\t\tvalid loss : %.3f'%best_train_loss['valid_loss'])
-	print('\tBest nmi based on valid loss')
-	print('\t\ttrain nmi : %.3f'%best_valid_loss['train_nmi'])
-	print('\t\tvalid nmi : %.3f'%best_valid_loss['valid_nmi'])
-	print('\t\ttrain loss : %.3f'%best_valid_loss['train_loss'])
-	print('\t\tvalid loss : %.3f'%best_valid_loss['valid_loss'])
-	print('\tBest overall train nmi')
-	print('\t\ttrain nmi : %.3f'%best_train_nmi['train_nmi'])
-	print('\t\tvalid nmi : %.3f'%best_train_nmi['valid_nmi'])
-	print('\t\ttrain loss : %.3f'%best_train_nmi['train_loss'])
-	print('\t\tvalid loss : %.3f'%best_train_nmi['valid_loss'])
-	print('\tBest overall valid nmi')
-	print('\t\ttrain nmi : %.3f'%best_valid_nmi['train_nmi'])
-	print('\t\tvalid nmi : %.3f'%best_valid_nmi['valid_nmi'])
-	print('\t\ttrain loss : %.3f'%best_valid_nmi['train_loss'])
-	print('\t\tvalid loss : %.3f'%best_valid_nmi['valid_loss'])
+	print('\tBest nmi based on train loss')		#
+	vals = (best_train_loss['train_nmi'], best_train_loss['valid_nmi'], best_train_loss['train_loss'], best_train_loss['valid_loss'])
+	print('\t\ttrain nmi : %.3f, valid nmi : %.3f, train loss : %.3f, valid loss : %.3f'%vals)
+	params = (best_train_loss["σ_ratio"], best_train_loss["λ_ratio"], best_train_loss['output_dim'], best_train_loss["kernel_net_depth"])
+	print('\t\tσ_ratio : %.3f, λ_ratio : %.3f, output_dim : %.3f, kernel_net_depth : %.3f'%params)
+
+	print('\tBest nmi based on valid loss')		#
+	vals = (best_valid_loss['train_nmi'], best_valid_loss['valid_nmi'], best_valid_loss['train_loss'], best_valid_loss['valid_loss'])
+	print('\t\ttrain nmi : %.3f, valid nmi : %.3f, train loss : %.3f, valid loss : %.3f'%vals)
+	params = (best_valid_loss["σ_ratio"], best_valid_loss["λ_ratio"], best_valid_loss['output_dim'], best_valid_loss["kernel_net_depth"])
+	print('\t\tσ_ratio : %.3f, λ_ratio : %.3f, output_dim : %.3f, kernel_net_depth : %.3f'%params)
+
+	print('\tBest overall train nmi')			#
+	vals = (best_train_nmi['train_nmi'], best_train_nmi['valid_nmi'], best_train_nmi['train_loss'], best_train_nmi['valid_loss'])
+	print('\t\ttrain nmi : %.3f, valid nmi : %.3f, train loss : %.3f, valid loss : %.3f'%vals)
+	params = (best_train_nmi["σ_ratio"], best_train_nmi["λ_ratio"], best_train_nmi['output_dim'], best_train_nmi["kernel_net_depth"])
+	print('\t\tσ_ratio : %.3f, λ_ratio : %.3f, output_dim : %.3f, kernel_net_depth : %.3f'%params)
+
+	print('\tBest overall valid nmi')			#
+	vals = (best_valid_nmi['train_nmi'], best_valid_nmi['valid_nmi'], best_valid_nmi['train_loss'], best_valid_nmi['valid_loss'])
+	print('\t\ttrain nmi : %.3f, valid nmi : %.3f, train loss : %.3f, valid loss : %.3f'%vals)
+	params = (best_valid_nmi["σ_ratio"], best_valid_nmi["λ_ratio"], best_valid_nmi['output_dim'], best_valid_nmi["kernel_net_depth"])
+	print('\t\tσ_ratio : %.3f, λ_ratio : %.3f, output_dim : %.3f, kernel_net_depth : %.3f'%params)
+
 
 
 X_valid = []
