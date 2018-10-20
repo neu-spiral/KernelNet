@@ -8,6 +8,7 @@ from termcolor import colored
 from path_tools import *
 import numpy as np
 import itertools
+import torch
 import types
 import socket
 
@@ -19,6 +20,7 @@ class test_parent():
 		db['data_path'] = './datasets/' + db['data_name'] + '/'
 		db['orig_data_file_name']  = db['data_path'] +  db['data_name'] + '.csv'
 		db['orig_label_file_name'] = db['data_path'] +  db['data_name'] + '_label.csv'
+
 
 		tmp_path = './tmp/' + db['data_name'] + '/'
 		db_output_path = tmp_path + 'db_files/'

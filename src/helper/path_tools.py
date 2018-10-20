@@ -23,6 +23,8 @@ def delete_file(path):
 		os.remove(path)
 
 def remove_files(folder_path):
+	if not os.path.exists(folder_path): return 
+
 	file_in_tmp = os.listdir(folder_path)
 	for i in file_in_tmp:
 		if os.path.isfile(folder_path + i):
