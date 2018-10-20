@@ -126,18 +126,18 @@ def train_kernel_net(db):
 def define_settings():
 	db = {}
 	# Data info
-	db["data_name"]="wine"
+	dn = db["data_name"]="cancer"
 	db["center_and_scale"]=True
-	db["data_path"]="./datasets/wine/"
-	db["orig_data_file_name"]="./datasets/wine/wine.csv"
-	db["orig_label_file_name"]="./datasets/wine/wine_label.csv"
-	db["data_folder"]="./datasets/wine/10_fold/split_0/"
-	db["train_data_file_name"]="./datasets/wine/10_fold/split_0/train.csv"
-	db["train_label_file_name"]="./datasets/wine/10_fold/split_0/train_label.csv"
-	db["test_data_file_name"]="./datasets/wine/10_fold/split_0/test.csv"
-	db["test_label_file_name"]="./datasets/wine/10_fold/split_0/test_label.csv"
+	db["data_path"]="./datasets/" + dn + "/"
+	db["orig_data_file_name"]="./datasets/" + dn + "/" + dn + ".csv"
+	db["orig_label_file_name"]="./datasets/" + dn + "/" + dn + "_label.csv"
+	db["data_folder"]="./datasets/" + dn + "/10_fold/split_0/"
+	db["train_data_file_name"]="./datasets/" + dn + "/10_fold/split_0/train.csv"
+	db["train_label_file_name"]="./datasets/" + dn + "/10_fold/split_0/train_label.csv"
+	db["test_data_file_name"]="./datasets/" + dn + "/10_fold/split_0/test.csv"
+	db["test_label_file_name"]="./datasets/" + dn + "/10_fold/split_0/test_label.csv"
 	db['10_fold_id'] = 0
-	db['cuda'] = torch.cuda.is_available()
+	db['cuda'] = False #torch.cuda.is_available()
 
 	# debug tracking
 	db['objective_tracker'] = []

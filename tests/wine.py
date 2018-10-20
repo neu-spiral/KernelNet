@@ -23,6 +23,7 @@ class test_code(test_parent):
 		db['recompute_10_fold'] = False
 		db['use_Degree_matrix'] = True
 		db['pretrain_repeats'] = 4
+		db['cuda'] = False
 
 		#	hyperparams
 		db['batch_size'] = 5
@@ -42,8 +43,8 @@ class test_code(test_parent):
 		output_dim = [13]
 		kernel_net_depth = [3]
 		σ_ratio = [1]
-		extra_repeat = range(30)
-		id_10_fold = range(10)
+		extra_repeat = range(200)
+		id_10_fold = [0] #range(10)
 	
 		#lambda_ratio = np.arange(0.1, 3, 0.1)
 		#random.shuffle(lambda_ratio)

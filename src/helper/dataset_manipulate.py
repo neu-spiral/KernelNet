@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from path_tools import *
 from numpy import genfromtxt
+from DManager import *
 import numpy as np
 import sys
 import os
@@ -58,7 +59,10 @@ def gen_10_fold_data(db):
 		split_folder = ('%s/10_fold/split_%d'%(db['data_path'],i))
 		ensure_path_exists(split_folder)
 
-	N = db['DManager'].N
+	if(db['cuda']): orig_data = DManager(db['orig_data_file_name'], db['orig_label_file_name'], torch.cuda.FloatTensor)
+	else: orig_data = DManager(db['orig_data_file_name'], db['orig_label_file_name'], torch.FloatTensor)
+
+	N = orig_data.N
 	loc = 0
 	inc = int(np.floor(N/10.0))
 	rp = np.random.permutation(N).tolist()
@@ -75,10 +79,10 @@ def gen_10_fold_data(db):
 		loc = loc+inc
 
 		train_set_id = list(set(rp) - set(test_set_id))
-		np.savetxt(train_path, db['DManager'].X[train_set_id,:], delimiter=',', fmt='%f') 
-		np.savetxt(test_path, db['DManager'].X[test_set_id,:], delimiter=',', fmt='%f') 
-		np.savetxt(train_label_path, db['DManager'].Y[train_set_id], delimiter=',', fmt='%d') 
-		np.savetxt(test_label_path, db['DManager'].Y[test_set_id], delimiter=',', fmt='%d') 
+		np.savetxt(train_path, orig_data.X[train_set_id,:], delimiter=',', fmt='%f') 
+		np.savetxt(test_path, orig_data.X[test_set_id,:], delimiter=',', fmt='%f') 
+		np.savetxt(train_label_path, orig_data.Y[train_set_id], delimiter=',', fmt='%d') 
+		np.savetxt(test_label_path, orig_data.Y[test_set_id], delimiter=',', fmt='%d') 
 
 
 
