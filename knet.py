@@ -35,7 +35,6 @@ np.set_printoptions(suppress=True)
 warnings.filterwarnings("ignore")
 
 def initialize_data(db):
-	db['cuda'] = torch.cuda.is_available()
 	print('\nRunning %s with cuda=%s\n\tLoading datasets...'%(db["data_name"], str(db['cuda'])))
 
 	if(db['cuda']): db['dataType'] = torch.cuda.FloatTensor
@@ -94,7 +93,7 @@ def initialize_network(db, pretrain_knet=True):
 			print('\n\tError of End to End AE , Before %.3f, After %.3f'%(prev_loss.item(), post_loss.item()))
 			export_pretrained_network(db, 'knet', 'end2end')
 
-		debug.end2end(db)
+		#debug.end2end(db)
 
 	db['knet'].initialize_variables(db)
 	[db['initial_loss'], db['initial_hsic'], db['initial_AE_loss'], φ_x] = db['knet'].get_current_state(db, db['train_data'].X_Var)
@@ -138,6 +137,7 @@ def define_settings():
 	db["test_data_file_name"]="./datasets/wine/10_fold/split_0/test.csv"
 	db["test_label_file_name"]="./datasets/wine/10_fold/split_0/test_label.csv"
 	db['10_fold_id'] = 0
+	db['cuda'] = torch.cuda.is_available()
 
 	# debug tracking
 	db['objective_tracker'] = []
