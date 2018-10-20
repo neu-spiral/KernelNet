@@ -52,21 +52,21 @@ Y_valid = []
 X_train = []
 Y_train = []
 
-for result in run_list[0]:
-	X_valid.append(result['valid_loss'])
-	Y_valid.append(result['valid_nmi'])
-	X_train.append(result['train_loss'])
-	Y_train.append(result['train_nmi'])
+for i in range(20):
+	if i in run_list:
+		for result in run_list[i]:
+			X_valid.append(result['valid_loss'])
+			Y_valid.append(result['valid_nmi'])
+			X_train.append(result['train_loss'])
+			Y_train.append(result['train_nmi'])
 
-
-plt.figure(figsize=(14,5))
-plt.subplot(121)
-plt.plot(X_train, Y_train, 'x')
-plt.title('Train loss vs NMI')
-plt.subplot(122)
-plt.plot(X_valid, Y_valid, 'x')
-plt.title('Validation loss vs NMI')
-
-plt.show()
-
-
+			plt.figure(figsize=(14,5))
+			plt.subplot(121)
+			plt.plot(X_train, Y_train, 'x')
+			plt.title('Train loss vs NMI')
+			plt.subplot(122)
+			plt.plot(X_valid, Y_valid, 'x')
+			plt.title('Validation loss vs NMI')
+			
+			plt.show()
+			plt.close()
