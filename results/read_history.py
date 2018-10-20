@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt; plt.rcdefaults()
 
 project_name = 'wine'
 run_list = {}
+valid_nmi_list = []
+train_nmi_list = []
 
 for i in range(20):
 	fold_id = str(i) + '_'
@@ -23,6 +25,9 @@ for i in range(20):
 	best_train_loss = history['best_train_loss']
 	best_valid_loss = history['best_valid_loss']
 	
+	valid_nmi_list.append( best_valid_loss['valid_nmi'] )
+	train_nmi_list.append( best_train_loss['valid_nmi'] )
+
 	
 	print('\nRun ID : %s with Num of runs : %d'%(fold_id, num_of_runs))
 	print('\tBest nmi based on train loss')		#
@@ -49,6 +54,8 @@ for i in range(20):
 	params = (best_valid_nmi["σ_ratio"], best_valid_nmi["λ_ratio"], best_valid_nmi['output_dim'], best_valid_nmi["kernel_net_depth"])
 	print('\t\tσ_ratio : %.3f, λ_ratio : %.3f, output_dim : %.3f, kernel_net_depth : %.3f'%params)
 
+print('\n\tmean train nmi : %.3f, std : %.3f'%(np.mean(train_nmi_list), np.std(train_nmi_list)))
+print('\n\tmean validation nmi : %.3f, std : %.3f'%(np.mean(valid_nmi_list), np.std(valid_nmi_list)))
 
 
 X_valid = []
@@ -64,13 +71,14 @@ for i in range(20):
 			X_train.append(result['train_loss'])
 			Y_train.append(result['train_nmi'])
 
-			plt.figure(figsize=(14,5))
-			plt.subplot(121)
-			plt.plot(X_train, Y_train, 'x')
-			plt.title('Train loss vs NMI')
-			plt.subplot(122)
-			plt.plot(X_valid, Y_valid, 'x')
-			plt.title('Validation loss vs NMI')
-			
-			plt.show()
-			plt.close()
+		plt.figure(figsize=(14,5))
+		plt.subplot(121)
+		plt.plot(X_train, Y_train, 'x')
+		plt.title('Train loss vs NMI')
+		plt.subplot(122)
+		plt.plot(X_valid, Y_valid, 'x')
+		plt.title('Validation loss vs NMI')
+		plt.savefig(str(i) + '_result.png')	
+
+		#plt.show()
+		#plt.close()
