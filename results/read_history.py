@@ -97,7 +97,6 @@ def without_validation():
 		num_of_runs = len(history['list_of_runs'])
 		best_train_nmi = history['best_train_nmi']
 		best_train_loss = history['best_train_loss']
-		train_nmi_list.append( best_train_loss['valid_nmi'] )
 	
 	
 		print('\nRun ID : %s with Num of runs : %d'%(fold_id, num_of_runs))
