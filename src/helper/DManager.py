@@ -13,6 +13,7 @@ class DManager(Dataset):
 		print('\tLoading : %s'%data_path)
 		self.dtype = np.float64				#np.float32
 		self.array_format = 'numpy'			# numpy, pytorch
+		if data_path == '': return
 
 		self.X = np.loadtxt(data_path, delimiter=',', dtype=self.dtype)			
 		self.Y = np.loadtxt(label_path, delimiter=',', dtype=np.int32)
@@ -34,5 +35,6 @@ class DManager(Dataset):
 
 
 	def __len__(self):
-		return self.X.shape[0]
+		try: return self.X.shape[0]
+		except: return 0
 

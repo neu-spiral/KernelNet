@@ -38,8 +38,8 @@ def save_result_to_history(db, result, result_path, fname, output_str):
 	tmp_writing = result_path + fname + '.' + str(int(10000000*np.random.rand()))
 
 	knet_best_train_nmi = result_path + str(db['10_fold_id']) + '_knet_best_train_nmi.pk'
-	knet_best_valid_nmi = result_path + str(db['10_fold_id']) + '_knet_best_valid_nmi.pk'
 	knet_lowest_train_loss = result_path + str(db['10_fold_id']) + '_knet_lowest_train_loss.pk'
+	knet_best_valid_nmi = result_path + str(db['10_fold_id']) + '_knet_best_valid_nmi.pk'
 	knet_lowest_valid_loss = result_path + str(db['10_fold_id']) + '_knet_lowest_valid_loss.pk'
 
 	if path_list_exists([file_path]):
@@ -52,20 +52,22 @@ def save_result_to_history(db, result, result_path, fname, output_str):
 			save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_best_train_nmi.txt' , output_str)
 			pickle.dump( db['knet'] , open(knet_best_train_nmi, "wb" ) )
 
-		if past_runs['best_valid_nmi']['valid_nmi'] < result['valid_nmi']:
-			past_runs['best_valid_nmi'] = result
-			save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_best_valid_nmi.txt' , output_str)
-			pickle.dump( db['knet'] , open(knet_best_valid_nmi, "wb" ) )
-
 		if past_runs['best_train_loss']['train_loss'] > result['train_loss']:
 			past_runs['best_train_loss'] = result
 			save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_lowest_train_loss.txt' , output_str)
 			pickle.dump( db['knet'] , open(knet_lowest_train_loss, "wb" ) )
 
-		if past_runs['best_valid_loss']['valid_loss'] > result['valid_loss']:
-			past_runs['best_valid_loss'] = result
-			save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_lowest_valid_loss.txt' , output_str)
-			pickle.dump( db['knet'] , open(knet_lowest_valid_loss, "wb" ) )
+		if 'valid_data' in db:
+			if past_runs['best_valid_nmi']['valid_nmi'] < result['valid_nmi']:
+				past_runs['best_valid_nmi'] = result
+				save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_best_valid_nmi.txt' , output_str)
+				pickle.dump( db['knet'] , open(knet_best_valid_nmi, "wb" ) )
+	
+	
+			if past_runs['best_valid_loss']['valid_loss'] > result['valid_loss']:
+				past_runs['best_valid_loss'] = result
+				save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_lowest_valid_loss.txt' , output_str)
+				pickle.dump( db['knet'] , open(knet_lowest_valid_loss, "wb" ) )
 
 	else:
 		#result['knet'] = db["knet"]
@@ -73,8 +75,8 @@ def save_result_to_history(db, result, result_path, fname, output_str):
 		past_runs = {}
 		past_runs['list_of_runs'] = [result]
 		past_runs['best_train_nmi'] = result
-		past_runs['best_valid_nmi'] = result
 		past_runs['best_train_loss'] = result
+		past_runs['best_valid_nmi'] = result
 		past_runs['best_valid_loss'] = result
 
 		save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_best_train_nmi.txt' , output_str)
@@ -98,16 +100,16 @@ def save_result_to_history(db, result, result_path, fname, output_str):
 def AE_validate(db):
 	#	get loss objective
 	[db['train_loss'], db['train_hsic'], db['train_AE_loss'], φ_x] = db['knet'].get_current_state(db, db['train_data'].X_Var)
-	[db['valid_loss'], db['valid_hsic'], db['valid_AE_loss'], φ_x] = db['knet'].get_current_state(db, db['valid_data'].X_Var)
+	#[db['valid_loss'], db['valid_hsic'], db['valid_AE_loss'], φ_x] = db['knet'].get_current_state(db, db['valid_data'].X_Var)
 
 	#	get training nmi
 	current_label = kmeans(db['num_of_clusters'], db['U'])
 	db['train_nmi'] = normalized_mutual_info_score(current_label, db['train_data'].Y)
 
-	#	get validation nmi
-	[x_hat, U] = db['knet'](db['valid_data'].X_Var)		# <- update this to be used in opt_K
-	current_label = kmeans(db['num_of_clusters'], U)
-	db['valid_nmi'] = normalized_mutual_info_score(current_label, db['valid_data'].Y)
+	##	get validation nmi
+	#[x_hat, U] = db['knet'](db['valid_data'].X_Var)		# <- update this to be used in opt_K
+	#current_label = kmeans(db['num_of_clusters'], U)
+	#db['valid_nmi'] = normalized_mutual_info_score(current_label, db['valid_data'].Y)
 
 
 	#	setting up paths
@@ -159,14 +161,15 @@ def AE_validate(db):
 	#	objective results
 	output_str += '\tObjective Results'
 	packet_6 = {}
-	list_of_keys = ['train_loss','train_hsic','train_AE_loss','valid_loss','valid_hsic','valid_AE_loss']
+	#list_of_keys = ['train_loss','train_hsic','train_AE_loss','valid_loss','valid_hsic','valid_AE_loss']
+	list_of_keys = ['train_loss','train_hsic','train_AE_loss']
 	fill_dictionary(db, packet_6, list_of_keys)
 	output_str += '\n' + dictionary_to_str(packet_6)
 
 	#	NMI results
 	output_str += '\tNMI Results'
 	packet_7 = {}
-	list_of_keys = ['train_nmi','valid_nmi']
+	list_of_keys = ['train_nmi'] #list_of_keys = ['train_nmi','valid_nmi']
 	fill_dictionary(db, packet_7, list_of_keys)
 	output_str += '\n' + dictionary_to_str(packet_7)
 

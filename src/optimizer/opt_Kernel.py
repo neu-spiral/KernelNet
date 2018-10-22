@@ -73,11 +73,13 @@ def exit_cond(db, count):
 		train_nmi = normalized_mutual_info_score(current_label, db['train_data'].Y)
 	
 		#	get validation nmi
-		[x_hat, U] = db['knet'](db['valid_data'].X_Var)		# <- update this to be used in opt_K
-		current_label = kmeans(db['num_of_clusters'], U)
-		valid_nmi = normalized_mutual_info_score(current_label, db['valid_data'].Y)
-
-		print('\t\tTrain NMI : %.3f, Valid NMI : %.3f'%(train_nmi, valid_nmi))
+		if 'valid_data' in db:
+			[x_hat, U] = db['knet'](db['valid_data'].X_Var)		# <- update this to be used in opt_K
+			current_label = kmeans(db['num_of_clusters'], U)
+			valid_nmi = normalized_mutual_info_score(current_label, db['valid_data'].Y)
+			print('\t\tTrain NMI : %.3f, Valid NMI : %.3f'%(train_nmi, valid_nmi))
+		else:
+			print('\t\tTrain NMI : %.3f'%(train_nmi))
 
 
 	return exit_count

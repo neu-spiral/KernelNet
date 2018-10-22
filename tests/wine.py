@@ -43,7 +43,7 @@ class test_code(test_parent):
 		output_dim = [13]
 		kernel_net_depth = [3]
 		σ_ratio = [1]
-		extra_repeat = range(200)
+		extra_repeat = range(2)
 		id_10_fold = [0] #range(10)
 	
 		#lambda_ratio = np.arange(0.1, 3, 0.1)
