@@ -22,9 +22,9 @@ np.set_printoptions(suppress=True)
 
 
 #	This controls which dataset to run
-#from wine import *
+from wine import *
 #from cancer import *
-from rcv import *
+#from rcv import *
 
 
 
@@ -32,4 +32,5 @@ from rcv import *
 
 #	Program Run
 code = test_code()
-code.run()
+#code.run_10_fold()
+code.run_batch()

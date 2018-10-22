@@ -41,14 +41,18 @@ def initialize_data(db):
 	else: db['dataType'] = torch.FloatTensor				
 	#db['dataType'] = torch.FloatTensor
 
-	gen_train_validate_data(db)
-	#db['orig_data'] = DManager(db['orig_data_file_name'], db['orig_label_file_name'], db['dataType'])
-	db['train_data'] = DManager(db['train_path'], db['train_label_path'], db['dataType'])
-	db['valid_data'] = DManager(db["valid_path"], db['valid_label_path'], db['dataType'])
-
-	#db['orig_data_loader'] = DataLoader(dataset=db['orig_data'], batch_size=db['batch_size'], shuffle=True)
-	db['train_loader'] = DataLoader(dataset=db['train_data'], batch_size=db['batch_size'], shuffle=True)
-	db['valid_loader'] = DataLoader(dataset=db['valid_data'], batch_size=db['batch_size'], shuffle=True)
+	if db["test_data_file_name"] == '':
+		db['train_data'] = DManager(db["train_data_file_name"], db["train_label_file_name"], db['dataType'])
+		db['train_loader'] = DataLoader(dataset=db['train_data'], batch_size=db['batch_size'], shuffle=True)
+	else:
+		gen_train_validate_data(db)
+		#db['orig_data'] = DManager(db['orig_data_file_name'], db['orig_label_file_name'], db['dataType'])
+		db['train_data'] = DManager(db['train_path'], db['train_label_path'], db['dataType'])
+		db['valid_data'] = DManager(db["valid_path"], db['valid_label_path'], db['dataType'])
+	
+		#db['orig_data_loader'] = DataLoader(dataset=db['orig_data'], batch_size=db['batch_size'], shuffle=True)
+		db['train_loader'] = DataLoader(dataset=db['train_data'], batch_size=db['batch_size'], shuffle=True)
+		db['valid_loader'] = DataLoader(dataset=db['valid_data'], batch_size=db['batch_size'], shuffle=True)
 
 def initialize_embedding(db):
 	print('\tComputing initial U for Spectral Clustering...')
