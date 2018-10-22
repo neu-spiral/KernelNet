@@ -126,7 +126,8 @@ def train_kernel_net(db):
 def define_settings():
 	db = {}
 	# Data info
-	dn = db["data_name"]="cancer"
+	#dn = db["data_name"]="cancer"
+	dn = db["data_name"]="wine"
 	db["center_and_scale"]=True
 	db["data_path"]="./datasets/" + dn + "/"
 	db["orig_data_file_name"]="./datasets/" + dn + "/" + dn + ".csv"
@@ -146,7 +147,7 @@ def define_settings():
 	db["output_dim"]=13
 	db["kernel_net_depth"]=3
 	db["σ_ratio"]=1
-	db["λ_ratio"]=0.0
+	db["λ_ratio"]=0.1
 	db['pretrain_repeats'] = 4
 	db['batch_size'] = 5
 	db['num_of_clusters'] = 3

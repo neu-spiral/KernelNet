@@ -49,6 +49,9 @@ class AE(autoencoder):
 		print('\t\tCurrent obj loss : %.5f from %.5f +  (%.3f)(%.3f)[%.5f]'%(current_loss, current_hsic, db["λ_ratio"], db['λ_obj_ratio'], current_AE_loss))
 		return [current_loss, current_hsic, current_AE_loss, φ_x]
 
+
+
+
 	def autoencoder_loss(self, x, label, indices):
 		db = self.db
 		[x_hat, φ_x] = self.forward(x)

@@ -22,8 +22,9 @@ np.set_printoptions(suppress=True)
 
 
 #	This controls which dataset to run
-from wine import *
+#from wine import *
 #from cancer import *
+from rcv import *
 
 
 
