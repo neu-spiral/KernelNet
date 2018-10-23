@@ -31,7 +31,7 @@ def moon_raw_data():
 	db["output_dim"]=13
 	db["kernel_net_depth"]=3
 	db["mlp_width"]= 20
-	db["σ_ratio"]=1.0
+	db["σ_ratio"]=0.1
 	db["λ_ratio"]=2
 	db['pretrain_repeats'] = 4
 	db['batch_size'] = 5

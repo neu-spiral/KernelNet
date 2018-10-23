@@ -14,6 +14,7 @@ class autoencoder(torch.nn.Module):
 		self.learning_rate = learning_rate
 		self.input_size = db['net_input_size']
 		self.output_dim = db['net_output_dim']
+		self.mlp_width = db['mlp_width']
 		self.net_depth = db['net_depth']
 		self.dataType = db['dataType']
 
@@ -58,6 +59,7 @@ class autoencoder(torch.nn.Module):
 
 		self.initialize_network()
 		self.output_network()
+
 
 	def output_network(self):
 		print('\tConstructing Kernel Net')

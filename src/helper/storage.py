@@ -29,9 +29,10 @@ def import_pretrained_network(db, keyVal, stage_name):
 				test1 = itm.input_size == db[keyVal].input_size
 				test2 = itm.output_dim == db[keyVal].output_dim
 				test3 = itm.net_depth == db[keyVal].net_depth
-				test4 = itm.dataType == db[keyVal].dataType
+				test4 = itm.mlp_width == db[keyVal].mlp_width
+				test5 = itm.σ == db[keyVal].σ
 	
-				if test1 and test2 and test3 and test4:
+				if test1 and test2 and test3 and test4 and test5:
 					db[keyVal] = itm
 					print('\t\tSucessful...')
 					return True
@@ -39,9 +40,10 @@ def import_pretrained_network(db, keyVal, stage_name):
 			test1 = list_of_networks.input_size == db[keyVal].input_size
 			test2 = list_of_networks.output_dim == db[keyVal].output_dim
 			test3 = list_of_networks.net_depth == db[keyVal].net_depth
-			test4 = list_of_networks.dataType == db[keyVal].dataType
+			test4 = list_of_networks.mlp_width == db[keyVal].mlp_width
+			test5 = list_of_networks.σ == db[keyVal].σ
 
-			if test1 and test2 and test3 and test4:
+			if test1 and test2 and test3 and test4 and test5:
 				db[keyVal] = list_of_networks
 				print('\t\tSucessful...')
 				return True
@@ -65,8 +67,10 @@ def export_pretrained_network(db, keyVal, stage_name):
 			test1 = itm.input_size == db[keyVal].input_size
 			test2 = itm.output_dim == db[keyVal].output_dim
 			test3 = itm.net_depth == db[keyVal].net_depth
+			test4 = itm.mlp_width == db[keyVal].mlp_width
+			test5 = itm.σ == db[keyVal].σ
 
-			if test1 and test2 and test3:
+			if test1 and test2 and test3 and test4 and test5:
 				list_of_networks[p] = db[keyVal]
 				pickle.dump( list_of_networks, open(pth, "wb" ) )
 				return 

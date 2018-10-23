@@ -1,5 +1,6 @@
 
 import torch
+from matplotlib import pyplot as plt
 
 def plot_alloc(self, db, plotID, data, title, linetype=None, fsize=20, xyLabels=[]):
 	color_list = ['b', 'r', 'g', 'c', 'm', 'y', 'k', 'w']
@@ -20,6 +21,14 @@ def plot_alloc(self, db, plotID, data, title, linetype=None, fsize=20, xyLabels=
 		plt.xlabel(xyLabels[0], fontsize=fsize, fontweight='bold')
 		plt.ylabel(xyLabels[1], fontsize=fsize, fontweight='bold')
 	plt.tick_params(labelsize=10)
+
+def plot_output(db):
+	[current_loss, current_hsic, current_AE_loss, φ_x, U, U_normalized] = db['knet'].get_current_state(db, db['train_data'].X_Var)
+	plt.plot(φ_x[:,0], φ_x[:,1], 'go')
+	plt.tight_layout(pad=0.0, w_pad=0.0, h_pad=0.0)
+	plt.show()
+
+	#print(φ_x)
 
 def end2end(db):
 	X = db['train_data'].X_Var

@@ -13,7 +13,7 @@ class MLP_autoencoder(torch.nn.Module):
 		self.add_decoder = add_decoder
 		self.learning_rate = learning_rate
 		self.input_size = db['net_input_size']
-		self.output_dim = db['net_output_dim']
+		self.output_dim = db['net_input_size']
 		self.mlp_width = db['mlp_width']
 		self.net_depth = db['net_depth']
 		self.dataType = db['dataType']

@@ -27,8 +27,7 @@ class RFF:
 			self.sigma = sigma
 	
 			b = 2*np.pi*np.random.rand(1, self.sample_num)
-			self.phase_shift = np.matlib.repmat(b, self.N, 1)
-	
+			self.phase_shift = np.matlib.repmat(b, self.N, 1)	
 			self.rand_proj = np.random.randn(self.d, self.sample_num)/(self.sigma)
 		else:
 			raise ValueError('An unknown datatype is passed into get_rbf as %s'%str(type(x)))
@@ -43,23 +42,31 @@ class RFF:
 		self.rand_proj = torch.from_numpy(self.rand_proj)
 		self.rand_proj = Variable(self.rand_proj.type(dtype), requires_grad=False)
 
-	def torch_rbf(self, x):
-		if type(x) == np.ndarray:
-			xTor = torch.from_numpy(x)
-			xTor = Variable(xTor.type(self.dtype), requires_grad=False)
-		elif type(x) == torch.Tensor:
-			xTor = x
-		elif type(x) != torch.Tensor:
-			raise ValueError('An unknown datatype is passed into get_rbf as %s'%str(type(x)))
+	def torch_rbf(self):
+		self.xTor = self.x
+		if type(self.x) == np.ndarray:
+			self.xTor = torch.from_numpy(self.x)
+			self.xTor = Variable(self.xTor.type(self.dtype), requires_grad=False)
 
-		P = torch.cos(torch.mm(xTor,self.rand_proj) + self.phase_shift)
+		if type(self.xTor) != torch.Tensor:
+			raise ValueError('An unknown datatype is passed into get_rbf as %s'%str(type(self.x)))
+
+
+		P = torch.cos(torch.mm(self.xTor,self.rand_proj) + self.phase_shift)
 		K = torch.mm(P, P.transpose(0,1))
 		K = (2.0/self.sample_num)*K
 		K = F.relu(K)
 
 		return K
 
-	def numpy_rbf(self):
+	def np_feature_map(self, x):
+		const = np.sqrt(2.0/self.sample_num)
+		feature_map = const*np.cos(x.dot(self.rand_proj) + self.phase_shift)
+	
+
+		return feature_map
+
+	def np_rbf(self):
 		P = np.cos(self.x.dot(self.rand_proj) + self.phase_shift)
 		K = (2.0/self.sample_num)*(P.dot(P.T))
 		K = np.maximum(K, 0)
@@ -70,8 +77,8 @@ class RFF:
 		self.dtype = dtype
 		self.initialize_RFF(x,sigma, output_torch, dtype)
 
-		if output_torch: return self.torch_rbf(x)
-		else: return self.numpy_rbf()
+		if output_torch: return self.torch_rbf()
+		else: return self.np_rbf()
 
 
 if __name__ == "__main__":

@@ -32,11 +32,13 @@ class test_parent():
 		ensure_path_exists(db_output_path)
 		ensure_path_exists(batch_output_path)
 
-		remove_files(tmp_path)
-		remove_files(db_output_path)
-		remove_files(batch_output_path)
-		remove_files(result_path)
+		reply = str(input('Do you want to delete pre-stored files ?'+' (y/[n]): ')).lower().strip()
 
+		if reply == 'y':
+			remove_files(tmp_path)
+			remove_files(db_output_path)
+			remove_files(batch_output_path)
+			remove_files(result_path)
 
 
 	def run_batch(self):

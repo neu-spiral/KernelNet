@@ -3,6 +3,7 @@ import torch
 from format_conversion import *
 from kernel_lib import *
 from basic_optimizer import *
+from RFF import *
 
 class opt_K():
 	def __init__(self, db):
@@ -73,7 +74,7 @@ def exit_cond(db, count):
 
 	clear_previous_line()
 	print('\t\tBetween U, Kx error Per element : ' + str(db['converge_list']))
-	if float(error_per_element) <= 0.05:
+	if float(error_per_element) <= 0.02:
 		db['knet'].itr_til_converge = count
 		exit_count = 100
 	else:
