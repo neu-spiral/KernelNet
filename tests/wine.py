@@ -49,7 +49,7 @@ class test_code(test_parent):
 		#lambda_ratio = np.arange(0.1, 3, 0.1)
 		#random.shuffle(lambda_ratio)
 		#lambda_ratio = [0] + list(lambda_ratio)
-		lambda_ratio = [0]
+		lambda_ratio = [2]
 
 		random.shuffle(output_dim)
 		random.shuffle(kernel_net_depth)

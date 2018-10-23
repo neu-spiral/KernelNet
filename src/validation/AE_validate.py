@@ -108,7 +108,7 @@ def AE_validate(db):
 
 	[x_hat, ϕ_x] = db['knet'](db['train_data'].X_Var)
 	current_label = kmeans(db['num_of_clusters'], ϕ_x)
-	db['final_AE_Kmeans'] = normalized_mutual_info_score(current_label, db['valid_data'].Y)
+	db['final_AE_Kmeans'] = normalized_mutual_info_score(current_label, db['train_data'].Y)
 
 
 	##	get validation nmi
@@ -126,14 +126,15 @@ def AE_validate(db):
 
 	output_str += '\tBasic settings that does not change often\n'
 	packet_1 = {}
-	list_of_keys = ['data_name', 'center_and_scale', 'pretrain_repeats', 'batch_size', 'num_of_clusters', 'use_Degree_matrix', 'cuda']
+	list_of_keys = ['data_name', 'center_and_scale', 'pretrain_repeats', 'batch_size', 'num_of_clusters', 'use_Degree_matrix', 'use_U_normalize', 'cuda']
 	fill_dictionary(db, packet_1, list_of_keys)
 	output_str += dictionary_to_str(packet_1)
 
 
 	output_str += '\tKey Settings'
 	packet_2 = {}
-	list_of_keys = ['output_dim', "kernel_net_depth", "σ_ratio", 'φ_x_mpd', "λ_ratio", 'λ_obj_ratio', 'λ']
+	list_of_keys = ['output_dim', "kernel_net_depth", 'σ', "σ_ratio", 'φ_x_mpd', "λ_ratio", 'λ_obj_ratio', 'λ']
+	db['σ'] = db['knet'].σ
 	db['φ_x_mpd'] = db['knet'].φ_x_mpd
 	fill_dictionary(db, packet_2, list_of_keys)
 	output_str += '\n' + dictionary_to_str(packet_2)

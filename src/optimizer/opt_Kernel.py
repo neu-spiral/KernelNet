@@ -43,7 +43,9 @@ class opt_U():
 		HDKxDH = center_matrix(db,DKxD)
 		[U, U_normalized] = L_to_U(db, HDKxDH)
 		db['U_prev'] = U
-		db['U'] = U_normalized 	# <- update this to be used in opt_K
+
+		if db['use_U_normalize']: db['U'] = U_normalized 	# <- update this to be used in opt_K
+		else: db['U'] = U
 	
 		if 'objective_tracker' in db:
 			if 'running_batch_mode' in db: return
