@@ -21,7 +21,7 @@ class AE(autoencoder):
 			
 		[x_hat, φ_x] = self.forward(db['train_data'].X_Var)
 		φ_x = ensure_matrix_is_numpy(φ_x)
-		db['φ_x_mpd'] = float(median_of_pairwise_distance(φ_x))
+		self.φ_x_mpd = float(median_of_pairwise_distance(φ_x))
 		#db['σ'] = float(db['φ_x_mpd']*db['σ_ratio'])
 
 		N = db['train_data'].N
@@ -34,7 +34,7 @@ class AE(autoencoder):
 		[x_hat, φ_x] = self.forward(in_x)
 		φ_x = ensure_matrix_is_numpy(φ_x)
 
-		[DKxD, Dinv] = normalized_rbk_sklearn(φ_x, db['φ_x_mpd'])
+		[DKxD, Dinv] = normalized_rbk_sklearn(φ_x, self.φ_x_mpd)
 		HDKxDH = center_matrix(db, DKxD)
 		[U, U_normalized] = L_to_U(db, HDKxDH)
 		Ku = U_normalized.dot(U_normalized.T)
@@ -67,7 +67,7 @@ class AE(autoencoder):
 	def compute_loss(self, x, label, indices):
 		db = self.db
 		[x_hat, φ_x] = self.forward(x)
-		Kx = self.gaussian_kernel(φ_x, db['φ_x_mpd'])
+		Kx = self.gaussian_kernel(φ_x, self.φ_x_mpd)
 
 		PP = self.Y[indices, :]
 		Ysmall = PP[:, indices]

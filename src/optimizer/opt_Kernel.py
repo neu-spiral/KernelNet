@@ -39,7 +39,7 @@ class opt_U():
 		print('\t' + str(count) + ' : Computing U with Eigen Decomposition ...')
 		db = self.db
 
-		[DKxD, D] = normalized_rbk_sklearn(db['ϕ_x'], db['φ_x_mpd'])
+		[DKxD, D] = normalized_rbk_sklearn(db['ϕ_x'], db['knet'].φ_x_mpd)
 		HDKxDH = center_matrix(db,DKxD)
 		[U, U_normalized] = L_to_U(db, HDKxDH)
 		db['U_prev'] = U
