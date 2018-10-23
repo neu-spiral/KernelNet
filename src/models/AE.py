@@ -22,7 +22,7 @@ class AE(autoencoder):
 		[x_hat, φ_x] = self.forward(db['train_data'].X_Var)
 		φ_x = ensure_matrix_is_numpy(φ_x)
 		self.φ_x_mpd = float(median_of_pairwise_distance(φ_x))
-		self.σ = float(db['φ_x_mpd']*db['σ_ratio'])
+		self.σ = float(self.φ_x_mpd*db['σ_ratio'])
 
 		N = db['train_data'].N
 		self.H = np.eye(N) - (1.0/N)*np.ones((N, N))
@@ -48,7 +48,6 @@ class AE(autoencoder):
 			db['λ'] = float(db["λ_ratio"]*db['λ_obj_ratio'])
 
 		current_loss = float(current_hsic + db['λ']*current_AE_loss)
-		print('\t\tCurrent obj loss : %.5f from %.5f +  (%.3f)(%.3f)[%.5f]'%(current_loss, current_hsic, db["λ_ratio"], db['λ_obj_ratio'], current_AE_loss))
 		return [current_loss, current_hsic, current_AE_loss, φ_x, U, U_normalized]
 
 
