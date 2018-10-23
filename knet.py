@@ -68,8 +68,10 @@ def initialize_embedding(db):
 	σ = float(db['x_mpd']*db["σ_ratio"])
 	[L, db['D_inv']] = getLaplacian(db, X, σ, H=H)
 	[db['U'], U_normalized] = L_to_U(db, L)
-	[allocation, db['init_spectral_nmi']] = kmeans(db['num_of_clusters'], db['U'], Y=db['train_data'].Y)
+
+	[allocation, db['init_spectral_nmi']] = kmeans(db['num_of_clusters'], U_normalized, Y=db['train_data'].Y)
 	print('\t\tInitial Spectral Clustering NMI on raw data : %.3f'%db['init_spectral_nmi'])
+
 
 def initialize_network(db, pretrain_knet=True):
 	db['net_input_size'] = db['train_data'].d
@@ -78,7 +80,7 @@ def initialize_network(db, pretrain_knet=True):
 
 	if(db['cuda']): db['knet'] = db['kernel_model'](db).cuda()
 	else: db['knet'] = db['kernel_model'](db)
-	import pdb; pdb.set_trace()
+	
 
 	if pretrain_knet:
 		dataLoader = 'train_loader'
@@ -104,9 +106,11 @@ def initialize_network(db, pretrain_knet=True):
 		#debug.end2end(db)
 
 	db['knet'].initialize_variables(db)
-	[db['initial_loss'], db['initial_hsic'], db['initial_AE_loss'], φ_x] = db['knet'].get_current_state(db, db['train_data'].X_Var)
+	[db['initial_loss'], db['initial_hsic'], db['initial_AE_loss'], φ_x, U, U_normalized] = db['knet'].get_current_state(db, db['train_data'].X_Var)
 	[allocation, db['init_AE+Kmeans_nmi']] = kmeans(db['num_of_clusters'], φ_x, Y=db['train_data'].Y)
-	print('\t\tInitial AE + Kmeans NMI : %.3f'%db['init_AE+Kmeans_nmi'])
+	[allocation, db['init_AE+Spectral_nmi']] = kmeans(db['num_of_clusters'], U_normalized, Y=db['train_data'].Y)
+
+	print('\t\tInitial AE + Kmeans NMI : %.3f, AE + Spectral : %.3f'%(db['init_AE+Kmeans_nmi'], db['init_AE+Spectral_nmi']))
 
 
 
