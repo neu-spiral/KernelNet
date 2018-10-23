@@ -136,11 +136,16 @@ def define_settings():
 	db["data_path"]="./datasets/" + dn + "/"
 	db["orig_data_file_name"]="./datasets/" + dn + "/" + dn + ".csv"
 	db["orig_label_file_name"]="./datasets/" + dn + "/" + dn + "_label.csv"
-	db["data_folder"]="./datasets/" + dn + "/10_fold/split_0/"
-	db["train_data_file_name"]="./datasets/" + dn + "/10_fold/split_0/train.csv"
-	db["train_label_file_name"]="./datasets/" + dn + "/10_fold/split_0/train_label.csv"
-	db["test_data_file_name"]="./datasets/" + dn + "/10_fold/split_0/test.csv"
-	db["test_label_file_name"]="./datasets/" + dn + "/10_fold/split_0/test_label.csv"
+	db['data_folder']  = db['data_path'] 
+	db['train_data_file_name']  = db['data_folder'] + db['data_name'] + '.csv'
+	db['train_label_file_name']  = db['data_folder'] + db['data_name'] + '_label.csv'
+	db['test_data_file_name']  = ''
+	db['test_label_file_name']  = ''
+	#db["data_folder"]="./datasets/" + dn + "/10_fold/split_0/"
+	#db["train_data_file_name"]="./datasets/" + dn + "/10_fold/split_0/train.csv"
+	#db["train_label_file_name"]="./datasets/" + dn + "/10_fold/split_0/train_label.csv"
+	#db["test_data_file_name"]="./datasets/" + dn + "/10_fold/split_0/test.csv"
+	#db["test_label_file_name"]="./datasets/" + dn + "/10_fold/split_0/test_label.csv"
 	db['10_fold_id'] = 0
 	db['cuda'] = False #torch.cuda.is_available()
 
@@ -151,7 +156,7 @@ def define_settings():
 	db["output_dim"]=13
 	db["kernel_net_depth"]=3
 	db["σ_ratio"]=1
-	db["λ_ratio"]=0.1
+	db["λ_ratio"]=2
 	db['pretrain_repeats'] = 4
 	db['batch_size'] = 5
 	db['num_of_clusters'] = 3
