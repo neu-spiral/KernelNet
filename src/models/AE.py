@@ -37,7 +37,9 @@ class AE(autoencoder):
 		[DKxD, Dinv] = normalized_rbk_sklearn(φ_x, self.σ)
 		HDKxDH = center_matrix(db, DKxD)
 		[U, U_normalized] = L_to_U(db, HDKxDH)
-		Ku = U_normalized.dot(U_normalized.T)
+		if db['use_U_normalize']: Ku = U_normalized.dot(U_normalized.T)
+		else: Ku = U.dot(U.T)
+
 		current_hsic = -float(np.sum(HDKxDH*Ku))
 		current_AE_loss = float(ensure_matrix_is_numpy(self.autoencoder_loss(in_x, None, None)))
 
@@ -47,7 +49,7 @@ class AE(autoencoder):
 
 		current_loss = float(current_hsic + db['λ']*current_AE_loss)
 		print('\t\tCurrent obj loss : %.5f from %.5f +  (%.3f)(%.3f)[%.5f]'%(current_loss, current_hsic, db["λ_ratio"], db['λ_obj_ratio'], current_AE_loss))
-		return [current_loss, current_hsic, current_AE_loss, φ_x]
+		return [current_loss, current_hsic, current_AE_loss, φ_x, U, U_normalized]
 
 
 

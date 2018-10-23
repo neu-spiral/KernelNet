@@ -11,8 +11,7 @@ from opt_Kernel import *
 def moon_raw_data():
 	db = {}
 	# Data info
-	#dn = db["data_name"]="cancer"
-	dn = db["data_name"]="wine"
+	dn = db["data_name"]="moon"
 	db["center_and_scale"]=True
 	db["data_path"]="./datasets/" + dn + "/"
 	db["orig_data_file_name"]="./datasets/" + dn + "/" + dn + ".csv"
@@ -22,11 +21,6 @@ def moon_raw_data():
 	db['train_label_file_name']  = db['data_folder'] + db['data_name'] + '_label.csv'
 	db['test_data_file_name']  = ''
 	db['test_label_file_name']  = ''
-	#db["data_folder"]="./datasets/" + dn + "/10_fold/split_0/"
-	#db["train_data_file_name"]="./datasets/" + dn + "/10_fold/split_0/train.csv"
-	#db["train_label_file_name"]="./datasets/" + dn + "/10_fold/split_0/train_label.csv"
-	#db["test_data_file_name"]="./datasets/" + dn + "/10_fold/split_0/test.csv"
-	#db["test_label_file_name"]="./datasets/" + dn + "/10_fold/split_0/test_label.csv"
 	db['10_fold_id'] = 0
 	db['cuda'] = False #torch.cuda.is_available()
 	
@@ -36,12 +30,12 @@ def moon_raw_data():
 	# hyperparams
 	db["output_dim"]=13
 	db["kernel_net_depth"]=3
-	db["mlp_width"]=15
-	db["σ_ratio"]=1
+	db["mlp_width"]= 20
+	db["σ_ratio"]=1.0
 	db["λ_ratio"]=2
 	db['pretrain_repeats'] = 4
 	db['batch_size'] = 5
-	db['num_of_clusters'] = 3
+	db['num_of_clusters'] = 2
 	db['use_Degree_matrix'] = True
 	db['use_U_normalize'] = True
 	
