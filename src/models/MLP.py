@@ -4,16 +4,16 @@ import torch
 from torch.autograd import Variable
 import numpy as np
 from kernel_lib import *
-from autoencoder import *
+from MLP_autoencoder import *
 from format_conversion import *
 from distances import *
 from RFF import *
 import torch.nn.functional as F
 import time 
 
-class AE(autoencoder):
+class MLP(MLP_autoencoder):
 	def __init__(self, db, add_decoder=True, learning_rate=0.001):
-		super(AE, self).__init__(db, add_decoder, learning_rate)
+		super(MLP, self).__init__(db, add_decoder, learning_rate)
 
 
 	def initialize_variables(self, db):
