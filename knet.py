@@ -17,6 +17,7 @@ import socket
 import time
 import debug
 import warnings
+from matplotlib import pyplot as plt
 from dataset_manipulate import *
 from pretrain import *
 from AE import *
@@ -106,12 +107,18 @@ def initialize_network(db, pretrain_knet=True):
 		#debug.end2end(db)
 
 	db['knet'].initialize_variables(db)
-	[db['initial_loss'], db['initial_hsic'], db['initial_AE_loss'], φ_x, U, U_normalized] = db['knet'].get_current_state(db, db['train_data'].X_Var)
-	[allocation, db['init_AE+Kmeans_nmi']] = kmeans(db['num_of_clusters'], φ_x, Y=db['train_data'].Y)
+
+	#db['RFF'] = RFF(sample_num=20)
+	#db['RFF'].initialize_RFF(db['train_data'].X, db['knet'].σ, False, None)
+	#ϕ_x = db['RFF'].np_feature_map(db['train_data'].X)
+	#[allocation, db['init_ϕ_x_nmi']] = kmeans(db['num_of_clusters'], ϕ_x, Y=db['train_data'].Y)
+
+	[db['initial_loss'], db['initial_hsic'], db['initial_AE_loss'], ψ_x, U, U_normalized] = db['knet'].get_current_state(db, db['train_data'].X_Var)
+	[allocation, db['init_AE+Kmeans_nmi']] = kmeans(db['num_of_clusters'], ψ_x, Y=db['train_data'].Y)
 	[allocation, db['init_AE+Spectral_nmi']] = kmeans(db['num_of_clusters'], U_normalized, Y=db['train_data'].Y)
 
 	print('\t\tInitial AE + Kmeans NMI : %.3f, AE + Spectral : %.3f'%(db['init_AE+Kmeans_nmi'], db['init_AE+Spectral_nmi']))
-
+	#import pdb; pdb.set_trace()
 
 
 def train_kernel_net(db):
@@ -126,18 +133,23 @@ def train_kernel_net(db):
 			db['opt_K'].run(count)
 			db['opt_U'].run(count)
 			if db['exit_cond'](db, count) > 99: break;
-	
+
+		db['λ'] = 0
+		for count in range(100):
+			db['opt_K'].run(count)
+			db['opt_U'].run(count)
+			if db['exit_cond'](db, count) > 99: break;
+
 		db['knet'].train_time = time.time() - start_time
 		export_pretrained_network(db, 'knet', 'last')
 
-
 	db['validate_function'](db)
-
+	debug.plot_output(db)
 
 
 def define_settings():
-	#db = wine_raw_data()
-	db = moon_raw_data()
+	db = wine_raw_data()
+	#db = moon_raw_data()
 
 
 	db = load_db(db)

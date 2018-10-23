@@ -36,7 +36,7 @@ def wine_raw_data():
 	# hyperparams
 	db["output_dim"]=13
 	db["kernel_net_depth"]=3
-	db["mlp_width"]=15
+	db["mlp_width"]=None
 	db["σ_ratio"]=1
 	db["λ_ratio"]=2
 	db['pretrain_repeats'] = 4
