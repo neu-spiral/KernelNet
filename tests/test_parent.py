@@ -41,6 +41,30 @@ class test_parent():
 			remove_files(result_path)
 
 
+	def run_train_test_batch(self):
+		db = self.db
+
+		output_list = self.parameter_ranges()
+		every_combination = list(itertools.product(*output_list))
+
+		gen_training_and_test(db, 0.2)
+		for count, single_instance in enumerate(every_combination):
+			[output_dim, kernel_net_depth, σ_ratio, extra_repeat, λ_ratio, id_10_fold] = single_instance
+
+			db['running_batch_mode'] = True
+			db['10_fold_id'] = id_10_fold
+			db['output_dim'] = output_dim
+			db['kernel_net_depth'] = kernel_net_depth
+			db['σ_ratio'] = float(σ_ratio)
+			db['λ_ratio'] = float(λ_ratio)
+			db['data_folder']  = db['data_path'] 
+			db['train_data_file_name']  = ('%s/train_test/train.csv'%(db['data_path']))
+			db['train_label_file_name']  = ('%s/train_test/train_label.csv'%(db['data_path']))
+			db['test_data_file_name']  = ('%s/train_test/test.csv'%(db['data_path']))
+			db['test_label_file_name']  = ('%s/train_test/test_label.csv'%(db['data_path']))
+
+			self.execute(db, id_10_fold, count)
+
 	def run_batch(self):
 		db = self.db
 
@@ -62,15 +86,7 @@ class test_parent():
 			db['test_data_file_name']  = ''
 			db['test_label_file_name']  = ''
 
-
-			export_db = self.output_db_to_text(id_10_fold, count)
-			self.export_bash_file(id_10_fold, db['data_name'], export_db)
-			if socket.gethostname().find('login') != -1:
-				call(["sbatch", "execute_combined.bash"])
-			else:
-				call(["bash", "./execute_combined.bash"])
-
-		#self.aggregate_results()
+			self.execute(db, id_10_fold, count)
 
 
 	def run_10_fold(self):
@@ -95,16 +111,17 @@ class test_parent():
 			db['test_data_file_name']  = db['data_folder'] + 'test.csv'
 			db['test_label_file_name']  = db['data_folder'] + 'test_label.csv'
 
-
-			export_db = self.output_db_to_text(id_10_fold, count)
-			self.export_bash_file(id_10_fold, db['data_name'], export_db)
-
-			if socket.gethostname().find('login') != -1:
-				call(["sbatch", "execute_combined.bash"])
-			else:
-				call(["bash", "./execute_combined.bash"])
+			self.execute(db, id_10_fold, count)
 
 		self.aggregate_results()
+
+	def execute(self, db, id_10_fold, count):
+		export_db = self.output_db_to_text(id_10_fold, count)
+		self.export_bash_file(id_10_fold, db['data_name'], export_db)
+		if socket.gethostname().find('login') != -1:
+			call(["sbatch", "execute_combined.bash"])
+		else:
+			call(["bash", "./execute_combined.bash"])
 
 	def aggregate_results(self):
 		db = self.db
