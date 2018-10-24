@@ -25,15 +25,16 @@ def plot_alloc(db, plotID, data, title, linetype=None, fsize=20, xyLabels=[]):
 
 def plot_output(db):
 	if 'running_batch_mode' in db: return
-		[current_loss, current_hsic, current_AE_loss, φ_x, U, U_normalized] = db['knet'].get_current_state(db, db['train_data'].X_Var)
-		db['allocation'] = kmeans(db['num_of_clusters'], U_normalized)
-		#plt.plot(φ_x[:,0], φ_x[:,1], 'go')
-		plot_alloc(db, 111, db['train_data'].X, '', linetype=None, fsize=20, xyLabels=[])
 
-		plt.tight_layout(pad=0.0, w_pad=0.0, h_pad=0.0)
-		plt.show()
+	[current_loss, current_hsic, current_AE_loss, φ_x, U, U_normalized] = db['knet'].get_current_state(db, db['train_data'].X_Var)
+	db['allocation'] = kmeans(db['num_of_clusters'], U_normalized)
+	#plt.plot(φ_x[:,0], φ_x[:,1], 'go')
+	plot_alloc(db, 111, db['train_data'].X, '', linetype=None, fsize=20, xyLabels=[])
 
-		import pdb; pdb.set_trace()
+	plt.tight_layout(pad=0.0, w_pad=0.0, h_pad=0.0)
+	plt.show()
+
+	import pdb; pdb.set_trace()
 
 def end2end(db):
 	X = db['train_data'].X_Var

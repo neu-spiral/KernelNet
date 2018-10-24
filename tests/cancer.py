@@ -5,6 +5,7 @@ sys.path.append('./src/validation')
 
 from test_parent import *
 from opt_Kernel import *
+from sm_opt_Kernel import *
 from AE_validate import *
 from termcolor import colored
 import sklearn.metrics

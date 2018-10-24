@@ -182,6 +182,18 @@ def AE_validate(db):
 	output_str += '\n' + dictionary_to_str(packet_7)
 
 	result = {**packet_1, **packet_2, **packet_3, **packet_4, **packet_5, **packet_6, **packet_7}
+
+	output_str += '\n\n'
+	output_str += '\t' + str(db['data_name'] )
+	output_str += '\t' + str(db['opt_K_class'].__name__ )
+	output_str += '\t' + str(db['itr_til_converge'])
+	output_str += '\t' + str(db['train_time'])
+	output_str += '\t' + str(db['train_hsic'])
+	output_str += '\t' + str(db['train_AE_loss'])
+	output_str += '\t' + str(db['train_loss'])
+	output_str += '\t' + str(db['train_nmi'])
+	output_str += '\t' + str(db['final_AE_Kmeans'])
+
 	print(output_str)
 
 

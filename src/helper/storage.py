@@ -4,6 +4,7 @@ sys.path.append('./src/validation')
 
 from path_tools import *
 from opt_Kernel import *
+from sm_opt_Kernel import *
 from AE_validate import *
 from AE import *
 import numpy as np
