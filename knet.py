@@ -134,6 +134,8 @@ def train_kernel_net(db):
 			db['opt_U'].run(count)
 			if db['exit_cond'](db, count) > 99: break;
 
+		[db['train_loss'], db['train_hsic'], db['train_AE_loss'], φ_x, U, U_normalized] = db['knet'].get_current_state(db, db['train_data'].X_Var)
+
 		db['λ'] = 0
 		for count in range(100):
 			db['opt_K'].run(count)
