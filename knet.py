@@ -26,6 +26,7 @@ from storage import *
 from DManager import *
 from opt_Kernel import *
 from wine_raw_data import *
+from wine_sm import *
 from moon_raw_data import *
 
 if socket.gethostname().find('login') != -1:
@@ -150,7 +151,8 @@ def train_kernel_net(db):
 
 
 def define_settings():
-	db = wine_raw_data()
+	#db = wine_raw_data()
+	db = wine_sm()
 	#db = moon_raw_data()
 
 
