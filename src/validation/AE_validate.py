@@ -99,8 +99,9 @@ def save_result_to_history(db, result, result_path, fname, output_str):
 
 def AE_validate(db):
 	#	get loss objective
-	#[db['train_loss'], db['train_hsic'], db['train_AE_loss'], φ_x, U, U_normalized] = db['knet'].get_current_state(db, db['train_data'].X_Var)
-	#[db['valid_loss'], db['valid_hsic'], db['valid_AE_loss'], φ_x] = db['knet'].get_current_state(db, db['valid_data'].X_Var)
+	if 'train_loss' not in db:
+		[db['train_loss'], db['train_hsic'], db['train_AE_loss'], φ_x, U, U_normalized] = db['knet'].get_current_state(db, db['train_data'].X_Var)
+		#[db['valid_loss'], db['valid_hsic'], db['valid_AE_loss'], φ_x] = db['knet'].get_current_state(db, db['valid_data'].X_Var)
 
 	#	get training nmi
 	current_label = kmeans(db['num_of_clusters'], db['U'])
