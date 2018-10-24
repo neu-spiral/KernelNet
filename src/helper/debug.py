@@ -1,8 +1,9 @@
 
 import torch
+from classifier import *
 from matplotlib import pyplot as plt
 
-def plot_alloc(self, db, plotID, data, title, linetype=None, fsize=20, xyLabels=[]):
+def plot_alloc(db, plotID, data, title, linetype=None, fsize=20, xyLabels=[]):
 	color_list = ['b', 'r', 'g', 'c', 'm', 'y', 'k', 'w']
 
 	plt.subplot(plotID)
@@ -23,12 +24,16 @@ def plot_alloc(self, db, plotID, data, title, linetype=None, fsize=20, xyLabels=
 	plt.tick_params(labelsize=10)
 
 def plot_output(db):
-	[current_loss, current_hsic, current_AE_loss, φ_x, U, U_normalized] = db['knet'].get_current_state(db, db['train_data'].X_Var)
-	plt.plot(φ_x[:,0], φ_x[:,1], 'go')
-	plt.tight_layout(pad=0.0, w_pad=0.0, h_pad=0.0)
-	plt.show()
+	if 'running_batch_mode' in db: return
+		[current_loss, current_hsic, current_AE_loss, φ_x, U, U_normalized] = db['knet'].get_current_state(db, db['train_data'].X_Var)
+		db['allocation'] = kmeans(db['num_of_clusters'], U_normalized)
+		#plt.plot(φ_x[:,0], φ_x[:,1], 'go')
+		plot_alloc(db, 111, db['train_data'].X, '', linetype=None, fsize=20, xyLabels=[])
 
-	#print(φ_x)
+		plt.tight_layout(pad=0.0, w_pad=0.0, h_pad=0.0)
+		plt.show()
+
+		import pdb; pdb.set_trace()
 
 def end2end(db):
 	X = db['train_data'].X_Var

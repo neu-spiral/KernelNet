@@ -146,7 +146,7 @@ def train_kernel_net(db):
 		export_pretrained_network(db, 'knet', 'last')
 
 	db['validate_function'](db)
-	debug.plot_output(db)
+	#debug.plot_output(db)
 
 
 def define_settings():
