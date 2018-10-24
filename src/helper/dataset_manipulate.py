@@ -37,6 +37,28 @@ def gen_train_validate_data(db):
 	np.savetxt(db['valid_label_path'], y[valid_set_indx], delimiter=',', fmt='%d') 
 
 
+def gen_training_and_test(db, test_percent):
+	ensure_path_exists('%s/train_test'%(db['data_path']))
+	train_path = ('%s/train_test/train.csv'%(db['data_path']))
+	test_path = ('%s/train_test/test.csv'%(db['data_path']))
+	train_label_path = ('%s/train_test/train_label.csv'%(db['data_path']))
+	test_label_path = ('%s/train_test/test_label.csv'%(db['data_path']))
+
+	orig_data = DManager(db['orig_data_file_name'], db['orig_label_file_name'], torch.FloatTensor)
+
+	N = orig_data.N
+	loc = 0
+	inc = int(np.floor(test_percent*N))
+	rp = np.random.permutation(N).tolist()
+
+	test_set_id = rp[0:inc]
+	train_set_id = list(set(rp) - set(test_set_id))
+
+	np.savetxt(train_path, orig_data.X[train_set_id,:], delimiter=',', fmt='%f') 
+	np.savetxt(test_path, orig_data.X[test_set_id,:], delimiter=',', fmt='%f') 
+	np.savetxt(train_label_path, orig_data.Y[train_set_id], delimiter=',', fmt='%d') 
+	np.savetxt(test_label_path, orig_data.Y[test_set_id], delimiter=',', fmt='%d') 
+
 
 def gen_10_fold_data(db):
 	#	Does the 10 fold path exist
