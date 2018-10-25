@@ -28,6 +28,7 @@ from opt_Kernel import *
 from wine_raw_data import *
 from wine_sm import *
 from moon_raw_data import *
+from moon_raw_data_sm import *
 
 if socket.gethostname().find('login') != -1:
 	print('\nError : you cannot run program on login node.......\n\n')
@@ -152,8 +153,9 @@ def train_kernel_net(db):
 
 def define_settings():
 	#db = wine_raw_data()
-	db = wine_sm()
+	#db = wine_sm()
 	#db = moon_raw_data()
+	db = moon_raw_data_sm()
 
 
 	db = load_db(db)

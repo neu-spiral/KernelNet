@@ -47,7 +47,7 @@ class test_parent():
 		output_list = self.parameter_ranges()
 		every_combination = list(itertools.product(*output_list))
 
-		gen_training_and_test(db, 0.2)
+		dataset_manipulate.gen_training_and_test(db, 0.2)
 		for count, single_instance in enumerate(every_combination):
 			[output_dim, kernel_net_depth, σ_ratio, extra_repeat, λ_ratio, id_10_fold] = single_instance
 
