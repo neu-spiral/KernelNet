@@ -35,3 +35,4 @@ from wine import *
 code = test_code()
 #code.run_10_fold()
 code.run_batch()
+#code.run_train_test_batch()
