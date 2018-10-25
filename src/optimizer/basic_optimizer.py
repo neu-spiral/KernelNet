@@ -27,6 +27,7 @@ def basic_optimizer(model, db, data_loader_name, loss_callback='compute_loss', e
 
 			loss_method = getattr(model, loss_callback)
 			loss = loss_method(inputs, labels, indices)
+			#loss_before = loss.data.item()
 
 			model.zero_grad()	
 			optimizer.zero_grad()
@@ -43,6 +44,10 @@ def basic_optimizer(model, db, data_loader_name, loss_callback='compute_loss', e
 			running_avg_grad.append(grad_norm)
 			running_avg.append(loss.data.item())
 
+			#loss = loss_method(inputs, labels, indices)
+			#loss_after = loss.data.item()
+			#print('\t\tloss before %.3f , loss after %.3f'%(loss_before, loss_after))
+			#import pdb; pdb.set_trace();
 
 		#avgLoss = np.mean(np.array(running_avg))		#/db['num_of_output']
 		maxLoss = np.max(np.array(running_avg))		#/db['num_of_output']
