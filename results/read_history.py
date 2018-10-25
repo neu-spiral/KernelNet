@@ -128,7 +128,7 @@ def without_validation():
 			plt.subplot(111)
 			plt.plot(X_train, Y_train, 'x')
 			plt.title('Train loss vs NMI with ' + project_name)
-			plt.savefig(str(i) + '_result.png')	
+			plt.savefig(str(i) + '_' + project_name + '.png')	
 
 #with_validation()
 without_validation()

@@ -19,7 +19,7 @@ class test_code(test_parent):
 		print(colored(('\nRunning Kernel Net : %s'%(__name__)), 'white'))
 		db = {}
 		#	Data settings
-		db['data_name'] = 'wine'
+		db['data_name'] = 'face'
 		db['center_and_scale'] = True
 		db['recompute_10_fold'] = False
 		db['use_Degree_matrix'] = True
@@ -28,7 +28,7 @@ class test_code(test_parent):
 
 		#	hyperparams
 		db['batch_size'] = 5
-		db['num_of_clusters'] = 3
+		db['num_of_clusters'] = 20
 		db['use_Degree_matrix'] = True
 		db['use_U_normalize'] = True
 
