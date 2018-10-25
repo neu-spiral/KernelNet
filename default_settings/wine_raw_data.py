@@ -35,15 +35,15 @@ def wine_raw_data():
 	
 	# hyperparams
 	db["output_dim"]=13
-	db["kernel_net_depth"]=3
-	db["mlp_width"]=None
+	db["kernel_net_depth"]=5
+	db["mlp_width"]=1
 	db["σ_ratio"]=1
 	db["λ_ratio"]=2
 	db['pretrain_repeats'] = 4
-	db['batch_size'] = 5
+	db['batch_size'] = 178
 	db['num_of_clusters'] = 3
 	db['use_Degree_matrix'] = True
-	db['use_U_normalize'] = True
+	db['use_U_normalize'] = False
 	
 	# code
 	db['kernel_model'] = AE
