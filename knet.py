@@ -29,6 +29,10 @@ from wine_raw_data import *
 from wine_sm import *
 from moon_raw_data import *
 from moon_raw_data_sm import *
+from spiral_raw_data import *
+
+
+
 
 if socket.gethostname().find('login') != -1:
 	print('\nError : you cannot run program on login node.......\n\n')
@@ -154,13 +158,9 @@ def train_kernel_net(db):
 def define_settings():
 	#db = wine_raw_data()
 	#db = wine_sm()
-<<<<<<< HEAD
 	#db = moon_raw_data()
-	db = moon_raw_data_sm()
-=======
-	db = moon_raw_data()
->>>>>>> 7da70822a1f61fef7e40ba5ca2da82b9c761f578
-
+	#db = moon_raw_data_sm()
+	db = spiral_raw_data()
 
 	db = load_db(db)
 	return db
