@@ -154,8 +154,12 @@ def train_kernel_net(db):
 def define_settings():
 	#db = wine_raw_data()
 	#db = wine_sm()
+<<<<<<< HEAD
 	#db = moon_raw_data()
 	db = moon_raw_data_sm()
+=======
+	db = moon_raw_data()
+>>>>>>> 7da70822a1f61fef7e40ba5ca2da82b9c761f578
 
 
 	db = load_db(db)
