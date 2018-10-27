@@ -13,8 +13,21 @@ import socket
 
 run_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(2))
 test_name = 'wine'
+#test_name = 'cancer'
+#test_name = 'face'
+
+
+
+
 pretrain_path = './pretrained/' + test_name + '/'
 remove_files(pretrain_path)
+tmp_path = './tmp/' + test_name + '/'
+tmp_path_2 = './tmp/' + test_name + '/batch_outputs'
+tmp_path_3 = './tmp/' + test_name + '/db_files'
+
+ ensure_path_exists(tmp_path)
+ ensure_path_exists(tmp_path_2)
+ ensure_path_exists(tmp_path_3)
 
 
 cmd = ''
@@ -49,8 +62,6 @@ fin = open('execute_combined.bash','w')
 fin.write(cmd)
 fin.close()
 
-if socket.gethostname().find('login') != -1:
-	call(["sbatch", "execute_combined.bash"])
-else:
-	call(["bash", "./execute_combined.bash"])
+call(["sbatch", "execute_combined.bash"])
+
 
