@@ -36,11 +36,11 @@ def face_raw_data():
 	db["output_dim"]=27
 	db["kernel_net_depth"]=3
 	db["mlp_width"]=1
-	db["σ_ratio"]=1
+	db["σ_ratio"]=1.0
 	db["λ_ratio"]=2
 	db['pretrain_repeats'] = 4
 	db['batch_size'] = 5
-	db['num_of_clusters'] = 3
+	db['num_of_clusters'] = 20
 	db['use_Degree_matrix'] = True
 	db['use_U_normalize'] = True
 	
