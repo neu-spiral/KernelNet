@@ -11,8 +11,7 @@ from opt_Kernel import *
 def rcv_raw_data():
 	db = {}
 	# Data info
-	#dn = db["data_name"]="cancer"
-	dn = db["data_name"]="wine"
+	dn = db["data_name"]="rcv"
 	db["center_and_scale"]=True
 	db["data_path"]="./datasets/" + dn + "/"
 	db["orig_data_file_name"]="./datasets/" + dn + "/" + dn + ".csv"
@@ -34,14 +33,14 @@ def rcv_raw_data():
 	db['objective_tracker'] = []
 	
 	# hyperparams
-	db["output_dim"]=13
-	db["kernel_net_depth"]=5
+	db["output_dim"]=5
+	db["kernel_net_depth"]=3
 	db["mlp_width"]=1
 	db["σ_ratio"]=1
 	db["λ_ratio"]=2
 	db['pretrain_repeats'] = 4
 	db['batch_size'] = 178
-	db['num_of_clusters'] = 3
+	db['num_of_clusters'] = 4
 	db['use_Degree_matrix'] = True
 	db['use_U_normalize'] = False
 	
