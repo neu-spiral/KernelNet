@@ -46,6 +46,12 @@ np.set_printoptions(linewidth=300)
 np.set_printoptions(suppress=True)
 warnings.filterwarnings("ignore")
 
+def delete_files(db):
+	pretrain_path = './pretrained/' + db['data_name'] + '/'
+	ensure_path_exists(pretrain_path)
+	reply = str(input('Do you want to delete pre-trained files ?'+' (y/[n]): ')).lower().strip()
+	if reply == 'y': remove_files(pretrain_path)
+
 def initialize_data(db):
 	print('\nRunning %s with cuda=%s\n\tLoading datasets...'%(db["data_name"], str(db['cuda'])))
 
@@ -158,17 +164,12 @@ def train_kernel_net(db):
 	#debug.plot_output(db)
 
 
-
-
-
-
-
 #---------------------------------------------------------------------
 
 
 def define_settings():
-	#db = wine_raw_data()
-	db = cancer_raw_data()
+	db = wine_raw_data()
+	#db = cancer_raw_data()
 	#db = wine_sm()
 	#db = moon_raw_data()
 	#db = moon_raw_data_sm()
@@ -191,6 +192,7 @@ def check_σ():
 
 def default_run():
 	db = define_settings()
+	delete_files(db)
 	initialize_data(db)
 	initialize_embedding(db)
 	initialize_network(db, pretrain_knet=True)
