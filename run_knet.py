@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 
+import sys
+sys.path.append('./src')
+sys.path.append('./src/helper')
 
 from subprocess import call
+from path_tools import *
 import random
 import string
 import socket
@@ -9,7 +13,8 @@ import socket
 
 run_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(2))
 test_name = 'wine'
-
+pretrain_path = './pretrained/' + test_name + '/'
+remove_files(pretrain_path)
 
 
 cmd = ''
