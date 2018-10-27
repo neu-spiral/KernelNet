@@ -48,9 +48,13 @@ warnings.filterwarnings("ignore")
 
 def delete_files(db):
 	pretrain_path = './pretrained/' + db['data_name'] + '/'
-	ensure_path_exists(pretrain_path)
-	reply = str(input('Do you want to delete pre-trained files ?'+' (y/[n]): ')).lower().strip()
-	if reply == 'y': remove_files(pretrain_path)
+
+	if socket.gethostname().find('login') != -1:
+		remove_files(pretrain_path)
+	else:
+		ensure_path_exists(pretrain_path)
+		reply = str(input('Do you want to delete pre-trained files ?'+' (y/[n]): ')).lower().strip()
+		if reply == 'y': remove_files(pretrain_path)
 
 def initialize_data(db):
 	print('\nRunning %s with cuda=%s\n\tLoading datasets...'%(db["data_name"], str(db['cuda'])))
