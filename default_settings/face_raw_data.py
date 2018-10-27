@@ -40,7 +40,7 @@ def face_raw_data():
 	db["λ_ratio"]=2
 	db['pretrain_repeats'] = 4
 	db['batch_size'] = 5
-	db['num_of_clusters'] = 3
+	db['num_of_clusters'] = 20
 	db['use_Degree_matrix'] = True
 	db['use_U_normalize'] = True
 	

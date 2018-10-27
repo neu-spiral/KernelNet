@@ -169,8 +169,12 @@ def define_settings():
 
 
 db = define_settings()
-initialize_data(db)
-initialize_embedding(db)
-initialize_network(db, pretrain_knet=True)
-train_kernel_net(db)
+for i in np.arange(0.1,4,0.1):
+	print(i)
+	db["σ_ratio"] = i
+	initialize_data(db)
+	initialize_embedding(db)
+
+#initialize_network(db, pretrain_knet=True)
+#train_kernel_net(db)
 
