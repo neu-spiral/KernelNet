@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 
-<<<<<<< HEAD
 
 from subprocess import call
-=======
->>>>>>> 8e4f567ce423dbac37f21562786b214529aeacfa
 import random
 import string
 import socket
