@@ -47,10 +47,6 @@ class test_code(test_parent):
 		σ_ratio = [1]
 		extra_repeat = range(200)
 		id_10_fold = [0] #range(10)
-	
-		#lambda_ratio = np.arange(0.1, 3, 0.1)
-		#random.shuffle(lambda_ratio)
-		#lambda_ratio = [0] + list(lambda_ratio)
 		lambda_ratio = [2]
 
 		random.shuffle(output_dim)
