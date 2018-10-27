@@ -157,26 +157,43 @@ def train_kernel_net(db):
 	#debug.plot_output(db)
 
 
+
+
+
+
+
+#---------------------------------------------------------------------
+
+
 def define_settings():
-	#db = wine_raw_data()
+	db = wine_raw_data()
 	#db = wine_sm()
 	#db = moon_raw_data()
 	#db = moon_raw_data_sm()
 	#db = spiral_raw_data()
 	#db = face_raw_data()
-	db = rcv_raw_data()
+	#db = rcv_raw_data()
 
 	db = load_db(db)
 	return db
 
 
-db = define_settings()
-for i in np.arange(0.1,4,0.1):
-	print(i)
-	db["σ_ratio"] = i
+def check_σ():
+	db = define_settings()
+	for i in np.arange(0.1,4,0.1):
+		print(i)
+		db["σ_ratio"] = i
+		initialize_data(db)
+		initialize_embedding(db)
+
+
+def default_run():
+	db = define_settings()
 	initialize_data(db)
 	initialize_embedding(db)
+	initialize_network(db, pretrain_knet=True)
+	train_kernel_net(db)
 
-#initialize_network(db, pretrain_knet=True)
-#train_kernel_net(db)
 
+
+default_run()
