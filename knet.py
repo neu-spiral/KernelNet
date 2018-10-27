@@ -32,6 +32,7 @@ from moon_raw_data_sm import *
 from spiral_raw_data import *
 from face_raw_data import *
 from rcv_raw_data import *
+from cancer_raw_data import *
 
 
 
@@ -166,7 +167,8 @@ def train_kernel_net(db):
 
 
 def define_settings():
-	db = wine_raw_data()
+	#db = wine_raw_data()
+	db = cancer_raw_data()
 	#db = wine_sm()
 	#db = moon_raw_data()
 	#db = moon_raw_data_sm()
