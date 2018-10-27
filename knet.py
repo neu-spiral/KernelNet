@@ -31,6 +31,7 @@ from moon_raw_data import *
 from moon_raw_data_sm import *
 from spiral_raw_data import *
 from face_raw_data import *
+from rcv_raw_data import *
 
 
 
@@ -162,7 +163,8 @@ def define_settings():
 	#db = moon_raw_data()
 	#db = moon_raw_data_sm()
 	#db = spiral_raw_data()
-	db = face_raw_data()
+	#db = face_raw_data()
+	db = rcv_raw_data()
 
 	db = load_db(db)
 	return db
