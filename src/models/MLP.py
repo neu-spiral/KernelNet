@@ -38,8 +38,7 @@ class MLP(MLP_autoencoder):
 
 		HDKxDH = center_matrix(db, DKxD)
 		[U, U_normalized] = L_to_U(db, HDKxDH)
-		if db['use_U_normalize']: Ku = U_normalized.dot(U_normalized.T)
-		else: Ku = U.dot(U.T)
+		Ku = U.dot(U.T)
 
 		current_hsic = -float(np.sum(HDKxDH*Ku))
 		current_AE_loss = float(ensure_matrix_is_numpy(self.autoencoder_loss(in_x, None, None)))
