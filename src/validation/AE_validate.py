@@ -104,7 +104,7 @@ def AE_validate(db):
 		#[db['valid_loss'], db['valid_hsic'], db['valid_AE_loss'], φ_x] = db['knet'].get_current_state(db, db['valid_data'].X_Var)
 
 	#	get training nmi
-	current_label = kmeans(db['num_of_clusters'], db['U'])
+	current_label = kmeans(db['num_of_clusters'], db['U_normalized'])
 	db['train_nmi'] = normalized_mutual_info_score(current_label, db['train_data'].Y)
 
 	[x_hat, ϕ_x] = db['knet'](db['train_data'].X_Var)
@@ -161,7 +161,7 @@ def AE_validate(db):
 
 	output_str += '\tResults of Initial States '
 	packet_5 = {}
-	list_of_keys = ['init_spectral_nmi', 'init_AE+Kmeans_nmi', 'initial_loss', 'initial_hsic', 'initial_AE_loss']
+	list_of_keys = ['init_spectral_nmi', 'init_AE+Kmeans_nmi', 'init_AE+Spectral_nmi', 'initial_loss', 'initial_hsic', 'initial_AE_loss']
 	fill_dictionary(db, packet_5, list_of_keys)
 	output_str += '\n' + dictionary_to_str(packet_5)
 
