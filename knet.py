@@ -78,7 +78,7 @@ def initialize_embedding(db):
 	σ = float(db['x_mpd']*db["σ_ratio"])
 	[L, db['D_inv']] = getLaplacian(db, X, σ, H=H)
 	[db['U'], db['U_normalized']] = L_to_U(db, L)
-
+	
 	[allocation, db['init_spectral_nmi']] = kmeans(db['num_of_clusters'], db['U_normalized'], Y=db['train_data'].Y)
 	print('\t\tInitial Spectral Clustering NMI on raw data : %.3f'%db['init_spectral_nmi'])
 
@@ -163,8 +163,8 @@ def train_kernel_net(db):
 
 
 def define_settings():
-	#db = wine_raw_data()
-	db = cancer_raw_data()
+	db = wine_raw_data()
+	#db = cancer_raw_data()
 	#db = wine_sm()
 	#db = moon_raw_data()
 	#db = moon_raw_data_sm()
