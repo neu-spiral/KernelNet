@@ -25,9 +25,9 @@ tmp_path = './tmp/' + test_name + '/'
 tmp_path_2 = './tmp/' + test_name + '/batch_outputs'
 tmp_path_3 = './tmp/' + test_name + '/db_files'
 
- ensure_path_exists(tmp_path)
- ensure_path_exists(tmp_path_2)
- ensure_path_exists(tmp_path_3)
+ensure_path_exists(tmp_path)
+ensure_path_exists(tmp_path_2)
+ensure_path_exists(tmp_path_3)
 
 
 cmd = ''
