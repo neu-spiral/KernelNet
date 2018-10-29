@@ -58,8 +58,8 @@ class sm_opt_U():
 		U_normalized = normalize(U, norm='l2', axis=1)
 
 		db['U_prev'] = db['U']
-		if db['use_U_normalize']: db['U'] = U_normalized 	# <- update this to be used in opt_K
-		else: db['U'] = U
+		db['U'] = U
+		db['U_normalized'] = U_normalized
 
 		if 'objective_tracker' in db:
 			if 'running_batch_mode' in db: return
@@ -67,7 +67,7 @@ class sm_opt_U():
 			db['objective_tracker'] = np.append(db['objective_tracker'], current_loss)	
 
 			#[allocation, train_nmi] = kmeans(db['num_of_clusters'], U_normalized, Y=db['train_data'].Y)
-			[allocation, train_nmi] = kmeans(db['num_of_clusters'], db['U'] , Y=db['train_data'].Y)
+			[allocation, train_nmi] = kmeans(db['num_of_clusters'], U_normalized , Y=db['train_data'].Y)
 			print('\t\tCurrent obj loss : %.5f from %.5f +  (%.3f)(%.3f)[%.5f]'%(current_loss, current_hsic, db["λ_ratio"], db['λ_obj_ratio'], current_AE_loss))
 			print('\t\tTrain NMI after optimizing U : %.3f'%(train_nmi))
 
