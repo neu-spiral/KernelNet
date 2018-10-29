@@ -69,25 +69,10 @@ class opt_U():
 		φ_x = ensure_matrix_is_numpy(db['ϕ_x'])
 		[DKxD, Dinv] = normalized_rbk_sklearn(φ_x, db['knet'].σ)
 		HDKxDH = center_matrix(db, DKxD)
-		
-	
-
-		#print(db['U'][0:4,0:3])
-		#[U, U_normalized] = L_to_U(db, HDKxDH)
 		[db['U'], db['U_normalized']] = L_to_U(db, HDKxDH)
-
-
-
-		#db['U_prev'] = db['U']
-		#if db['use_U_normalize']: db['U'] = U_normalized 	# <- update this to be used in opt_K
-		#else: db['U'] = U
 
 		db['prev_Ku'] = db['Ku']
 		db['Ku'] = db['U'].dot(db['U'].T)
-	
-
-		#print(db['U'][0:4,0:3])
-
 
 		if 'objective_tracker' in db:
 			if 'running_batch_mode' in db: return

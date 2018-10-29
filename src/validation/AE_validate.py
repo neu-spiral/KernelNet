@@ -127,7 +127,7 @@ def AE_validate(db):
 
 	output_str += '\tBasic settings that does not change often\n'
 	packet_1 = {}
-	list_of_keys = ['data_name', 'center_and_scale', 'pretrain_repeats', 'batch_size', 'num_of_clusters', 'use_Degree_matrix', 'use_U_normalize', 'cuda']
+	list_of_keys = ['data_name', 'center_and_scale', 'pretrain_repeats', 'batch_size', 'num_of_clusters', 'use_Degree_matrix', 'cuda']
 	fill_dictionary(db, packet_1, list_of_keys)
 	output_str += dictionary_to_str(packet_1)
 
