@@ -145,7 +145,7 @@ def train_kernel_net(db):
 
 		[db['train_loss'], db['train_hsic'], db['train_AE_loss'], φ_x, U, U_normalized] = db['knet'].get_current_state(db, db['train_data'].X_Var)
 
-		#db['λ'] = 1
+		#db['λ'] = 1.8
 		#db['λ_ratio'] = 0
 		#for count in range(1):
 		#	db['opt_K'].run(count)
@@ -164,9 +164,9 @@ def train_kernel_net(db):
 
 def define_settings():
 	#db = wine_raw_data()
-	#db = cancer_raw_data()
+	db = cancer_raw_data()
 	#db = wine_sm()
-	db = moon_raw_data()
+	#db = moon_raw_data()
 	#db = moon_raw_data_sm()
 	#db = spiral_raw_data()
 	#db = face_raw_data()
