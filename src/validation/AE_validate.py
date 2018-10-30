@@ -32,6 +32,7 @@ def save_results_to_text_file(db, result_path, fname, output_str):
 	fin.close()
 	delete_file(mr_mutex)
 
+
 def save_result_to_history(db, result, result_path, fname, output_str):
 	file_path = result_path + fname + '.pk'
 	mutex = result_path + fname + '.writing'

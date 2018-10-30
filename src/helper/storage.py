@@ -14,8 +14,10 @@ import shutil
 import time
 
 
-def import_pretrained_network(db, keyVal, stage_name):
-	if 'running_batch_mode' in db: return False
+def import_pretrained_network(db, keyVal, stage_name, ignore_in_batch=False):
+	if ignore_in_batch:
+		if 'running_batch_mode' in db: return False
+
 
 	ensure_path_exists('./pretrained')
 	ensure_path_exists('./pretrained/' + db['data_name'])
@@ -53,8 +55,9 @@ def import_pretrained_network(db, keyVal, stage_name):
 	return False
 
 
-def export_pretrained_network(db, keyVal, stage_name):
-	if 'running_batch_mode' in db: return
+def export_pretrained_network(db, keyVal, stage_name, ignore_in_batch=False):
+	if ignore_in_batch:
+		if 'running_batch_mode' in db: return False
 
 	ensure_path_exists('./pretrained')
 	ensure_path_exists('./pretrained/' + db['data_name'])
@@ -96,4 +99,29 @@ def load_db(db):
 			import pdb; pdb.set_trace()
 	return db
 
+def save_to_lowest_end2end(db):
+	ensure_path_exists('./pretrained')
+	ensure_path_exists('./pretrained/' + db['data_name'])
+	pth = './pretrained/' + db['data_name'] + '/' + db['data_name'] + '_best_end2end.pk'
+	lowest_error_list = './pretrained/' + db['data_name'] + '/' + 'lowest_error_list.txt'
+	mutex = './pretrained/' + db['data_name'] + '/' + db['data_name'] + '_best_end2end.writing'
+	tmp_writing = tmp + '.' + str(int(10000000*np.random.rand()))
+
+
+	if path_list_exists([pth]):
+		best_knet = pickle.load( open( pth, "rb" ) )
+		if db['knet'] < best_knet.end2end_error:
+			pickle.dump( db['knet'] , open(tmp_writing, "wb" ) )
+	else:
+		pickle.dump( db['knet'] , open(tmp_writing, "wb" ) )
+
+
+	while os.path.exists(mutex): time.sleep(20*np.random.rand())
+
+	create_file(mutex)
+	fin = open('lowest_error_list','a')
+	fin.write('%.4f\n'%best_knet.end2end_error)
+	fin.close()
+	shutil.move(tmp_writing, pth)
+	delete_file(mutex)
 
