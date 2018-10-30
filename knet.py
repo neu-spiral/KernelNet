@@ -31,6 +31,7 @@ from moon_raw_data import *
 from moon_raw_data_sm import *
 from spiral_raw_data import *
 from face_raw_data import *
+from face_raw_data_sm import *
 from rcv_raw_data import *
 from cancer_raw_data import *
 
@@ -109,8 +110,8 @@ def initialize_network(db, pretrain_knet=True):
 			basic_optimizer(db['knet'], db, loss_callback='autoencoder_loss', data_loader_name=dataLoader)
 	
 			db['knet'].end2end_time = time.time() - start_time
-			post_loss = db['knet'].autoencoder_loss(db['train_data'].X_Var, None, None)
-			print('\n\tError of End to End AE , Before %.3f, After %.3f'%(prev_loss.item(), post_loss.item()))
+			db['knet'].end2end_error = (db['knet'].autoencoder_loss(db['train_data'].X_Var, None, None)).item()
+			print('\n\tError of End to End AE , Before %.3f, After %.3f'%(prev_loss.item(), db['knet'].end2end_error))
 			export_pretrained_network(db, 'knet', 'end2end')
 
 		#debug.end2end(db)
@@ -130,13 +131,14 @@ def initialize_network(db, pretrain_knet=True):
 	#import pdb; pdb.set_trace()
 
 
+
 def train_kernel_net(db):
 	db['opt_K'] = db['opt_K_class'](db)
 	db['opt_U'] = db['opt_U_class'](db)
 	db['converge_list'] = []
 
 
-	if not import_pretrained_network(db, 'knet', 'last'):
+	if not import_pretrained_network(db, 'knet', 'last', True):
 		start_time = time.time() 
 		for count in range(100):
 			db['opt_K'].run(count)
@@ -153,7 +155,7 @@ def train_kernel_net(db):
 		#	if db['exit_cond'](db, count) > 99: break;
 
 		db['knet'].train_time = time.time() - start_time
-		export_pretrained_network(db, 'knet', 'last')
+		export_pretrained_network(db, 'knet', 'last', True)
 
 	db['validate_function'](db)
 	#debug.plot_output(db)
@@ -164,12 +166,13 @@ def train_kernel_net(db):
 
 def define_settings():
 	#db = wine_raw_data()
-	db = cancer_raw_data()
+	#db = cancer_raw_data()
 	#db = wine_sm()
 	#db = moon_raw_data()
 	#db = moon_raw_data_sm()
 	#db = spiral_raw_data()
-	#db = face_raw_data()
+	db = face_raw_data()
+	#db = face_raw_data_sm()
 	#db = rcv_raw_data()
 
 	db = load_db(db)
@@ -185,13 +188,23 @@ def check_σ():
 		initialize_embedding(db)
 
 
+def discover_lowest_end2end_error():
+	db = define_settings()
+	initialize_data(db)
+	initialize_embedding(db)
+	initialize_network(db, pretrain_knet=True)
+	save_to_lowest_end2end(db)
+
 def default_run():
 	db = define_settings()
 	initialize_data(db)
 	initialize_embedding(db)
 	initialize_network(db, pretrain_knet=True)
-	train_kernel_net(db)
+	#train_kernel_net(db)
 
 
 
-default_run()
+
+
+#default_run()
+discover_lowest_end2end_error()
