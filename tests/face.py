@@ -23,6 +23,7 @@ class test_code(test_parent):
 		db['center_and_scale'] = True
 		db['recompute_10_fold'] = False
 		db['use_Degree_matrix'] = True
+		db['recompute_data_split'] = True
 		db['pretrain_repeats'] = 4
 		db['cuda'] = False
 
@@ -45,7 +46,7 @@ class test_code(test_parent):
 		output_dim = [27]
 		kernel_net_depth = [3]
 		σ_ratio = [1]
-		extra_repeat = range(200)
+		extra_repeat = range(1)
 		id_10_fold = [0] #range(10)
 		lambda_ratio = [2]
 

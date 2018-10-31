@@ -5,6 +5,7 @@ sys.path.append('./src/validation')
 
 from test_parent import *
 from opt_Kernel import *
+from sm_opt_Kernel import *
 from AE_validate import *
 from termcolor import colored
 import sklearn.metrics
@@ -22,6 +23,7 @@ class test_code(test_parent):
 		db['center_and_scale'] = True
 		db['recompute_10_fold'] = False
 		db['use_Degree_matrix'] = True
+		db['recompute_data_split'] = True
 		db['pretrain_repeats'] = 4
 		db['cuda'] = False
 
