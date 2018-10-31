@@ -83,7 +83,11 @@ def exit_cond(db, count):
 	if 'prev_Ku' not in db: return count
 
 	N = float(db['Ku'].shape[0])
+<<<<<<< HEAD
 	error_per_element = 10*np.absolute(db['prev_Ku'] - db['Ku']).sum()/(N*N)
+=======
+	error_per_element = np.absolute(db['prev_Ku'] - db['Ku']).sum()/(N*N)
+>>>>>>> dcf3e6f57a88c0983b20818245fc24dc1cefcf47
 	error_per_element = '%.2f' % error_per_element
 	db['converge_list'].append(error_per_element)
 

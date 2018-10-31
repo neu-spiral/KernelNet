@@ -8,6 +8,7 @@ import sys
 import os
 
 
+
 def gen_subset_and_rest(db):
 	ensure_path_exists('%s/train_test'%(db['data_path']))
 	train_path = ('%s/train_test/train.csv'%(db['data_path']))
