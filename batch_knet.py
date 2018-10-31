@@ -22,11 +22,12 @@ np.set_printoptions(suppress=True)
 
 
 #	This controls which dataset to run
-#from wine import *
+from wine import *
 #from cancer import *
 #from face import *
 #from rcv import *
-from moon import *
+#from moon import *
+#from spiral import *
 #from car import *
 
 
@@ -37,4 +38,5 @@ from moon import *
 code = test_code()
 #code.run_10_fold()
 #code.run_batch()
-code.run_train_test_batch(0.2)
+#code.run_train_test_batch(0.2)
+code.run_subset_and_rest_batch()

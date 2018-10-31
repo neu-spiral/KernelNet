@@ -20,7 +20,7 @@ class test_code(test_parent):
 		print(colored(('\nRunning Kernel Net : %s'%(__name__)), 'white'))
 		db = {}
 		#	Data settings
-		db['data_name'] = 'moon'
+		db['data_name'] = 'spiral'
 		db['center_and_scale'] = True
 		db['recompute_data_split'] = False
 		db['use_Degree_matrix'] = True
@@ -29,7 +29,7 @@ class test_code(test_parent):
 
 		#	hyperparams
 		db['batch_size'] = 5
-		db['num_of_clusters'] = 2
+		db['num_of_clusters'] = 3
 		db['use_U_normalize'] = True
 		db["mlp_width"]= 20
 

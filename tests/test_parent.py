@@ -47,7 +47,7 @@ class test_parent():
 
 
 
-	def run_subset_and_rest_batch(self, test_percentage):
+	def run_subset_and_rest_batch(self):
 		db = self.db
 		db['train_test_dataset'] = True
 

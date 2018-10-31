@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from path_tools import *
 from numpy import genfromtxt
+from kernel_lib import *
 from DManager import *
 from distances import *
 import numpy as np
@@ -10,28 +11,46 @@ import os
 
 
 def gen_subset_and_rest(db):
-	ensure_path_exists('%s/train_test'%(db['data_path']))
-	train_path = ('%s/train_test/train.csv'%(db['data_path']))
-	test_path = ('%s/train_test/test.csv'%(db['data_path']))
-	train_label_path = ('%s/train_test/train_label.csv'%(db['data_path']))
-	test_label_path = ('%s/train_test/test_label.csv'%(db['data_path']))
+	ensure_path_exists('%s/subset_rest'%(db['data_path']))
+	train_path = ('%s/subset_rest/train.csv'%(db['data_path']))
+	test_path = ('%s/subset_rest/test.csv'%(db['data_path']))
+	train_label_path = ('%s/subset_rest/train_label.csv'%(db['data_path']))
+	test_label_path = ('%s/subset_rest/test_label.csv'%(db['data_path']))
 	if (db['recompute_data_split'] == False) and os.path.exists(train_path): return
 
 	orig_data = DManager(db['orig_data_file_name'], db['orig_label_file_name'], torch.FloatTensor)
 	σ = median_of_pairwise_distance(orig_data.X)
 	K_orig = rbk_sklearn(orig_data.X, σ)
-	np.linalg.eigh(K_orig)
+	[D,V] = np.linalg.eigh(K_orig)
+	scaled_cumsum_D = np.cumsum(np.flip(D)/np.sum(D))
+	eigLen = len(scaled_cumsum_D[scaled_cumsum_D < 0.95])
+	largest_eigs = np.flip(D)[0:eigLen]
+	largest_eigs = largest_eigs/np.sum(largest_eigs)
 
-
-
-	for n in np.arange(0.05,0.8,0.05):
-		N = orig_data.N
-		loc = 0
-		inc = int(np.floor(test_percent*N))
-		rp = np.random.permutation(N).tolist()
+	N = orig_data.N
+	for test_percent in np.arange(0.05,0.8,0.05):
+		for rep in range(10):
+			inc = int(np.floor(test_percent*N))
+			if inc < eigLen: continue
 	
-		test_set_id = rp[0:inc]
-		train_set_id = list(set(rp) - set(test_set_id))
+			rp = np.random.permutation(N).tolist()
+			test_set_id = rp[0:inc]
+			sample_X = orig_data.X[test_set_id,:]
+	
+			K_new = rbk_sklearn(sample_X, σ)
+			[D,V] = np.linalg.eigh(K_new)
+			small_eigs = np.flip(D)[0:eigLen]
+			small_eigs = small_eigs/np.sum(small_eigs)
+	
+			Kd = np.absolute(largest_eigs - small_eigs)
+	
+			print(sample_X.shape)
+			print(np.max(Kd))
+			print(Kd)
+
+	import pdb; pdb.set_trace()
+
+		#train_set_id = list(set(rp) - set(test_set_id))
 
 
 
