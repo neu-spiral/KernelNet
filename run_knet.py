@@ -16,11 +16,9 @@ test_name = 'wine'
 #test_name = 'cancer'
 #test_name = 'face'
 
+last_file = './pretrained/' + test_name + '/' + test_name + '_last.pk'
+if os.path.isfile(last_file): os.remove(last_file)
 
-
-
-pretrain_path = './pretrained/' + test_name + '/'
-remove_files(pretrain_path)
 tmp_path = './tmp/' + test_name + '/'
 tmp_path_2 = './tmp/' + test_name + '/batch_outputs'
 tmp_path_3 = './tmp/' + test_name + '/db_files'
