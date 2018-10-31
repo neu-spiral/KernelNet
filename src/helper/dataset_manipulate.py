@@ -38,11 +38,14 @@ def gen_train_validate_data(db):
 
 
 def gen_training_and_test(db, test_percent):
+
 	ensure_path_exists('%s/train_test'%(db['data_path']))
 	train_path = ('%s/train_test/train.csv'%(db['data_path']))
 	test_path = ('%s/train_test/test.csv'%(db['data_path']))
 	train_label_path = ('%s/train_test/train_label.csv'%(db['data_path']))
 	test_label_path = ('%s/train_test/test_label.csv'%(db['data_path']))
+	if (db['recompute_data_split'] == False) and os.path.exists(train_path): return
+
 
 	orig_data = DManager(db['orig_data_file_name'], db['orig_label_file_name'], torch.FloatTensor)
 
@@ -73,7 +76,7 @@ def gen_10_fold_data(db):
 		if not path_list_exists(path_list): ten_fold_exist = False
 
 
-	if db['recompute_10_fold'] == False and ten_fold_exist == True: return
+	if db['recompute_data_split'] == False and ten_fold_exist == True: return
 
 
 	ensure_path_exists('%s/10_fold'%(db['data_path']))

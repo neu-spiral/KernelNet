@@ -23,9 +23,10 @@ np.set_printoptions(suppress=True)
 
 #	This controls which dataset to run
 from wine import *
-#from car import *
 #from cancer import *
 #from rcv import *
+#from face import *
+#from car import *
 
 
 
@@ -35,4 +36,4 @@ from wine import *
 code = test_code()
 #code.run_10_fold()
 code.run_batch()
-#code.run_train_test_batch()
+#code.run_train_test_batch(0.2)

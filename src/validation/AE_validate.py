@@ -13,12 +13,13 @@ import pickle
 
 def fill_dictionary(db, dictionary, list_of_keys):
 	for i in list_of_keys:
-		if type(db[i]) == type: 
-			dictionary[i] = db[i].__name__
-		elif type(db[i]) == types.FunctionType:
-			dictionary[i] = db[i].__name__
-		else:
-			dictionary[i] = db[i]
+		if i in db:
+			if type(db[i]) == type: 
+				dictionary[i] = db[i].__name__
+			elif type(db[i]) == types.FunctionType:
+				dictionary[i] = db[i].__name__
+			else:
+				dictionary[i] = db[i]
 
 def save_results_to_text_file(db, result_path, fname, output_str):
 	most_recent_result_path = result_path + fname
@@ -100,9 +101,15 @@ def save_result_to_history(db, result, result_path, fname, output_str):
 
 def AE_validate(db):
 	#	get loss objective
-	if 'train_loss' not in db:
+	if 'train_loss' in db:
 		[db['train_loss'], db['train_hsic'], db['train_AE_loss'], φ_x, U, U_normalized] = db['knet'].get_current_state(db, db['train_data'].X_Var)
-		#[db['valid_loss'], db['valid_hsic'], db['valid_AE_loss'], φ_x] = db['knet'].get_current_state(db, db['valid_data'].X_Var)
+
+	if 'test_data' in db:
+		[db['test_loss'], db['test_hsic'], db['test_AE_loss'], test_φ_x, test_U, test_U_normalized] = db['knet'].get_current_state(db, db['test_data'].X_Var)
+		current_label = kmeans(db['num_of_clusters'], test_φ_x)
+		db['test_nmi'] = normalized_mutual_info_score(current_label, db['test_data'].Y)
+
+	
 
 	#	get training nmi
 	current_label = kmeans(db['num_of_clusters'], db['U_normalized'])
@@ -112,11 +119,6 @@ def AE_validate(db):
 	current_label = kmeans(db['num_of_clusters'], ϕ_x)
 	db['final_AE_Kmeans'] = normalized_mutual_info_score(current_label, db['train_data'].Y)
 
-
-	##	get validation nmi
-	#[x_hat, U] = db['knet'](db['valid_data'].X_Var)		# <- update this to be used in opt_K
-	#current_label = kmeans(db['num_of_clusters'], U)
-	#db['valid_nmi'] = normalized_mutual_info_score(current_label, db['valid_data'].Y)
 
 
 	#	setting up paths
@@ -162,23 +164,23 @@ def AE_validate(db):
 
 	output_str += '\tResults of Initial States '
 	packet_5 = {}
-	list_of_keys = ['init_spectral_nmi', 'init_AE+Kmeans_nmi', 'init_AE+Spectral_nmi', 'initial_loss', 'initial_hsic', 'initial_AE_loss']
+	list_of_keys = ['init_AE+Kmeans_nmi_onTest', 'init_spectral_nmi', 'init_AE+Kmeans_nmi', 'init_AE+Spectral_nmi', 'initial_loss', 'initial_hsic', 'initial_AE_loss']
 	fill_dictionary(db, packet_5, list_of_keys)
 	output_str += '\n' + dictionary_to_str(packet_5)
-
 
 	#	objective results
 	output_str += '\tObjective Results'
 	packet_6 = {}
-	#list_of_keys = ['train_loss','train_hsic','train_AE_loss','valid_loss','valid_hsic','valid_AE_loss']
-	list_of_keys = ['train_loss','train_hsic','train_AE_loss']
+	list_of_keys = ['test_loss', 'test_hsic', 'test_AE_loss', 'train_loss','train_hsic','train_AE_loss']
+
+
 	fill_dictionary(db, packet_6, list_of_keys)
 	output_str += '\n' + dictionary_to_str(packet_6)
 
 	#	NMI results
 	output_str += '\tNMI Results'
 	packet_7 = {}
-	list_of_keys = ['train_nmi', 'final_AE_Kmeans'] #list_of_keys = ['train_nmi','valid_nmi']
+	list_of_keys = ['train_nmi', 'final_AE_Kmeans', 'test_nmi'] #list_of_keys = ['train_nmi','valid_nmi']
 	fill_dictionary(db, packet_7, list_of_keys)
 	output_str += '\n' + dictionary_to_str(packet_7)
 
@@ -194,6 +196,8 @@ def AE_validate(db):
 	output_str += '\t%.3f'%(db['train_loss'])
 	output_str += '\t%.3f'%(db['train_nmi'])
 	output_str += '\t%.3f'%(db['final_AE_Kmeans'])
+	try: output_str += '\t%.3f'%(db['test_nmi'])
+	except: pass
 
 	print(output_str)
 

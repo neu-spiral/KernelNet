@@ -21,7 +21,7 @@ class test_code(test_parent):
 		#	Data settings
 		db['data_name'] = 'wine'
 		db['center_and_scale'] = True
-		db['recompute_10_fold'] = False
+		db['recompute_data_split'] = True
 		db['use_Degree_matrix'] = True
 		db['pretrain_repeats'] = 4
 		db['cuda'] = False
@@ -43,9 +43,9 @@ class test_code(test_parent):
 
 	def parameter_ranges(self):
 		output_dim = [13]
-		kernel_net_depth = [3]
+		kernel_net_depth = [1]
 		σ_ratio = [1]
-		extra_repeat = range(200)
+		extra_repeat = range(3)
 		id_10_fold = [0] #range(10)
 		lambda_ratio = [2]
 
