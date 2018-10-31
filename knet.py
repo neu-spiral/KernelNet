@@ -55,17 +55,15 @@ def initialize_data(db):
 	else: db['dataType'] = torch.FloatTensor				
 	#db['dataType'] = torch.FloatTensor
 
-	if db["test_data_file_name"] == '':
-		db['train_data'] = DManager(db["train_data_file_name"], db["train_label_file_name"], db['dataType'])
-		db['train_loader'] = DataLoader(dataset=db['train_data'], batch_size=db['batch_size'], shuffle=True)
-	else:
+	db['train_data'] = DManager(db["train_data_file_name"], db["train_label_file_name"], db['dataType'])
+	db['train_loader'] = DataLoader(dataset=db['train_data'], batch_size=db['batch_size'], shuffle=True)
+
+	if 'train_test_dataset' in db:
+		db['test_data'] = DManager(db["test_data_file_name"], db["test_label_file_name"], db['dataType'])
+		db['test_loader'] = DataLoader(dataset=db['test_data'], batch_size=db['batch_size'], shuffle=True)
+	elif 'using_10_fold_dataset' in db:
 		gen_train_validate_data(db)
-		#db['orig_data'] = DManager(db['orig_data_file_name'], db['orig_label_file_name'], db['dataType'])
-		db['train_data'] = DManager(db['train_path'], db['train_label_path'], db['dataType'])
 		db['valid_data'] = DManager(db["valid_path"], db['valid_label_path'], db['dataType'])
-	
-		#db['orig_data_loader'] = DataLoader(dataset=db['orig_data'], batch_size=db['batch_size'], shuffle=True)
-		db['train_loader'] = DataLoader(dataset=db['train_data'], batch_size=db['batch_size'], shuffle=True)
 		db['valid_loader'] = DataLoader(dataset=db['valid_data'], batch_size=db['batch_size'], shuffle=True)
 
 def initialize_embedding(db):
@@ -84,7 +82,7 @@ def initialize_embedding(db):
 	print('\t\tInitial Spectral Clustering NMI on raw data : %.3f'%db['init_spectral_nmi'])
 
 
-def initialize_network(db, pretrain_knet=True):
+def initialize_network(db, pretrain_knet=True, ignore_in_batch=False):
 	db['net_input_size'] = db['train_data'].d
 	db['net_depth'] = db['kernel_net_depth']
 	db['net_output_dim'] = db['output_dim']
@@ -95,14 +93,14 @@ def initialize_network(db, pretrain_knet=True):
 
 	if pretrain_knet:
 		dataLoader = 'train_loader'
-		if not import_pretrained_network(db, 'knet', 'rbm'):
+		if not import_pretrained_network(db, 'knet', 'rbm', ignore_in_batch):
 			start_time = time.time() 
 			pretrain(db['knet'], db, dataLoader)
 			db['knet'].pretrain_time = time.time() - start_time
-			export_pretrained_network(db, 'knet', 'rbm')
+			export_pretrained_network(db, 'knet', 'rbm', ignore_in_batch)
 	
 	
-		if not import_pretrained_network(db, 'knet', 'end2end'):
+		if not import_pretrained_network(db, 'knet', 'end2end', ignore_in_batch):
 			print('\tRunning End to End Autoencoder training...')
 			prev_loss = db['knet'].autoencoder_loss(db['train_data'].X_Var, None, None)
 			start_time = time.time() 
@@ -112,7 +110,7 @@ def initialize_network(db, pretrain_knet=True):
 			db['knet'].end2end_time = time.time() - start_time
 			db['knet'].end2end_error = (db['knet'].autoencoder_loss(db['train_data'].X_Var, None, None)).item()
 			print('\n\tError of End to End AE , Before %.3f, After %.3f'%(prev_loss.item(), db['knet'].end2end_error))
-			export_pretrained_network(db, 'knet', 'end2end')
+			export_pretrained_network(db, 'knet', 'end2end', ignore_in_batch)
 
 		#debug.end2end(db)
 
@@ -127,7 +125,13 @@ def initialize_network(db, pretrain_knet=True):
 	[allocation, db['init_AE+Kmeans_nmi']] = kmeans(db['num_of_clusters'], ψ_x, Y=db['train_data'].Y)
 	[allocation, db['init_AE+Spectral_nmi']] = kmeans(db['num_of_clusters'], U_normalized, Y=db['train_data'].Y)
 
-	print('\t\tInitial AE + Kmeans NMI : %.3f, AE + Spectral : %.3f'%(db['init_AE+Kmeans_nmi'], db['init_AE+Spectral_nmi']))
+	extra_info = ''
+	if 'test_data' in db:
+		[db['test_initial_loss'], db['test_initial_hsic'], db['test_initial_AE_loss'], test_ψ_x, test_U, test_U_normalized] = db['knet'].get_current_state(db, db['test_data'].X_Var)
+		[allocation, db['init_AE+Kmeans_nmi_onTest']] = kmeans(db['num_of_clusters'], test_U_normalized, Y=db['test_data'].Y)
+		extra_info = ', AE+Kmeans on Test NMI : %.3f'%db['init_AE+Kmeans_nmi_onTest']
+
+	print('\t\tInitial AE + Kmeans NMI : %.3f, AE + Spectral : %.3f%s'%(db['init_AE+Kmeans_nmi'], db['init_AE+Spectral_nmi'], extra_info))
 	#import pdb; pdb.set_trace()
 
 
@@ -165,13 +169,13 @@ def train_kernel_net(db):
 
 
 def define_settings():
-	#db = wine_raw_data()
+	db = wine_raw_data()
 	#db = cancer_raw_data()
 	#db = wine_sm()
 	#db = moon_raw_data()
 	#db = moon_raw_data_sm()
 	#db = spiral_raw_data()
-	db = face_raw_data()
+	#db = face_raw_data()
 	#db = face_raw_data_sm()
 	#db = rcv_raw_data()
 
@@ -192,7 +196,7 @@ def discover_lowest_end2end_error():
 	db = define_settings()
 	initialize_data(db)
 	initialize_embedding(db)
-	initialize_network(db, pretrain_knet=True)
+	initialize_network(db, pretrain_knet=True, ignore_in_batch=True)
 	save_to_lowest_end2end(db)
 
 def default_run():
@@ -200,7 +204,7 @@ def default_run():
 	initialize_data(db)
 	initialize_embedding(db)
 	initialize_network(db, pretrain_knet=True)
-	#train_kernel_net(db)
+	train_kernel_net(db)
 
 
 

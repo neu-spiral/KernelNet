@@ -42,7 +42,7 @@ class test_code(test_parent):
 		test_parent.__init__(self, db)
 
 	def parameter_ranges(self):
-		output_dim = [13]
+		output_dim = [27]
 		kernel_net_depth = [3]
 		σ_ratio = [1]
 		extra_repeat = range(200)

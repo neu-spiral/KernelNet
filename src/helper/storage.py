@@ -105,23 +105,26 @@ def save_to_lowest_end2end(db):
 	pth = './pretrained/' + db['data_name'] + '/' + db['data_name'] + '_best_end2end.pk'
 	lowest_error_list = './pretrained/' + db['data_name'] + '/' + 'lowest_error_list.txt'
 	mutex = './pretrained/' + db['data_name'] + '/' + db['data_name'] + '_best_end2end.writing'
-	tmp_writing = tmp + '.' + str(int(10000000*np.random.rand()))
+	tmp_writing = './pretrained/' + db['data_name'] + '/' + 'tmp.' + str(int(10000000*np.random.rand()))
 
 
 	if path_list_exists([pth]):
 		best_knet = pickle.load( open( pth, "rb" ) )
-		if db['knet'] < best_knet.end2end_error:
+		if db['knet'].end2end_error < best_knet.end2end_error:
 			pickle.dump( db['knet'] , open(tmp_writing, "wb" ) )
 	else:
 		pickle.dump( db['knet'] , open(tmp_writing, "wb" ) )
 
 
-	while os.path.exists(mutex): time.sleep(20*np.random.rand())
+	while os.path.exists(mutex): 
+		print('waiting .....')
+		time.sleep(20*np.random.rand())
 
 	create_file(mutex)
-	fin = open('lowest_error_list','a')
-	fin.write('%.4f\n'%best_knet.end2end_error)
+	fin = open(lowest_error_list,'a')
+	fin.write('%.4f\n'%db['knet'].end2end_error)
 	fin.close()
-	shutil.move(tmp_writing, pth)
+	if os.path.exists(tmp_writing): shutil.move(tmp_writing, pth)
 	delete_file(mutex)
+
 

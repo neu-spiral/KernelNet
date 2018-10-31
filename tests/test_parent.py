@@ -11,8 +11,7 @@ import itertools
 import torch
 import types
 import socket
-
-
+import os
 
 class test_parent():
 	def __init__(self,db):
@@ -32,6 +31,12 @@ class test_parent():
 		ensure_path_exists(db_output_path)
 		ensure_path_exists(batch_output_path)
 
+		ensure_path_exists('./pretrained')
+		ensure_path_exists('./pretrained/' + db['data_name'])
+		mutex_file = './pretrained/' + db['data_name'] + '/' + db['data_name'] + '_best_end2end.writing'
+		if os.path.isfile(mutex_file): os.remove(mutex_file)
+
+
 		reply = str(input('Do you want to delete pre-stored files ?'+' (y/[n]): ')).lower().strip()
 
 		if reply == 'y':
@@ -41,13 +46,14 @@ class test_parent():
 			remove_files(result_path)
 
 
-	def run_train_test_batch(self):
+	def run_train_test_batch(self, test_percentage):
 		db = self.db
+		db['train_test_dataset'] = True
 
 		output_list = self.parameter_ranges()
 		every_combination = list(itertools.product(*output_list))
 
-		dataset_manipulate.gen_training_and_test(db, 0.2)
+		dataset_manipulate.gen_training_and_test(db, test_percentage)
 		for count, single_instance in enumerate(every_combination):
 			[output_dim, kernel_net_depth, σ_ratio, extra_repeat, λ_ratio, id_10_fold] = single_instance
 
@@ -67,6 +73,7 @@ class test_parent():
 
 	def run_batch(self):
 		db = self.db
+		db['only_train_data_set'] = True
 
 		output_list = self.parameter_ranges()
 		every_combination = list(itertools.product(*output_list))
@@ -91,6 +98,7 @@ class test_parent():
 
 	def run_10_fold(self):
 		db = self.db
+		db['using_10_fold_dataset'] = True
 		dataset_manipulate.gen_10_fold_data(db)
 
 		output_list = self.parameter_ranges()
