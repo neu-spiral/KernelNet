@@ -36,10 +36,14 @@ def import_pretrained_network(db, keyVal, stage_name, ignore_in_batch=False):
 				except: return False
 				
 	
-				if test1 and test2 and test3 and test4:
+				if test1 and test2 and test3:
 					db[keyVal] = itm
 					print('\t\tSucessful...')
 					return True
+				else:
+					print('\t\tloaded input size : %d, current input size : %d'%(itm.input_size, db[keyVal].input_size))
+					print('\t\tloaded output size : %d, current output size : %d'%(itm.output_dim, db[keyVal].output_dim))
+					print('\t\tloaded depth : %d, current depth : %d'%(itm.net_depth, db[keyVal].net_depth))
 		else:
 			test1 = list_of_networks.input_size == db[keyVal].input_size
 			test2 = list_of_networks.output_dim == db[keyVal].output_dim

@@ -113,6 +113,8 @@ def initialize_network(db, pretrain_knet=True):
 			db['knet'].end2end_error = (db['knet'].autoencoder_loss(db['train_data'].X_Var, None, None)).item()
 			print('\n\tError of End to End AE , Before %.3f, After %.3f'%(prev_loss.item(), db['knet'].end2end_error))
 			export_pretrained_network(db, 'knet', 'end2end')
+		else:
+			print('\t\tError of End to End AE : %.3f'%(db['knet'].end2end_error))
 
 		#debug.end2end(db)
 
@@ -165,13 +167,13 @@ def train_kernel_net(db):
 
 
 def define_settings():
-	#db = wine_raw_data()
+	db = wine_raw_data()
 	#db = cancer_raw_data()
 	#db = wine_sm()
 	#db = moon_raw_data()
 	#db = moon_raw_data_sm()
 	#db = spiral_raw_data()
-	db = face_raw_data()
+	#db = face_raw_data()
 	#db = face_raw_data_sm()
 	#db = rcv_raw_data()
 
@@ -200,11 +202,11 @@ def default_run():
 	initialize_data(db)
 	initialize_embedding(db)
 	initialize_network(db, pretrain_knet=True)
-	#train_kernel_net(db)
+	train_kernel_net(db)
 
 
 
 
 
-#default_run()
-discover_lowest_end2end_error()
+default_run()
+#discover_lowest_end2end_error()

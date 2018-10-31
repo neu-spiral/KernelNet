@@ -21,7 +21,7 @@ class opt_K():
 		Y = numpy2Variable(Y, db['dataType'])
 
 		db['knet'].set_Y(Y)
-		[avgLoss, avgGrad, progression_slope] = basic_optimizer(db['knet'], db, loss_callback='compute_loss', data_loader_name='train_loader', epoc_loop=20)
+		[avgLoss, avgGrad, progression_slope] = basic_optimizer(db['knet'], db, loss_callback='compute_loss', data_loader_name='train_loader', epoc_loop=100)
 		[db['x_hat'], db['ϕ_x']] = db['knet'](db['train_data'].X_Var)		# <- update this to be used in opt_K
 
 		if 'objective_tracker' in db:
