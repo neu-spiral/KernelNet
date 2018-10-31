@@ -110,7 +110,13 @@ def initialize_network(db, pretrain_knet=True, ignore_in_batch=False):
 			db['knet'].end2end_time = time.time() - start_time
 			db['knet'].end2end_error = (db['knet'].autoencoder_loss(db['train_data'].X_Var, None, None)).item()
 			print('\n\tError of End to End AE , Before %.3f, After %.3f'%(prev_loss.item(), db['knet'].end2end_error))
+<<<<<<< HEAD
 			export_pretrained_network(db, 'knet', 'end2end', ignore_in_batch)
+=======
+			export_pretrained_network(db, 'knet', 'end2end')
+		else:
+			print('\t\tError of End to End AE : %.3f'%(db['knet'].end2end_error))
+>>>>>>> f9f37502392c3c3a9746efeb4f66fb146296758b
 
 		#debug.end2end(db)
 
@@ -120,10 +126,13 @@ def initialize_network(db, pretrain_knet=True, ignore_in_batch=False):
 	#db['RFF'].initialize_RFF(db['train_data'].X, db['knet'].σ, False, None)
 	#ϕ_x = db['RFF'].np_feature_map(db['train_data'].X)
 	#[allocation, db['init_ϕ_x_nmi']] = kmeans(db['num_of_clusters'], ϕ_x, Y=db['train_data'].Y)
+#[db['U'], db['U_normalized']]
 
 	[db['initial_loss'], db['initial_hsic'], db['initial_AE_loss'], ψ_x, U, U_normalized] = db['knet'].get_current_state(db, db['train_data'].X_Var)
 	[allocation, db['init_AE+Kmeans_nmi']] = kmeans(db['num_of_clusters'], ψ_x, Y=db['train_data'].Y)
 	[allocation, db['init_AE+Spectral_nmi']] = kmeans(db['num_of_clusters'], U_normalized, Y=db['train_data'].Y)
+	db['U'] = Allocation_2_Y(allocation)
+
 
 	extra_info = ''
 	if 'test_data' in db:
@@ -151,12 +160,12 @@ def train_kernel_net(db):
 
 		[db['train_loss'], db['train_hsic'], db['train_AE_loss'], φ_x, U, U_normalized] = db['knet'].get_current_state(db, db['train_data'].X_Var)
 
-		#db['λ'] = 1.8
-		#db['λ_ratio'] = 0
-		#for count in range(1):
-		#	db['opt_K'].run(count)
-		#	db['opt_U'].run(count)
-		#	if db['exit_cond'](db, count) > 99: break;
+		db['λ'] = 0
+		db['λ_ratio'] = 0
+		for count in range(1):
+			db['opt_K'].run(count)
+			db['opt_U'].run(count)
+			if db['exit_cond'](db, count) > 99: break;
 
 		db['knet'].train_time = time.time() - start_time
 		export_pretrained_network(db, 'knet', 'last', True)
@@ -210,5 +219,5 @@ def default_run():
 
 
 
-#default_run()
-discover_lowest_end2end_error()
+default_run()
+#discover_lowest_end2end_error()
