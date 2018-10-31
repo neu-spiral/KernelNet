@@ -21,6 +21,7 @@ from matplotlib import pyplot as plt
 from dataset_manipulate import *
 from pretrain import *
 from AE import *
+from MLP import *
 from AE_validate import *
 from storage import *
 from DManager import *
@@ -29,13 +30,15 @@ from wine_raw_data import *
 from wine_sm import *
 from moon_raw_data import *
 from moon_raw_data_sm import *
-from spiral_raw_data import *
+from moon_80_20 import *
+from moon_80_20_sm import *
 from face_raw_data import *
 from face_raw_data_sm import *
+from face_8020 import *
 from rcv_raw_data import *
 from cancer_raw_data import *
-from moon_80_20 import *
 from spiral_80_20 import *
+from spiral_raw_data import *
 
 
 
@@ -118,13 +121,6 @@ def initialize_network(db, pretrain_knet=True, ignore_in_batch=False):
 		#debug.end2end(db)
 
 	db['knet'].initialize_variables(db)
-
-	#db['RFF'] = RFF(sample_num=20)
-	#db['RFF'].initialize_RFF(db['train_data'].X, db['knet'].σ, False, None)
-	#ϕ_x = db['RFF'].np_feature_map(db['train_data'].X)
-	#[allocation, db['init_ϕ_x_nmi']] = kmeans(db['num_of_clusters'], ϕ_x, Y=db['train_data'].Y)
-#[db['U'], db['U_normalized']]
-
 	[db['initial_loss'], db['initial_hsic'], db['initial_AE_loss'], ψ_x, U, U_normalized] = db['knet'].get_current_state(db, db['train_data'].X_Var)
 	[allocation, db['init_AE+Kmeans_nmi']] = kmeans(db['num_of_clusters'], ψ_x, Y=db['train_data'].Y)
 	[allocation, db['init_AE+Spectral_nmi']] = kmeans(db['num_of_clusters'], U_normalized, Y=db['train_data'].Y)
@@ -179,11 +175,13 @@ def define_settings():
 	#db = cancer_raw_data()
 	#db = wine_sm()
 	#db = moon_raw_data()
-	db = moon_80_20()
+	#db = moon_80_20()
+	#db = moon_80_20_sm()
 	#db = moon_raw_data_sm()
 	#db = spiral_raw_data()
-	#db = spiral_80_20()
+	db = spiral_80_20()
 	#db = face_raw_data()
+	#db = face_8020()
 	#db = face_raw_data_sm()
 	#db = rcv_raw_data()
 
