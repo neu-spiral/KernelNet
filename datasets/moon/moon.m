@@ -1,6 +1,6 @@
 #!/usr/bin/octave
 
-N = 300;		% half of samples
+N = 500;		% half of samples
 noise_N = 0;
 total_d = 4 + noise_N;
 
