@@ -8,21 +8,19 @@ from opt_Kernel import *
 
 
 
-def moon_80_20():
+def spiral_raw_data():
 	db = {}
 	# Data info
-	dn = db["data_name"]="moon"
+	dn = db["data_name"]="spiral"
 	db["center_and_scale"]=True
 	db["data_path"]="./datasets/" + dn + "/"
 	db["orig_data_file_name"]="./datasets/" + dn + "/" + dn + ".csv"
 	db["orig_label_file_name"]="./datasets/" + dn + "/" + dn + "_label.csv"
 	db['data_folder']  = db['data_path'] 
-	db["train_data_file_name"]="./datasets/moon/train_test/train.csv"
-	db["train_label_file_name"]="./datasets/moon/train_test/train_label.csv"
-	db["test_data_file_name"]="./datasets/moon/train_test/test.csv"
-	db["test_label_file_name"]="./datasets/moon/train_test/test_label.csv"
-	db['train_test_dataset'] = True
-
+	db['train_data_file_name']  = db['data_folder'] + db['data_name'] + '.csv'
+	db['train_label_file_name']  = db['data_folder'] + db['data_name'] + '_label.csv'
+	db['test_data_file_name']  = ''
+	db['test_label_file_name']  = ''
 	db['10_fold_id'] = 0
 	db['cuda'] = False #torch.cuda.is_available()
 	
@@ -37,7 +35,7 @@ def moon_80_20():
 	db["λ_ratio"]=2
 	db['pretrain_repeats'] = 4
 	db['batch_size'] = 5
-	db['num_of_clusters'] = 2
+	db['num_of_clusters'] = 3
 	db['use_Degree_matrix'] = True
 	db['use_U_normalize'] = True
 	

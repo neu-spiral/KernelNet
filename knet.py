@@ -34,6 +34,7 @@ from face_raw_data import *
 from face_raw_data_sm import *
 from rcv_raw_data import *
 from cancer_raw_data import *
+from moon_80_20 import *
 
 
 
@@ -80,7 +81,6 @@ def initialize_embedding(db):
 	
 	[allocation, db['init_spectral_nmi']] = kmeans(db['num_of_clusters'], db['U_normalized'], Y=db['train_data'].Y)
 	print('\t\tInitial Spectral Clustering NMI on raw data : %.3f'%db['init_spectral_nmi'])
-
 
 def initialize_network(db, pretrain_knet=True, ignore_in_batch=False):
 	db['net_input_size'] = db['train_data'].d
@@ -177,7 +177,8 @@ def define_settings():
 	#db = wine_raw_data()
 	#db = cancer_raw_data()
 	#db = wine_sm()
-	db = moon_raw_data()
+	#db = moon_raw_data()
+	db = moon_80_20()
 	#db = moon_raw_data_sm()
 	#db = spiral_raw_data()
 	#db = face_raw_data()

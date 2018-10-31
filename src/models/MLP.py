@@ -26,6 +26,7 @@ class MLP(MLP_autoencoder):
 
 		N = db['train_data'].N
 		self.H = np.eye(N) - (1.0/N)*np.ones((N, N))
+		self.mlp_width = db['mlp_width']
 
 	def set_Y(self, Y):
 		self.Y = Y
