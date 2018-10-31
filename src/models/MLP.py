@@ -36,7 +36,6 @@ class MLP(MLP_autoencoder):
 		φ_x = ensure_matrix_is_numpy(φ_x)
 
 		[DKxD, Dinv] = normalized_rbk_sklearn(φ_x, self.σ)
-
 		HDKxDH = center_matrix(db, DKxD)
 		[U, U_normalized] = L_to_U(db, HDKxDH)
 		Ku = U.dot(U.T)

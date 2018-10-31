@@ -8,7 +8,7 @@ from opt_Kernel import *
 
 
 
-def spiral_raw_data():
+def spiral_80_20():
 	db = {}
 	# Data info
 	dn = db["data_name"]="spiral"
@@ -17,11 +17,11 @@ def spiral_raw_data():
 	db["orig_data_file_name"]="./datasets/" + dn + "/" + dn + ".csv"
 	db["orig_label_file_name"]="./datasets/" + dn + "/" + dn + "_label.csv"
 	db['data_folder']  = db['data_path'] 
-
 	db["train_data_file_name"]="./datasets/spiral/train_test/train.csv"
 	db["train_label_file_name"]="./datasets/spiral/train_test/train_label.csv"
 	db["test_data_file_name"]="./datasets/spiral/train_test/test.csv"
 	db["test_label_file_name"]="./datasets/spiral/train_test/test_label.csv"
+	db['train_test_dataset'] = True
 
 	db['10_fold_id'] = 0
 	db['cuda'] = False #torch.cuda.is_available()

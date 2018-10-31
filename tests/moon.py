@@ -9,6 +9,7 @@ from sm_opt_Kernel import *
 from AE_validate import *
 from termcolor import colored
 import sklearn.metrics
+from MLP import *
 from AE import *
 import numpy as np
 import random
@@ -33,7 +34,7 @@ class test_code(test_parent):
 		db["mlp_width"]= 20
 
 		# objs
-		db['kernel_model'] = AE
+		db['kernel_model'] = MLP
 		db['opt_K_class'] = opt_K
 		db['opt_U_class'] = opt_U
 		db['exit_cond'] = exit_cond
@@ -44,7 +45,7 @@ class test_code(test_parent):
 	def parameter_ranges(self):
 		output_dim = [2]
 		kernel_net_depth = [3]
-		σ_ratio = [1]
+		σ_ratio = [0.1]
 		extra_repeat = range(1)
 		id_10_fold = [0] #range(10)
 		lambda_ratio = [2]
