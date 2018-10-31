@@ -56,8 +56,8 @@ alternative_label = [zeros(N,1); ones(N,1)];
 
 
 csvwrite(['moon_' num2str(N*2) 'x' num2str(total_d) '.csv'], data(:,1:2), 'precision', 3)
-%csvwrite(['moon_' num2str(N*2) 'x' num2str(total_d) '_label.csv'], alternative_label, 'precision', 1)
-csvwrite(['moon_' num2str(N*2) 'x' num2str(total_d) '_label.csv'], original_label, 'precision', 1)
+csvwrite(['moon_' num2str(N*2) 'x' num2str(total_d) '_label.csv'], alternative_label, 'precision', 1)
+%csvwrite(['moon_' num2str(N*2) 'x' num2str(total_d) '_label.csv'], original_label, 'precision', 1)
 
 
 %csvwrite(['moon_' num2str(N*2) 'x' num2str(total_d) '.csv'], data, 'precision', 3)

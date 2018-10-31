@@ -42,10 +42,7 @@ def save_result_to_history(db, result, result_path, fname, output_str):
 	knet_best_train_nmi = result_path + str(db['10_fold_id']) + '_knet_best_train_nmi.pk'
 	knet_lowest_train_loss = result_path + str(db['10_fold_id']) + '_knet_lowest_train_loss.pk'
 	knet_best_valid_nmi = result_path + str(db['10_fold_id']) + '_knet_best_valid_nmi.pk'
-<<<<<<< HEAD
 	knet_best_test_nmi = result_path + str(db['10_fold_id']) + '_knet_best_test_nmi.pk'
-=======
->>>>>>> dcf3e6f57a88c0983b20818245fc24dc1cefcf47
 	knet_lowest_valid_loss = result_path + str(db['10_fold_id']) + '_knet_lowest_valid_loss.pk'
 
 	if path_list_exists([file_path]):
@@ -63,7 +60,7 @@ def save_result_to_history(db, result, result_path, fname, output_str):
 			save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_lowest_train_loss.txt' , output_str)
 			pickle.dump( db['knet'] , open(knet_lowest_train_loss, "wb" ) )
 
-<<<<<<< HEAD
+
 
 		if 'test_data' in db:
 			if past_runs['best_test_nmi']['test_nmi'] < result['test_nmi']:
@@ -72,8 +69,6 @@ def save_result_to_history(db, result, result_path, fname, output_str):
 				pickle.dump( db['knet'] , open(knet_best_test_nmi, "wb" ) )
 	
 
-=======
->>>>>>> dcf3e6f57a88c0983b20818245fc24dc1cefcf47
 		if 'valid_data' in db:
 			if past_runs['best_valid_nmi']['valid_nmi'] < result['valid_nmi']:
 				past_runs['best_valid_nmi'] = result
@@ -100,21 +95,13 @@ def save_result_to_history(db, result, result_path, fname, output_str):
 		save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_best_valid_nmi.txt' , output_str)
 		save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_lowest_train_loss.txt' , output_str)
 		save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_lowest_valid_loss.txt' , output_str)
-<<<<<<< HEAD
 		save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_best_test_nmi.txt' , output_str)
 		
-
-=======
-		
->>>>>>> dcf3e6f57a88c0983b20818245fc24dc1cefcf47
 		pickle.dump( db['knet'] , open(knet_best_train_nmi, "wb" ) )
 		pickle.dump( db['knet'] , open(knet_best_valid_nmi, "wb" ) )
 		pickle.dump( db['knet'] , open(knet_lowest_train_loss, "wb" ) )
 		pickle.dump( db['knet'] , open(knet_lowest_valid_loss, "wb" ) )
-<<<<<<< HEAD
 		pickle.dump( db['knet'] , open(knet_best_test_nmi, "wb" ) )
-=======
->>>>>>> dcf3e6f57a88c0983b20818245fc24dc1cefcf47
 
 	pickle.dump( past_runs, open(tmp_writing, "wb" ) )
 
