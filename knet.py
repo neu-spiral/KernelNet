@@ -38,6 +38,7 @@ from face_8020 import *
 from rcv_raw_data import *
 from cancer_raw_data import *
 from spiral_80_20 import *
+from spiral_80_20_sm import *
 from spiral_raw_data import *
 
 
@@ -179,7 +180,8 @@ def define_settings():
 	#db = moon_80_20_sm()
 	#db = moon_raw_data_sm()
 	#db = spiral_raw_data()
-	db = spiral_80_20()
+	#db = spiral_80_20()
+	db = spiral_80_20_sm()
 	#db = face_raw_data()
 	#db = face_8020()
 	#db = face_raw_data_sm()
