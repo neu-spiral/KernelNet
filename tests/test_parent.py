@@ -46,6 +46,32 @@ class test_parent():
 			remove_files(result_path)
 
 
+	def run_subset_and_rest_batch(self, test_percentage):
+		db = self.db
+		db['train_test_dataset'] = True
+
+		output_list = self.parameter_ranges()
+		every_combination = list(itertools.product(*output_list))
+
+		dataset_manipulate.gen_subset_and_rest(db)
+		for count, single_instance in enumerate(every_combination):
+			[output_dim, kernel_net_depth, σ_ratio, extra_repeat, λ_ratio, id_10_fold] = single_instance
+
+			db['running_batch_mode'] = True
+			db['10_fold_id'] = id_10_fold
+			db['output_dim'] = output_dim
+			db['kernel_net_depth'] = kernel_net_depth
+			db['σ_ratio'] = float(σ_ratio)
+			db['λ_ratio'] = float(λ_ratio)
+			db['data_folder']  = db['data_path'] 
+			db['train_data_file_name']  = ('%s/train_test/train.csv'%(db['data_path']))
+			db['train_label_file_name']  = ('%s/train_test/train_label.csv'%(db['data_path']))
+			db['test_data_file_name']  = ('%s/train_test/test.csv'%(db['data_path']))
+			db['test_label_file_name']  = ('%s/train_test/test_label.csv'%(db['data_path']))
+
+			self.execute(db, id_10_fold, count)
+
+
 	def run_train_test_batch(self, test_percentage):
 		db = self.db
 		db['train_test_dataset'] = True

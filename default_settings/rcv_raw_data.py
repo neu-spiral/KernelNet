@@ -39,7 +39,7 @@ def rcv_raw_data():
 	db["σ_ratio"]=1
 	db["λ_ratio"]=2
 	db['pretrain_repeats'] = 4
-	db['batch_size'] = 178
+	db['batch_size'] = 5
 	db['num_of_clusters'] = 4
 	db['use_Degree_matrix'] = True
 	db['use_U_normalize'] = False
