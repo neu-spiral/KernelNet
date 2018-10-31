@@ -110,13 +110,9 @@ def initialize_network(db, pretrain_knet=True, ignore_in_batch=False):
 			db['knet'].end2end_time = time.time() - start_time
 			db['knet'].end2end_error = (db['knet'].autoencoder_loss(db['train_data'].X_Var, None, None)).item()
 			print('\n\tError of End to End AE , Before %.3f, After %.3f'%(prev_loss.item(), db['knet'].end2end_error))
-<<<<<<< HEAD
 			export_pretrained_network(db, 'knet', 'end2end', ignore_in_batch)
-=======
-			export_pretrained_network(db, 'knet', 'end2end')
 		else:
 			print('\t\tError of End to End AE : %.3f'%(db['knet'].end2end_error))
->>>>>>> f9f37502392c3c3a9746efeb4f66fb146296758b
 
 		#debug.end2end(db)
 
