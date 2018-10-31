@@ -154,8 +154,6 @@ def train_kernel_net(db):
 			db['opt_U'].run(count)
 			if db['exit_cond'](db, count) > 99: break;
 
-		[db['train_loss'], db['train_hsic'], db['train_AE_loss'], φ_x, U, U_normalized] = db['knet'].get_current_state(db, db['train_data'].X_Var)
-
 		db['λ'] = 0
 		db['λ_ratio'] = 0
 		for count in range(1):
@@ -166,6 +164,8 @@ def train_kernel_net(db):
 		db['knet'].train_time = time.time() - start_time
 		export_pretrained_network(db, 'knet', 'last', True)
 
+
+	[db['train_loss'], db['train_hsic'], db['train_AE_loss'], φ_x, U, U_normalized] = db['knet'].get_current_state(db, db['train_data'].X_Var)
 	db['validate_function'](db)
 	#debug.plot_output(db)
 
@@ -174,13 +174,13 @@ def train_kernel_net(db):
 
 
 def define_settings():
-	db = wine_raw_data()
+	#db = wine_raw_data()
 	#db = cancer_raw_data()
 	#db = wine_sm()
 	#db = moon_raw_data()
 	#db = moon_raw_data_sm()
 	#db = spiral_raw_data()
-	#db = face_raw_data()
+	db = face_raw_data()
 	#db = face_raw_data_sm()
 	#db = rcv_raw_data()
 
