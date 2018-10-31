@@ -35,6 +35,7 @@ from face_raw_data_sm import *
 from rcv_raw_data import *
 from cancer_raw_data import *
 from moon_80_20 import *
+from spiral_80_20 import *
 
 
 
@@ -178,9 +179,10 @@ def define_settings():
 	#db = cancer_raw_data()
 	#db = wine_sm()
 	#db = moon_raw_data()
-	db = moon_80_20()
+	#db = moon_80_20()
 	#db = moon_raw_data_sm()
 	#db = spiral_raw_data()
+	db = spiral_80_20()
 	#db = face_raw_data()
 	#db = face_raw_data_sm()
 	#db = rcv_raw_data()
