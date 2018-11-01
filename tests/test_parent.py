@@ -49,6 +49,7 @@ class test_parent():
 
 	def run_subset_and_rest_batch(self):
 		db = self.db
+		print('\trunning subset and rest of the data')
 		db['train_test_dataset'] = True
 
 		output_list = self.parameter_ranges()

@@ -19,12 +19,11 @@ def rcv_8020():
 	db['data_folder']  = db['data_path'] 
 	db['train_data_file_name']  = db['data_folder'] + db['data_name'] + '.csv'
 	db['train_label_file_name']  = db['data_folder'] + db['data_name'] + '_label.csv'
-	db['test_data_file_name']  = ''
-	db['test_label_file_name']  = ''
 	db["train_data_file_name"]="./datasets/rcv/train_test/train.csv"
 	db["train_label_file_name"]="./datasets/rcv/train_test/train_label.csv"
 	db["test_data_file_name"]="./datasets/rcv/train_test/test.csv"
 	db["test_label_file_name"]="./datasets/rcv/train_test/test_label.csv"
+	db['train_test_dataset'] = True
 	db['10_fold_id'] = 0
 	db['cuda'] = False #torch.cuda.is_available()
 	
