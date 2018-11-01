@@ -29,6 +29,7 @@ def gen_subset_and_rest(db):
 
 	N = orig_data.N
 	for test_percent in np.arange(0.05,0.8,0.05):
+		kd_list = []
 		for rep in range(10):
 			inc = int(np.floor(test_percent*N))
 			if inc < eigLen: continue
@@ -43,10 +44,29 @@ def gen_subset_and_rest(db):
 			small_eigs = small_eigs/np.sum(small_eigs)
 	
 			Kd = np.absolute(largest_eigs - small_eigs)
-	
-			print(sample_X.shape)
-			print(np.max(Kd))
-			print(Kd)
+			kd_list.append(Kd)
+
+		avg_kd = np.mean(kd_list)
+		if avg_kd < 0.01: break
+
+test_percent
+
+	for rep in range(30):
+		inc = int(np.floor(test_percent*N))
+		if inc < eigLen: continue
+
+		rp = np.random.permutation(N).tolist()
+		test_set_id = rp[0:inc]
+		sample_X = orig_data.X[test_set_id,:]
+
+		K_new = rbk_sklearn(sample_X, σ)
+		[D,V] = np.linalg.eigh(K_new)
+		small_eigs = np.flip(D)[0:eigLen]
+		small_eigs = small_eigs/np.sum(small_eigs)
+
+		Kd = np.absolute(largest_eigs - small_eigs)
+		kd_list.append(Kd)
+
 
 	import pdb; pdb.set_trace()
 

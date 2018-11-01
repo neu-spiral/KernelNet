@@ -21,7 +21,7 @@ class test_code(test_parent):
 		#	Data settings
 		db['data_name'] = 'rcv'
 		db['center_and_scale'] = True
-		db['recompute_10_fold'] = False
+		db['recompute_10_fold'] = True
 		db['use_Degree_matrix'] = True
 		db['recompute_data_split'] = False
 		db['pretrain_repeats'] = 4
@@ -45,7 +45,7 @@ class test_code(test_parent):
 		output_dim = [5]
 		kernel_net_depth = [3]
 		σ_ratio = [1]
-		extra_repeat = range(100)
+		extra_repeat = range(1)
 		id_10_fold = [0] #range(10)
 		lambda_ratio = [2]
 
