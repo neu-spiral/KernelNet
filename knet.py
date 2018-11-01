@@ -172,7 +172,7 @@ def train_kernel_net(db):
 
 
 def define_settings():
-	#db = wine_raw_data()
+	db = wine_raw_data()
 	#db = cancer_raw_data()
 	#db = wine_sm()
 	#db = moon_raw_data()
@@ -181,7 +181,7 @@ def define_settings():
 	#db = moon_raw_data_sm()
 	#db = spiral_raw_data()
 	#db = spiral_80_20()
-	db = spiral_80_20_sm()
+	#db = spiral_80_20_sm()
 	#db = face_raw_data()
 	#db = face_8020()
 	#db = face_raw_data_sm()
