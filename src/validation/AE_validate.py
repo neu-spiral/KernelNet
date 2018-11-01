@@ -90,6 +90,7 @@ def save_result_to_history(db, result, result_path, fname, output_str):
 		past_runs['best_train_loss'] = result
 		past_runs['best_valid_nmi'] = result
 		past_runs['best_valid_loss'] = result
+		past_runs['best_test_nmi'] = result
 
 		save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_best_train_nmi.txt' , output_str)
 		save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_best_valid_nmi.txt' , output_str)
