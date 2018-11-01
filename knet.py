@@ -36,6 +36,7 @@ from face_raw_data import *
 from face_raw_data_sm import *
 from face_8020 import *
 from rcv_raw_data import *
+from rcv_8020 import *
 from cancer_raw_data import *
 from spiral_80_20 import *
 from spiral_80_20_sm import *
@@ -172,7 +173,7 @@ def train_kernel_net(db):
 
 
 def define_settings():
-	db = wine_raw_data()
+	#db = wine_raw_data()
 	#db = cancer_raw_data()
 	#db = wine_sm()
 	#db = moon_raw_data()
@@ -186,6 +187,7 @@ def define_settings():
 	#db = face_8020()
 	#db = face_raw_data_sm()
 	#db = rcv_raw_data()
+	db = rcv_8020()
 
 	db = load_db(db)
 	return db

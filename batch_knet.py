@@ -24,8 +24,8 @@ np.set_printoptions(suppress=True)
 #	This controls which dataset to run
 #from wine import *
 #from cancer import *
-from face import *
-#from rcv import *
+#from face import *
+from rcv import *
 #from moon import *
 #from spiral import *
 #from car import *
