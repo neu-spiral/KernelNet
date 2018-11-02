@@ -44,7 +44,7 @@ class test_code(test_parent):
 		output_dim = [5]
 		kernel_net_depth = [3]
 		σ_ratio = [1]
-		extra_repeat = range(1)
+		extra_repeat = range(100)
 		id_10_fold = [0] #range(10)
 		lambda_ratio = [2]
 

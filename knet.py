@@ -222,6 +222,6 @@ def default_run():
 
 
 
-check_σ()
-#default_run()
+#check_σ()
+default_run()
 #discover_lowest_end2end_error()
