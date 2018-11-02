@@ -66,10 +66,10 @@ class test_parent():
 			db['σ_ratio'] = float(σ_ratio)
 			db['λ_ratio'] = float(λ_ratio)
 			db['data_folder']  = db['data_path'] 
-			db['train_data_file_name']  = ('%s/train_test/train.csv'%(db['data_path']))
-			db['train_label_file_name']  = ('%s/train_test/train_label.csv'%(db['data_path']))
-			db['test_data_file_name']  = ('%s/train_test/test.csv'%(db['data_path']))
-			db['test_label_file_name']  = ('%s/train_test/test_label.csv'%(db['data_path']))
+			db['train_data_file_name']  = ('%s/subset_rest/train.csv'%(db['data_path']))
+			db['train_label_file_name']  = ('%s/subset_rest/train_label.csv'%(db['data_path']))
+			db['test_data_file_name']  = ('%s/subset_rest/test.csv'%(db['data_path']))
+			db['test_label_file_name']  = ('%s/subset_rest/test_label.csv'%(db['data_path']))
 
 			self.execute(db, id_10_fold, count)
 
