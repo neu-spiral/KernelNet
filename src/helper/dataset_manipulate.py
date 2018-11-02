@@ -53,9 +53,9 @@ def gen_subset_and_rest(db):
 				lowest_Kd = Kd
 				best_test_sample_id = test_set_id
 				test_set_indx = list(set(rp) - set(best_test_sample_id))
-
+	
 		avg_kd = np.mean(kd_list)
-		if avg_kd < 0.01: break
+		if avg_kd < 0.005: break
 
 
 	new_X = orig_data.X[best_test_sample_id,:]
@@ -64,7 +64,6 @@ def gen_subset_and_rest(db):
 	small_eigs = np.flip(D)[0:eigLen]
 	small_eigs = small_eigs/np.sum(small_eigs)
 	Kd = np.max(np.absolute(largest_eigs - small_eigs))
-	
 	print('\t%.3f percent was chosen with kernel divergence error of %.3f'%(test_percent, Kd))
 
 	np.savetxt(train_path, orig_data.X[best_test_sample_id,:], delimiter=',', fmt='%.3f') 
@@ -72,7 +71,6 @@ def gen_subset_and_rest(db):
 	np.savetxt(train_label_path, orig_data.Y[best_test_sample_id], delimiter=',', fmt='%d') 
 	np.savetxt(test_label_path, orig_data.Y[test_set_indx], delimiter=',', fmt='%d') 
 
-	import pdb; pdb.set_trace()
 
 def gen_train_validate_data(db):
 	db['train_validate_folder'] = db['data_folder'] + 'train_validate/'
