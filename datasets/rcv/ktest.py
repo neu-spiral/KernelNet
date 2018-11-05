@@ -5,6 +5,7 @@ import numpy as np
 import sklearn.metrics
 import sklearn.cluster
 from sklearn.cluster import KMeans
+from sklearn.preprocessing import normalize			# version : 0.17
 from sklearn.metrics.cluster import normalized_mutual_info_score
 
 
@@ -42,7 +43,7 @@ DKD = D.dot(K).dot(D)
 
 [U, U_λ] = eig_solver(DKD, 4, mode='largest')
 U_normed = normalize_U(U)
-labels = KMeans(k).fit_predict(U_normed)
+labels = KMeans(4).fit_predict(U_normed)
 nmi = normalized_mutual_info_score(labels, Y)
 print(nmi)
 import pdb; pdb.set_trace()
