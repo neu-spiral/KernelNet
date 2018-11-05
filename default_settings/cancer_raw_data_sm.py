@@ -4,12 +4,11 @@ from MLP import *
 from AE_validate import *
 from storage import *
 from DManager import *
-from opt_Kernel import *
 from sm_opt_Kernel import *
 
 
 
-def cancer_raw_data():
+def cancer_raw_data_sm():
 	db = {}
 	# Data info
 	dn = db["data_name"]="cancer"
@@ -42,8 +41,8 @@ def cancer_raw_data():
 	
 	# code
 	db['kernel_model'] = AE
-	db['opt_K_class'] = opt_K
-	db['opt_U_class'] = opt_U
+	db['opt_K_class'] = sm_opt_K
+	db['opt_U_class'] = sm_opt_U
 	db['exit_cond'] = exit_cond
 	db['validate_function'] = AE_validate
 

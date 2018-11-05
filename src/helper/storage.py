@@ -51,10 +51,14 @@ def import_pretrained_network(db, keyVal, stage_name, ignore_in_batch=False):
 			test3 = list_of_networks.net_depth == db[keyVal].net_depth
 			test4 = list_of_networks.mlp_width == db[keyVal].mlp_width
 
-			if test1 and test2 and test3 and test4:
+			if test1 and test2 and test3:
 				db[keyVal] = list_of_networks
 				print('\t\tSucessful...')
 				return True
+			else:
+				print('\t\tloaded input size : %d, current input size : %d'%(itm.input_size, db[keyVal].input_size))
+				print('\t\tloaded output size : %d, current output size : %d'%(itm.output_dim, db[keyVal].output_dim))
+				print('\t\tloaded depth : %d, current depth : %d'%(itm.net_depth, db[keyVal].net_depth))
 
 	print('\t\tFailed...')
 	return False
