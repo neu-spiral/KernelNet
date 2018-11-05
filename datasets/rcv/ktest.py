@@ -4,6 +4,7 @@ import sklearn
 import numpy as np
 import sklearn.metrics
 import sklearn.cluster
+from sklearn import preprocessing
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import normalize			# version : 0.17
 from sklearn.metrics.cluster import normalized_mutual_info_score
@@ -34,6 +35,7 @@ def normalize_U(U):
 	return normalize(U, norm='l2', axis=1)
 
 X = np.loadtxt('rcv.csv', delimiter=',', dtype=np.float64)			
+X = preprocessing.scale(X)
 Y = np.loadtxt('rcv_label.csv', delimiter=',', dtype=np.int32)
 #K = X.dot(X.T)
 K = sklearn.metrics.pairwise.polynomial_kernel(X, Y=None, degree=3, gamma=None, coef0=1)
