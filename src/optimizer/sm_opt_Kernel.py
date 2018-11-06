@@ -62,8 +62,14 @@ class sm_opt_U():
 		U = OO.run(db['U'], max_rep=5)
 		U_normalized = normalize(U, norm='l2', axis=1)
 
-		[allocation, train_nmi] = kmeans(db['num_of_clusters'], U_normalized, Y=db['train_data'].Y)
-		db['U'] = Allocation_2_Y(allocation)
+
+		if db['use_delta_kernel_for_U']: 
+			[allocation, train_nmi] = kmeans(db['num_of_clusters'], U_normalized, Y=db['train_data'].Y)
+			db['U'] = Allocation_2_Y(allocation)
+		else:
+			db['U'] = U
+			[allocation, train_nmi] = kmeans(db['num_of_clusters'], U_normalized, Y=db['train_data'].Y)
+
 		db['prev_Ku'] = db['Ku']
 		db['Ku'] = db['U'].dot(db['U'].T)
 
