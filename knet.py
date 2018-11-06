@@ -176,8 +176,8 @@ def train_kernel_net(db):
 
 
 def define_settings():
-	#db = wine_raw_data()
-	db = wine_sm()
+	db = wine_raw_data()
+	#db = wine_sm()
 	#db = wine_subset()
 	#db = cancer_raw_data()
 	#db = cancer_raw_data_sm()
