@@ -21,7 +21,7 @@ def use_svm(X,Y,W=None, k='rbf'):
 
 def kmeans(k, U, Y=None):
 	U = ensure_matrix_is_numpy(U)
-	allocation = KMeans(k).fit_predict(U)
+	allocation = KMeans(k, n_init=10).fit_predict(U)
 
 	if Y is None:
 		return allocation

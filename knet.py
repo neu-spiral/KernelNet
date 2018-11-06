@@ -127,9 +127,12 @@ def initialize_network(db, pretrain_knet=True, ignore_in_batch=False):
 
 	db['knet'].initialize_variables(db)
 	[db['initial_loss'], db['initial_hsic'], db['initial_AE_loss'], ψ_x, U, U_normalized] = db['knet'].get_current_state(db, db['train_data'].X_Var)
+	[allocation, db['init_Kmeans_nmi']] = kmeans(db['num_of_clusters'], db['train_data'].X, Y=db['train_data'].Y)
 	[allocation, db['init_AE+Kmeans_nmi']] = kmeans(db['num_of_clusters'], ψ_x, Y=db['train_data'].Y)
 	[allocation, db['init_AE+Spectral_nmi']] = kmeans(db['num_of_clusters'], U_normalized, Y=db['train_data'].Y)
-	db['U'] = Allocation_2_Y(allocation)
+
+	if db['use_delta_kernel_for_U']: db['U'] = Allocation_2_Y(allocation)
+	else: db['U'] = U
 
 
 	extra_info = ''
@@ -151,19 +154,22 @@ def train_kernel_net(db):
 
 	if not import_pretrained_network(db, 'knet', 'last', True):
 		start_time = time.time() 
-		for count in range(100):
+		for count in np.arange(1,100,1):
 			db['opt_K'].run(count)
 			db['opt_U'].run(count)
-			if db['exit_cond'](db, count) > 99: break;
+			if db['exit_cond'](db, count): break;
 
+
+		db['use_delta_kernel_for_U'] = True
 		db['λ'] = 0
 		db['λ_ratio'] = 0
-		for count in range(1):
-			db['opt_K'].run(count)
-			db['opt_U'].run(count)
-			if db['exit_cond'](db, count) > 99: break;
+		for count2 in np.arange(1,10,1):
+			db['opt_K'].run(count2)
+			db['opt_U'].run(count2)
+			if db['exit_cond'](db, count): break;
 
 		db['knet'].train_time = time.time() - start_time
+		db['knet'].itr_til_converge = float(count + count2)
 		export_pretrained_network(db, 'knet', 'last', True)
 
 
@@ -176,7 +182,7 @@ def train_kernel_net(db):
 
 
 def define_settings():
-	db = wine_raw_data()
+	#db = wine_raw_data()
 	#db = wine_sm()
 	#db = wine_subset()
 	#db = cancer_raw_data()
@@ -189,12 +195,13 @@ def define_settings():
 	#db = spiral_raw_data_sm()
 	#db = spiral_80_20()
 	#db = spiral_80_20_sm()
-	#db = face_raw_data()
+	db = face_raw_data()
 	#db = face_8020()
 	#db = face_raw_data_sm()
 	#db = rcv_raw_data()
 	#db = rcv_8020()
 
+	db['use_delta_kernel_for_U'] = False
 	db = load_db(db)
 	return db
 

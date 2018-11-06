@@ -16,15 +16,16 @@ import time
 
 
 def import_pretrained_network(db, keyVal, stage_name, ignore_in_batch=False):
+	print('\tLoading %s from %s...'%(stage_name, keyVal))
 	if ignore_in_batch:
-		if 'running_batch_mode' in db: return False
-
+		if 'running_batch_mode' in db: 
+			print('\t\tFailed...')
+			return False
 
 	ensure_path_exists('./pretrained')
 	ensure_path_exists('./pretrained/' + db['data_name'])
 	path_list = ['./pretrained/' + db['data_name'] + '/' + db['data_name'] + '_' + stage_name + '.pk']
 
-	print('\tLoading %s from %s...'%(stage_name, keyVal))
 	if path_list_exists(path_list):
 		list_of_networks = pickle.load( open( path_list[0], "rb" ) )
 
@@ -96,10 +97,14 @@ def export_pretrained_network(db, keyVal, stage_name, ignore_in_batch=False):
 
 def load_db(db):
 	if len(sys.argv) == 1: return db
+	if sys.argv[1] == 'at_discovery':
+		db['running_batch_mode'] = True
+		return db
 
 	fin = open(sys.argv[1],'r')
 	cmds = fin.readlines()
 	fin.close()
+	db['running_batch_mode'] = True
 	
 	for i in cmds: 
 		try:
