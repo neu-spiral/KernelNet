@@ -141,6 +141,7 @@ def initialize_network(db, pretrain_knet=True, ignore_in_batch=False):
 		[allocation, db['init_AE+Kmeans_nmi_onTest']] = kmeans(db['num_of_clusters'], test_U_normalized, Y=db['test_data'].Y)
 		extra_info = ', AE+Kmeans on Test NMI : %.3f'%db['init_AE+Kmeans_nmi_onTest']
 
+	print('\t\tInitial Objective : %.3f = %.3f + λ (%.3f)'%(db['initial_loss'], db['initial_hsic'], db['initial_AE_loss']))
 	print('\t\tInitial AE + Kmeans NMI : %.3f, AE + Spectral : %.3f%s'%(db['init_AE+Kmeans_nmi'], db['init_AE+Spectral_nmi'], extra_info))
 	#import pdb; pdb.set_trace()
 
