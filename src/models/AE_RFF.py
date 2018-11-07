@@ -43,6 +43,10 @@ class AE_RFF(autoencoder):
 
 
 	def compute_RFF_Gaussian(self, x):
+		db = self.db
+
+		if type(x) == np.ndarray: x = numpy2Variable(x, db['dataType'], need_grad=False)
+
 		P = torch.cos(torch.mm(x,self.rand_proj) + self.phase_shift)
 		K = torch.mm(P, P.transpose(0,1))
 		K = (2.0/self.sample_num)*K
