@@ -13,7 +13,7 @@ import time
 
 class AE_RFF(autoencoder):
 	def __init__(self, db, add_decoder=True, learning_rate=0.001):
-		super(AE, self).__init__(db, add_decoder, learning_rate)
+		super(AE_RFF, self).__init__(db, add_decoder, learning_rate)
 
 
 	def initialize_variables(self, db):
@@ -63,6 +63,7 @@ class AE_RFF(autoencoder):
 		[DKxD, Dinv] = normalized_rbk_sklearn(φ_x, self.σ)
 		[DKD, K] = self.compute_RFF_Gaussian(φ_x)
 
+		import pdb; pdb.set_trace()
 
 		HDKxDH = center_matrix(db, DKxD)
 		[U, U_normalized] = L_to_U(db, HDKxDH)

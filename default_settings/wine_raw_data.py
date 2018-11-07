@@ -1,5 +1,6 @@
 
 from AE import *
+from AE_RFF import *
 from MLP import *
 from AE_validate import *
 from storage import *
@@ -22,11 +23,6 @@ def wine_raw_data():
 	db['train_label_file_name']  = db['data_folder'] + db['data_name'] + '_label.csv'
 	db['test_data_file_name']  = ''
 	db['test_label_file_name']  = ''
-	#db["data_folder"]="./datasets/" + dn + "/10_fold/split_0/"
-	#db["train_data_file_name"]="./datasets/" + dn + "/10_fold/split_0/train.csv"
-	#db["train_label_file_name"]="./datasets/" + dn + "/10_fold/split_0/train_label.csv"
-	#db["test_data_file_name"]="./datasets/" + dn + "/10_fold/split_0/test.csv"
-	#db["test_label_file_name"]="./datasets/" + dn + "/10_fold/split_0/test_label.csv"
 	db['10_fold_id'] = 0
 	db['cuda'] = False #torch.cuda.is_available()
 	
@@ -46,7 +42,7 @@ def wine_raw_data():
 	db['use_U_normalize'] = False
 	
 	# code
-	db['kernel_model'] = AE
+	db['kernel_model'] = AE_RFF
 	db['opt_K_class'] = opt_K
 	db['opt_U_class'] = opt_U
 	db['exit_cond'] = exit_cond
