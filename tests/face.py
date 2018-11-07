@@ -46,9 +46,9 @@ class test_code(test_parent):
 		output_dim = [27]
 		kernel_net_depth = [3]
 		σ_ratio = [1]
-		extra_repeat = range(100)
+		extra_repeat = range(1)
 		id_10_fold = [0] #range(10)
-		lambda_ratio = [2]
+		lambda_ratio = [1]
 
 		random.shuffle(output_dim)
 		random.shuffle(kernel_net_depth)
