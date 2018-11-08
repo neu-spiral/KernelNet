@@ -2,17 +2,18 @@
 from AE import *
 from AE_RFF import *
 from MLP import *
+import debug
 from AE_validate import *
 from storage import *
 from DManager import *
 from opt_Kernel import *
+from sm_opt_Kernel import *
 
 
 
 def wine_raw_data_RFF():
 	db = {}
 	# Data info
-	#dn = db["data_name"]="cancer"
 	dn = db["data_name"]="wine"
 	db["center_and_scale"]=True
 	db["data_path"]="./datasets/" + dn + "/"
@@ -36,9 +37,9 @@ def wine_raw_data_RFF():
 	db["σ_ratio"]=1
 	db["λ_ratio"]=1
 	db['pretrain_repeats'] = 4
-	db['batch_size'] = 5
+	db['batch_size'] = 178
 	db['num_of_clusters'] = 3
-	db['use_Degree_matrix'] = True
+	db['use_Degree_matrix'] = False
 	db['use_U_normalize'] = False
 	
 	# code

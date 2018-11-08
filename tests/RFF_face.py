@@ -10,7 +10,6 @@ from AE_validate import *
 from termcolor import colored
 import sklearn.metrics
 from AE import *
-from AE_RFF import *
 import numpy as np
 import random
 
@@ -20,20 +19,21 @@ class test_code(test_parent):
 		print(colored(('\nRunning Kernel Net : %s'%(__name__)), 'white'))
 		db = {}
 		#	Data settings
-		db['data_name'] = 'wine'
+		db['data_name'] = 'face'
 		db['center_and_scale'] = True
-		db['recompute_data_split'] = True
-		db['use_Degree_matrix'] = True
+		db['recompute_10_fold'] = False
+		db['use_Degree_matrix'] = False
+		db['recompute_data_split'] = False
 		db['pretrain_repeats'] = 4
 		db['cuda'] = False
 
 		#	hyperparams
 		db['batch_size'] = 5
-		db['num_of_clusters'] = 3
+		db['num_of_clusters'] = 20
 		db['use_U_normalize'] = True
 
 		# objs
-		db['kernel_model'] = AE
+		db['kernel_model'] = AE_RFF
 		db['opt_K_class'] = opt_K
 		db['opt_U_class'] = opt_U
 		db['exit_cond'] = exit_cond
@@ -42,12 +42,12 @@ class test_code(test_parent):
 		test_parent.__init__(self, db)
 
 	def parameter_ranges(self):
-		output_dim = [13]
+		output_dim = [27]
 		kernel_net_depth = [3]
 		σ_ratio = [1]
 		extra_repeat = range(1)
 		id_10_fold = [0] #range(10)
-		lambda_ratio = [2]
+		lambda_ratio = [1]
 
 		random.shuffle(output_dim)
 		random.shuffle(kernel_net_depth)

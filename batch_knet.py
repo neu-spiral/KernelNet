@@ -24,8 +24,10 @@ os.system('tabs -4')
 
 #	This controls which dataset to run
 #from wine import *
+#from RFF_wine import *
 #from cancer import *
-from face import *
+#from face import *
+from RFF_face import *
 #from rcv import *
 #from moon import *
 #from spiral import *

@@ -1,5 +1,6 @@
 
 import torch
+import debug
 from format_conversion import *
 from kernel_lib import *
 from basic_optimizer import *
@@ -9,7 +10,7 @@ class opt_K():
 	def __init__(self, db):
 		self.db = db
 
-	def run(self, count):
+	def run(self, count, start_time):
 		print('\t' + str(count) + ' : Computing K...')
 
 		db = self.db
@@ -24,30 +25,13 @@ class opt_K():
 		[avgLoss, avgGrad, progression_slope] = basic_optimizer(db['knet'], db, loss_callback='compute_loss', data_loader_name='train_loader', epoc_loop=20)
 		[db['x_hat'], db['ϕ_x']] = db['knet'](db['train_data'].X_Var)		# <- update this to be used in opt_K
 
-		if 'objective_tracker' in db:
-			if 'running_batch_mode' in db: return
-
-			φ_x = ensure_matrix_is_numpy(db['ϕ_x'])
-			[DKxD, Dinv] = normalized_rbk_sklearn(φ_x, db['knet'].σ)
-			HDKxDH = center_matrix(db, DKxD)
-
-			current_hsic = -float(np.sum(HDKxDH*db['Ku']))
-			current_AE_loss = float(ensure_matrix_is_numpy(db['knet'].autoencoder_loss(db['train_data'].X_Var, None, None)))
-			current_loss = float(current_hsic + db['λ']*current_AE_loss)
-
-			db['objective_tracker'] = np.append(db['objective_tracker'], current_loss)
-			#[allocation, train_nmi] = kmeans(db['num_of_clusters'], db['U_normalized'], Y=db['train_data'].Y)
-			[allocation, train_nmi] = kmeans(db['num_of_clusters'], db['U'], Y=db['train_data'].Y)
-
-			print('\t\tCurrent obj loss : %.5f from %.5f +  (%.3f)(%.3f)[%.5f]'%(current_loss, current_hsic, db["λ_ratio"], db['λ_obj_ratio'], current_AE_loss))
-			print('\t\tTrain NMI after optimizing θ : %.3f'%(train_nmi))
-
+		debug.print_opt_K_status(db, start_time)
 
 class opt_U():
 	def __init__(self, db):
 		self.db = db
 
-	def run(self, count):
+	def run(self, count, start_time):
 		print('\t' + str(count) + ' : Computing U with Eigen Decomposition ...')
 		db = self.db
 
@@ -55,33 +39,19 @@ class opt_U():
 		[DKxD, Dinv] = normalized_rbk_sklearn(φ_x, db['knet'].σ)
 		HDKxDH = center_matrix(db, DKxD)
 
-
 		if db['use_delta_kernel_for_U']: 
 			[U, U_normalized] = L_to_U(db, HDKxDH)
 			[allocation, train_nmi] = kmeans(db['num_of_clusters'], U_normalized, Y=db['train_data'].Y)
 			db['U'] = Allocation_2_Y(allocation)
 		else:
-			[db['U'], db['U_normalized']] = L_to_U(db, HDKxDH)
+			[U, db['U_normalized']] = L_to_U(db, HDKxDH)
 			[allocation, train_nmi] = kmeans(db['num_of_clusters'], db['U_normalized'], Y=db['train_data'].Y)
+			db['U'] = U
 		
-
-
 		db['prev_Ku'] = db['Ku']
 		db['Ku'] = db['U'].dot(db['U'].T)
 
-		if 'objective_tracker' in db:
-			if 'running_batch_mode' in db: return
-
-			current_hsic = -float(np.sum(HDKxDH*db['Ku']))
-			current_AE_loss = float(ensure_matrix_is_numpy(db['knet'].autoencoder_loss(db['train_data'].X_Var, None, None)))
-			current_loss = float(current_hsic + db['λ']*current_AE_loss)
-
-			db['objective_tracker'] = np.append(db['objective_tracker'], current_loss)
-
-			#[allocation, train_nmi] = kmeans(db['num_of_clusters'], db['U_normalized'] , Y=db['train_data'].Y)
-			print('\t\tCurrent obj loss : %.5f from %.5f +  (%.3f)(%.3f)[%.5f]'%(current_loss, current_hsic, db["λ_ratio"], db['λ_obj_ratio'], current_AE_loss))
-			print('\t\tTrain NMI after optimizing U : %.3f'%(train_nmi))
-
+		debug.print_opt_U_status(db, HDKxDH, train_nmi, U, start_time)
 	
 
 def exit_cond(db, count):

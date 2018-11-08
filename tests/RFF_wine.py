@@ -23,7 +23,7 @@ class test_code(test_parent):
 		db['data_name'] = 'wine'
 		db['center_and_scale'] = True
 		db['recompute_data_split'] = True
-		db['use_Degree_matrix'] = True
+		db['use_Degree_matrix'] = False
 		db['pretrain_repeats'] = 4
 		db['cuda'] = False
 
@@ -33,9 +33,9 @@ class test_code(test_parent):
 		db['use_U_normalize'] = True
 
 		# objs
-		db['kernel_model'] = AE
-		db['opt_K_class'] = opt_K
-		db['opt_U_class'] = opt_U
+		db['kernel_model'] = AE_RFF
+		db['opt_K_class'] = sm_opt_K
+		db['opt_U_class'] = sm_opt_U
 		db['exit_cond'] = exit_cond
 		db['validate_function'] = AE_validate
 
@@ -45,7 +45,7 @@ class test_code(test_parent):
 		output_dim = [13]
 		kernel_net_depth = [3]
 		σ_ratio = [1]
-		extra_repeat = range(1)
+		extra_repeat = range(10)
 		id_10_fold = [0] #range(10)
 		lambda_ratio = [2]
 

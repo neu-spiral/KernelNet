@@ -68,7 +68,8 @@ class AE_RFF(autoencoder):
 		φ_x = ensure_matrix_is_numpy(φ_x)
 
 		#[DKxD, Dinv] = normalized_rbk_sklearn(φ_x, self.σ)
-		[DKD, K] = self.compute_RFF_Gaussian(φ_x)
+		[DKxD, K] = self.compute_RFF_Gaussian(φ_x)
+
 		HDKxDH = center_matrix(db, DKxD)
 		[U, U_normalized] = L_to_U(db, HDKxDH)
 		Ku = U.dot(U.T)
@@ -105,7 +106,7 @@ class AE_RFF(autoencoder):
 		[DKD, K] = self.compute_RFF_Gaussian(φ_x)
 		#Kx = self.gaussian_kernel(φ_x, self.σ)
 
-		obj_loss = -torch.sum(DkD*Y)
+		obj_loss = -torch.sum(DKD*self.Y)
 		AE_loss = self.mse_loss(x_hat, db['train_data'].X_Var)
 		loss = obj_loss + db['λ']*AE_loss
 
