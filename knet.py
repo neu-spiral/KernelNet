@@ -31,6 +31,7 @@ from wine_raw_data_RFF import *
 from wine_sm import *
 from wine_subset import *
 from moon_raw_data import *
+from moon_raw_data_RFF import *
 from moon_raw_data_sm import *
 from moon_80_20 import *
 from moon_80_20_sm import *
@@ -44,6 +45,7 @@ from cancer_raw_data_sm import *
 from spiral_80_20 import *
 from spiral_80_20_sm import *
 from spiral_raw_data import *
+from spiral_raw_data_RFF import *
 from spiral_raw_data_sm import *
 
 
@@ -188,16 +190,18 @@ def train_kernel_net(db):
 
 def define_settings():
 	#db = wine_raw_data()
-	db = wine_sm()
+	#db = wine_sm()
 	#db = wine_raw_data_RFF()
 	#db = wine_subset()
 	#db = cancer_raw_data()
 	#db = cancer_raw_data_sm()
 	#db = moon_raw_data()
+	#db = moon_raw_data_RFF()
 	#db = moon_raw_data_sm()
 	#db = moon_80_20()
 	#db = moon_80_20_sm()
 	#db = spiral_raw_data()
+	db = spiral_raw_data_RFF()
 	#db = spiral_raw_data_sm()
 	#db = spiral_80_20()
 	#db = spiral_80_20_sm()
