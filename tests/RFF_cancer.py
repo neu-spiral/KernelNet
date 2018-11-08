@@ -11,6 +11,7 @@ from termcolor import colored
 import sklearn.metrics
 from AE import *
 import numpy as np
+from AE_RFF import *
 import random
 
 
@@ -34,7 +35,7 @@ class test_code(test_parent):
 		db['use_U_normalize'] = True
 
 		# objs
-		db['kernel_model'] = AE
+		db['kernel_model'] = AE_RFF
 		db['opt_K_class'] = opt_K
 		db['opt_U_class'] = opt_U
 		db['exit_cond'] = exit_cond
@@ -46,7 +47,7 @@ class test_code(test_parent):
 		output_dim = [9]
 		kernel_net_depth = [3]
 		σ_ratio = [1]
-		extra_repeat = range(1)
+		extra_repeat = range(2)
 		id_10_fold = [0] #range(10)
 	
 		#lambda_ratio = np.arange(0.1, 3, 0.1)
