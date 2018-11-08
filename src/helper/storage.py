@@ -7,6 +7,7 @@ from opt_Kernel import *
 from sm_opt_Kernel import *
 from AE_validate import *
 from AE import *
+from AE_RFF import *
 from MLP import *
 import numpy as np
 import pickle

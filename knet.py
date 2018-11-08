@@ -157,8 +157,8 @@ def train_kernel_net(db):
 	if not import_pretrained_network(db, 'knet', 'last', True):
 		start_time = time.time() 
 		for count in np.arange(1,100,1):
-			db['opt_K'].run(count)
-			db['opt_U'].run(count)
+			db['opt_K'].run(count, start_time)
+			db['opt_U'].run(count, start_time)
 			if db['exit_cond'](db, count): break;
 
 
@@ -166,12 +166,15 @@ def train_kernel_net(db):
 		db['λ'] = 0
 		db['λ_ratio'] = 0
 		for count2 in np.arange(1,10,1):
-			db['opt_K'].run(count2)
-			db['opt_U'].run(count2)
+			db['opt_K'].run(count2, start_time)
+			db['opt_U'].run(count2, start_time)
 			if db['exit_cond'](db, count): break;
 
 		db['knet'].train_time = time.time() - start_time
 		db['knet'].itr_til_converge = float(count + count2)
+		if 'objective_tracker' in db: db['knet'].objective_tracker = db['objective_tracker']
+		if 'constraint_tracker' in db: db['knet'].constraint_tracker = db['constraint_tracker']
+
 		export_pretrained_network(db, 'knet', 'last', True)
 
 
@@ -185,8 +188,8 @@ def train_kernel_net(db):
 
 def define_settings():
 	#db = wine_raw_data()
-	db = wine_raw_data_RFF()
-	#db = wine_sm()
+	db = wine_sm()
+	#db = wine_raw_data_RFF()
 	#db = wine_subset()
 	#db = cancer_raw_data()
 	#db = cancer_raw_data_sm()
@@ -232,8 +235,7 @@ def default_run():
 	initialize_network(db, pretrain_knet=True)
 	train_kernel_net(db)
 
-
-
+	debug.plot_Objective_trajectories(db)
 
 
 #check_σ()
