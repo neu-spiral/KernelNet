@@ -27,6 +27,7 @@ from storage import *
 from DManager import *
 from opt_Kernel import *
 from wine_raw_data import *
+from wine_raw_data_RFF import *
 from wine_sm import *
 from wine_subset import *
 from moon_raw_data import *
@@ -183,7 +184,8 @@ def train_kernel_net(db):
 
 
 def define_settings():
-	db = wine_raw_data()
+	#db = wine_raw_data()
+	db = wine_raw_data_RFF()
 	#db = wine_sm()
 	#db = wine_subset()
 	#db = cancer_raw_data()

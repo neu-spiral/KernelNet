@@ -9,7 +9,7 @@ from opt_Kernel import *
 
 
 
-def wine_raw_data():
+def wine_raw_data_RFF():
 	db = {}
 	# Data info
 	#dn = db["data_name"]="cancer"
@@ -38,11 +38,11 @@ def wine_raw_data():
 	db['pretrain_repeats'] = 4
 	db['batch_size'] = 5
 	db['num_of_clusters'] = 3
-	db['use_Degree_matrix'] = False
+	db['use_Degree_matrix'] = True
 	db['use_U_normalize'] = False
 	
 	# code
-	db['kernel_model'] = AE
+	db['kernel_model'] = AE_RFF
 	db['opt_K_class'] = opt_K
 	db['opt_U_class'] = opt_U
 	db['exit_cond'] = exit_cond

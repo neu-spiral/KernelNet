@@ -41,6 +41,8 @@ class AE_RFF(autoencoder):
 		self.rand_proj = torch.from_numpy(self.rand_proj)
 		self.rand_proj = Variable(self.rand_proj.type(db['dataType']), requires_grad=False)
 
+		mask = 1 - torch.eye(N)
+		self.mask = Variable(mask.type(db['dataType']), requires_grad=False)
 
 	def compute_RFF_Gaussian(self, x):
 		db = self.db
@@ -51,6 +53,7 @@ class AE_RFF(autoencoder):
 		K = torch.mm(P, P.transpose(0,1))
 		K = (2.0/self.sample_num)*K
 		K = F.relu(K)
+		K = K*self.mask
 
 		ds = 1.0/torch.sqrt(torch.sum(K, dim=0))
 		D = torch.ger(ds,ds)
@@ -64,11 +67,8 @@ class AE_RFF(autoencoder):
 		[x_hat, φ_x] = self.forward(in_x)
 		φ_x = ensure_matrix_is_numpy(φ_x)
 
-		[DKxD, Dinv] = normalized_rbk_sklearn(φ_x, self.σ)
+		#[DKxD, Dinv] = normalized_rbk_sklearn(φ_x, self.σ)
 		[DKD, K] = self.compute_RFF_Gaussian(φ_x)
-
-		import pdb; pdb.set_trace()
-
 		HDKxDH = center_matrix(db, DKxD)
 		[U, U_normalized] = L_to_U(db, HDKxDH)
 		Ku = U.dot(U.T)
@@ -100,13 +100,13 @@ class AE_RFF(autoencoder):
 
 	def compute_loss(self, x, label, indices):
 		db = self.db
-		[x_hat, φ_x] = self.forward(x)
-		Kx = self.gaussian_kernel(φ_x, self.σ)
+		[x_hat, φ_x] = self.forward(db['train_data'].X_Var)
 
-		PP = self.Y[indices, :]
-		Ysmall = PP[:, indices]
-		obj_loss = -torch.sum(Kx*Ysmall)
-		AE_loss = self.mse_loss(x_hat, x)
+		[DKD, K] = self.compute_RFF_Gaussian(φ_x)
+		#Kx = self.gaussian_kernel(φ_x, self.σ)
+
+		obj_loss = -torch.sum(DkD*Y)
+		AE_loss = self.mse_loss(x_hat, db['train_data'].X_Var)
 		loss = obj_loss + db['λ']*AE_loss
 
 		return loss
