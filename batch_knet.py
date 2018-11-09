@@ -31,11 +31,11 @@ os.system('tabs -4')
 #from rcv import *
 #from car import *
 
-from RFF_moon import *
+#from RFF_moon import *
 #from RFF_spiral import *
 #from RFF_wine import *
 #from RFF_cancer import *
-#from RFF_face import *
+from RFF_face import *
 #from RFF_rcv import *
 
 

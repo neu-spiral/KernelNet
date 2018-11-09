@@ -41,9 +41,9 @@ def import_pretrained_network(db, keyVal, stage_name, ignore_in_batch=False):
 			print('\t\tSucessful...')
 			return True
 		else:
-			print('\t\tloaded input size : %d, current input size : %d'%(itm.input_size, db[keyVal].input_size))
-			print('\t\tloaded output size : %d, current output size : %d'%(itm.output_dim, db[keyVal].output_dim))
-			print('\t\tloaded depth : %d, current depth : %d'%(itm.net_depth, db[keyVal].net_depth))
+			print('\t\tloaded input size : %d, current input size : %d'%(saved_networks.input_size, db[keyVal].input_size))
+			print('\t\tloaded output size : %d, current output size : %d'%(saved_networks.output_dim, db[keyVal].output_dim))
+			print('\t\tloaded depth : %d, current depth : %d'%(saved_networks.net_depth, db[keyVal].net_depth))
 			print('\t\tloaded model : %s, current model: %s'%(saved_networks.__class__.__name__, db[keyVal].__class__.__name__))
 
 
@@ -82,11 +82,10 @@ def load_db(db):
 def save_to_lowest_end2end(db):
 	ensure_path_exists('./pretrained')
 	ensure_path_exists('./pretrained/' + db['data_name'])
-	pth = './pretrained/' + db['data_name'] + '/' + db['data_name'] + '_best_end2end.pk'
+	pth = './pretrained/' + db['data_name'] + '/' + db['data_name'] + '_best_' + db['knet'].__class__.__name__ + '.pk'
 	lowest_error_list = './pretrained/' + db['data_name'] + '/' + 'lowest_error_list.txt'
 	mutex = './pretrained/' + db['data_name'] + '/' + db['data_name'] + '_best_end2end.writing'
 	tmp_writing = './pretrained/' + db['data_name'] + '/' + 'tmp.' + str(int(10000000*np.random.rand()))
-
 
 	if path_list_exists([pth]):
 		best_knet = pickle.load( open( pth, "rb" ) )

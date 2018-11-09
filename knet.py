@@ -41,6 +41,7 @@ from face_8020 import *
 from rcv_raw_data import *
 from rcv_8020 import *
 from cancer_raw_data import *
+from cancer_raw_data_RFF import *
 from cancer_raw_data_sm import *
 from spiral_80_20 import *
 from spiral_80_20_sm import *
@@ -88,7 +89,7 @@ def initialize_embedding(db):
 	db['x_mpd'] = float(median_of_pairwise_distance(X))
 
 	σ = float(db['x_mpd']*db["σ_ratio"])
-	[L, db['D_inv']] = getLaplacian(db, X, σ, H=H)
+	[L, db['D_inv']] = getLaplacian(db, X, σ, H=H)	
 	[db['U'], db['U_normalized']] = L_to_U(db, L)
 	
 	[allocation, db['init_spectral_nmi']] = kmeans(db['num_of_clusters'], db['U_normalized'], Y=db['train_data'].Y)
@@ -101,7 +102,6 @@ def initialize_network(db, pretrain_knet=True, ignore_in_batch=False):
 
 	if(db['cuda']): db['knet'] = db['kernel_model'](db).cuda()
 	else: db['knet'] = db['kernel_model'](db)
-	
 
 	if pretrain_knet:
 		dataLoader = 'train_loader'
@@ -136,7 +136,6 @@ def initialize_network(db, pretrain_knet=True, ignore_in_batch=False):
 
 	if db['use_delta_kernel_for_U']: db['U'] = Allocation_2_Y(allocation)
 	else: db['U'] = U
-
 
 	extra_info = ''
 	if 'test_data' in db:
@@ -192,14 +191,16 @@ def define_settings():
 	#db = moon_raw_data()
 	#db = spiral_raw_data()
 	#db = wine_raw_data()
-	db = cancer_raw_data()
+	#db = cancer_raw_data()
 	#db = face_raw_data()
 	#db = rcv_raw_data()
 
 	#db = moon_raw_data_RFF()
 	#db = spiral_raw_data_RFF()
 	#db = wine_raw_data_RFF()
+	db = cancer_raw_data_RFF()
 
+	#db = cancer_raw_data_sm()
 	#db = moon_raw_data_sm()
 	#db = moon_80_20()
 	#db = moon_80_20_sm()
@@ -208,7 +209,6 @@ def define_settings():
 	#db = spiral_80_20_sm()
 	#db = wine_sm()
 	#db = wine_subset()
-	#db = cancer_raw_data_sm()
 	#db = face_8020()
 	#db = face_raw_data_sm()
 	#db = rcv_8020()
