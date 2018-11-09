@@ -65,9 +65,9 @@ class MLP_RFF(MLP_autoencoder):
 
 	def get_current_state(self, db, in_x):
 		[x_hat, φ_x] = self.forward(in_x)
-		φ_x = ensure_matrix_is_numpy(φ_x)
-
+		
 		[DKxD, K] = self.compute_RFF_Gaussian(φ_x)
+		DKxD = ensure_matrix_is_numpy(DKxD)
 		HDKxDH = center_matrix(db, DKxD)
 		[U, U_normalized] = L_to_U(db, HDKxDH)
 		Ku = U.dot(U.T)
@@ -80,6 +80,7 @@ class MLP_RFF(MLP_autoencoder):
 			db['λ'] = float(db["λ_ratio"]*db['λ_obj_ratio'])
 
 		current_loss = float(current_hsic + db['λ']*current_AE_loss)
+		φ_x = ensure_matrix_is_numpy(φ_x)
 		return [current_loss, current_hsic, current_AE_loss, φ_x, U, U_normalized]
 
 
