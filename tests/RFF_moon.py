@@ -9,7 +9,7 @@ from sm_opt_Kernel import *
 from AE_validate import *
 from termcolor import colored
 import sklearn.metrics
-from MLP import *
+from MLP_RFF import *
 from AE import *
 import numpy as np
 import random
@@ -23,18 +23,18 @@ class test_code(test_parent):
 		db['data_name'] = 'moon'
 		db['center_and_scale'] = True
 		db['recompute_data_split'] = False
-		db['use_Degree_matrix'] = True
+		db['use_Degree_matrix'] = False
 		db['pretrain_repeats'] = 4
 		db['cuda'] = False
 
 		#	hyperparams
-		db['batch_size'] = 5
+		db['batch_size'] = 178
 		db['num_of_clusters'] = 2
 		db['use_U_normalize'] = True
 		db["mlp_width"]= 20
 
 		# objs
-		db['kernel_model'] = MLP
+		db['kernel_model'] = MLP_RFF
 		db['opt_K_class'] = opt_K
 		db['opt_U_class'] = opt_U
 		db['exit_cond'] = exit_cond
@@ -46,7 +46,7 @@ class test_code(test_parent):
 		output_dim = [2]
 		kernel_net_depth = [3]
 		σ_ratio = [0.1]
-		extra_repeat = range(1)
+		extra_repeat = range(50)
 		id_10_fold = [0] #range(10)
 		lambda_ratio = [2]
 
