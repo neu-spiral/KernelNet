@@ -189,26 +189,28 @@ def train_kernel_net(db):
 
 
 def define_settings():
-	#db = wine_raw_data()
-	#db = wine_sm()
-	#db = wine_raw_data_RFF()
-	#db = wine_subset()
-	#db = cancer_raw_data()
-	#db = cancer_raw_data_sm()
 	#db = moon_raw_data()
+	#db = spiral_raw_data()
+	#db = wine_raw_data()
+	db = cancer_raw_data()
+	#db = face_raw_data()
+	#db = rcv_raw_data()
+
 	#db = moon_raw_data_RFF()
+	#db = spiral_raw_data_RFF()
+	#db = wine_raw_data_RFF()
+
 	#db = moon_raw_data_sm()
 	#db = moon_80_20()
 	#db = moon_80_20_sm()
-	#db = spiral_raw_data()
-	db = spiral_raw_data_RFF()
 	#db = spiral_raw_data_sm()
 	#db = spiral_80_20()
 	#db = spiral_80_20_sm()
-	#db = face_raw_data()
+	#db = wine_sm()
+	#db = wine_subset()
+	#db = cancer_raw_data_sm()
 	#db = face_8020()
 	#db = face_raw_data_sm()
-	#db = rcv_raw_data()
 	#db = rcv_8020()
 
 	db['use_delta_kernel_for_U'] = False

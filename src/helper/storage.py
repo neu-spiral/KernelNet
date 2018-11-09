@@ -9,6 +9,7 @@ from AE_validate import *
 from AE import *
 from AE_RFF import *
 from MLP import *
+from MLP_RFF import *
 import numpy as np
 import pickle
 import sys
@@ -28,39 +29,23 @@ def import_pretrained_network(db, keyVal, stage_name, ignore_in_batch=False):
 	path_list = ['./pretrained/' + db['data_name'] + '/' + db['data_name'] + '_' + stage_name + '.pk']
 
 	if path_list_exists(path_list):
-		list_of_networks = pickle.load( open( path_list[0], "rb" ) )
+		saved_networks = pickle.load( open( path_list[0], "rb" ) )
+		
+		test1 = saved_networks.input_size == db[keyVal].input_size
+		test2 = saved_networks.output_dim == db[keyVal].output_dim
+		test3 = saved_networks.net_depth == db[keyVal].net_depth
+		test4 = saved_networks.__class__.__name__ == db[keyVal].__class__.__name__
 
-		if type(list_of_networks) == list:
-			for itm in list_of_networks:
-				test1 = itm.input_size == db[keyVal].input_size
-				test2 = itm.output_dim == db[keyVal].output_dim
-				test3 = itm.net_depth == db[keyVal].net_depth
-				try: test4 = itm.mlp_width == db[keyVal].mlp_width
-				except: return False
-				
-	
-				if test1 and test2 and test3:
-					db[keyVal] = itm
-					print('\t\tSucessful...')
-					return True
-				else:
-					print('\t\tloaded input size : %d, current input size : %d'%(itm.input_size, db[keyVal].input_size))
-					print('\t\tloaded output size : %d, current output size : %d'%(itm.output_dim, db[keyVal].output_dim))
-					print('\t\tloaded depth : %d, current depth : %d'%(itm.net_depth, db[keyVal].net_depth))
+		if test1 and test2 and test3 and test4:
+			db[keyVal] = saved_networks
+			print('\t\tSucessful...')
+			return True
 		else:
-			test1 = list_of_networks.input_size == db[keyVal].input_size
-			test2 = list_of_networks.output_dim == db[keyVal].output_dim
-			test3 = list_of_networks.net_depth == db[keyVal].net_depth
-			test4 = list_of_networks.mlp_width == db[keyVal].mlp_width
+			print('\t\tloaded input size : %d, current input size : %d'%(itm.input_size, db[keyVal].input_size))
+			print('\t\tloaded output size : %d, current output size : %d'%(itm.output_dim, db[keyVal].output_dim))
+			print('\t\tloaded depth : %d, current depth : %d'%(itm.net_depth, db[keyVal].net_depth))
+			print('\t\tloaded model : %s, current model: %s'%(saved_networks.__class__.__name__, db[keyVal].__class__.__name__))
 
-			if test1 and test2 and test3:
-				db[keyVal] = list_of_networks
-				print('\t\tSucessful...')
-				return True
-			else:
-				print('\t\tloaded input size : %d, current input size : %d'%(itm.input_size, db[keyVal].input_size))
-				print('\t\tloaded output size : %d, current output size : %d'%(itm.output_dim, db[keyVal].output_dim))
-				print('\t\tloaded depth : %d, current depth : %d'%(itm.net_depth, db[keyVal].net_depth))
 
 	print('\t\tFailed...')
 	return False
@@ -73,27 +58,7 @@ def export_pretrained_network(db, keyVal, stage_name, ignore_in_batch=False):
 	ensure_path_exists('./pretrained')
 	ensure_path_exists('./pretrained/' + db['data_name'])
 	pth = './pretrained/' + db['data_name'] + '/' + db['data_name'] + '_' + stage_name + '.pk'
-	path_list = [pth]
-
-	if path_list_exists(path_list):
-		list_of_networks = pickle.load( open( path_list[0], "rb" ) )
-
-		for p, itm in enumerate(list_of_networks):
-			test1 = itm.input_size == db[keyVal].input_size
-			test2 = itm.output_dim == db[keyVal].output_dim
-			test3 = itm.net_depth == db[keyVal].net_depth
-			test4 = itm.mlp_width == db[keyVal].mlp_width
-
-			if test1 and test2 and test3 and test4:
-				list_of_networks[p] = db[keyVal]
-				pickle.dump( list_of_networks, open(pth, "wb" ) )
-				return 
-	else:
-		list_of_networks = []
-
-
-	list_of_networks.append(db[keyVal])
-	pickle.dump( list_of_networks, open(pth, "wb" ) )
+	pickle.dump( db[keyVal], open(pth, "wb" ) )
 
 
 def load_db(db):
@@ -108,9 +73,9 @@ def load_db(db):
 	db['running_batch_mode'] = True
 	
 	for i in cmds: 
-		try:
-			exec(i)
+		try: exec(i)
 		except:
+			print('Attempted to execuse command : %s'%i)
 			import pdb; pdb.set_trace()
 	return db
 

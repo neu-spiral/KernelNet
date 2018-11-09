@@ -9,7 +9,6 @@ from sm_opt_Kernel import *
 from AE_validate import *
 from termcolor import colored
 import sklearn.metrics
-from AE import *
 from AE_RFF import *
 import numpy as np
 import random
@@ -45,7 +44,7 @@ class test_code(test_parent):
 		output_dim = [5]
 		kernel_net_depth = [3]
 		σ_ratio = [1]
-		extra_repeat = range(2)
+		extra_repeat = range(50)
 		id_10_fold = [0] #range(10)
 		lambda_ratio = [2]
 
