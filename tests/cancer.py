@@ -30,7 +30,6 @@ class test_code(test_parent):
 		#	hyperparams
 		db['batch_size'] = 5
 		db['num_of_clusters'] = 2
-		db['use_Degree_matrix'] = True
 		db['use_U_normalize'] = True
 
 		# objs
