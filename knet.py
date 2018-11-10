@@ -200,10 +200,7 @@ def define_settings():
 	#db = spiral_raw_data_RFF()
 	#db = wine_raw_data_RFF()
 	db = cancer_raw_data_RFF()
-<<<<<<< HEAD
 	#db = face_raw_data_RFF()
-=======
->>>>>>> cfaa071237f799377cc764ab6589de927384b7be
 
 	#db = cancer_raw_data_sm()
 	#db = moon_raw_data_sm()
