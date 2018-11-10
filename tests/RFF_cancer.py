@@ -44,7 +44,7 @@ class test_code(test_parent):
 
 	def parameter_ranges(self):
 		output_dim = [9]
-		kernel_net_depth = [1]
+		kernel_net_depth = [3]
 		σ_ratio = [1]
 		extra_repeat = range(1)
 		id_10_fold = [0] #range(10)

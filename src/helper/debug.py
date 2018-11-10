@@ -185,7 +185,7 @@ def plot_Objective_trajectories(db):
 		plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 		
 		ensure_path_exists('./img_results/')
-		pth = './img_results/' + db['data_name'] + '.png' 
+		pth = './img_results/' + db['data_name'] + '_' + db['kernel_model'].__class__.__name__ + '_' + db['opt_K_class'].__class__.__name__ + '.png' 
 		plt.savefig(pth)
 
 		if 'running_batchmode' not in db: 
