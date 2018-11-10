@@ -110,7 +110,7 @@ def print_opt_U_status(db, HDKxDH, train_nmi, U, start_time):
 
 def plot_Objective_trajectories(db):
 	if 'objective_tracker' in db:
-		#if 'running_batch_mode' in db: return
+		if 'running_batch_mode' in db: return
 
 		Y = db['knet'].objective_tracker
 		X = range(len(Y))
@@ -183,11 +183,20 @@ def plot_Objective_trajectories(db):
 
 
 		plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+<<<<<<< HEAD
 		ensure_path_exists('./img_results/')
 		pth = './img_results/' + db['data_name'] + '_' + db['kernel_model'].__name__ + '_' + db['opt_K_class'].__name__ + '.png' 
 		plt.savefig(pth)
 
 		if 'running_batch_mode' not in db: 
+=======
+		
+		ensure_path_exists('./img_results/')
+		pth = './img_results/' + db['data_name'] + '.png' 
+		plt.savefig(pth)
+
+		if 'running_batchmode' not in db: 
+>>>>>>> cfaa071237f799377cc764ab6589de927384b7be
 			try: plt.show()
 			except: pass
 
