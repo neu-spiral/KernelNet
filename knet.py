@@ -191,7 +191,7 @@ def train_kernel_net(db):
 def define_settings():
 	#db = moon_raw_data()
 	#db = spiral_raw_data()
-	db = wine_raw_data()
+	#db = wine_raw_data()
 	#db = cancer_raw_data()
 	#db = face_raw_data()
 	#db = rcv_raw_data()
@@ -210,7 +210,7 @@ def define_settings():
 	#db = spiral_80_20()
 	#db = spiral_80_20_sm()
 	#db = wine_sm()
-	#db = wine_subset()
+	db = wine_subset()
 	#db = face_8020()
 	#db = face_raw_data_sm()
 	#db = rcv_8020()
@@ -243,7 +243,7 @@ def default_run():
 	initialize_network(db, pretrain_knet=True)
 	train_kernel_net(db)
 
-	debug.plot_Objective_trajectories(db)
+	#debug.plot_Objective_trajectories(db)
 
 
 #check_σ()

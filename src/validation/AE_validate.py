@@ -62,11 +62,11 @@ def save_result_to_history(db, result, result_path, fname, output_str):
 
 
 
-		if 'test_data' in db:
-			if past_runs['best_test_nmi']['test_nmi'] < result['test_nmi']:
-				past_runs['best_test_nmi'] = result
-				save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_best_test_nmi.txt' , output_str)
-				pickle.dump( db['knet'] , open(knet_best_test_nmi, "wb" ) )
+		#if 'test_data' in db:
+		#	if past_runs['best_test_nmi']['test_nmi'] < result['test_nmi']:
+		#		past_runs['best_test_nmi'] = result
+		#		save_results_to_text_file(db, result_path, str(db['10_fold_id']) + '_best_test_nmi.txt' , output_str)
+		#		pickle.dump( db['knet'] , open(knet_best_test_nmi, "wb" ) )
 	
 
 		if 'valid_data' in db:

@@ -20,8 +20,10 @@ def wine_subset():
 	db['data_folder']  = db['data_path'] 
 	db["train_data_file_name"]="./datasets/wine/subset_rest/train.csv"
 	db["train_label_file_name"]="./datasets/wine/subset_rest/train_label.csv"
-	db["test_data_file_name"]="./datasets/wine/subset_rest/test.csv"
-	db["test_label_file_name"]="./datasets/wine/subset_rest/test_label.csv"
+	db["test_data_file_name"]="./datasets/wine/wine.csv"
+	db["test_label_file_name"]="./datasets/wine/wine_label.csv"
+	#db["test_data_file_name"]="./datasets/wine/subset_rest/test.csv"
+	#db["test_label_file_name"]="./datasets/wine/subset_rest/test_label.csv"
 	db['10_fold_id'] = 0
 	db['train_test_dataset'] = True
 	db['cuda'] = False #torch.cuda.is_available()
