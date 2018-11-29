@@ -23,7 +23,7 @@ np.set_printoptions(suppress=True)
 os.system('tabs -4')
 
 #	This controls which dataset to run
-#from moon import *
+from moon import *
 #from spiral import *
 #from wine import *
 #from cancer import *
@@ -35,7 +35,7 @@ os.system('tabs -4')
 #from RFF_spiral import *
 #from RFF_wine import *
 #from RFF_cancer import *
-from RFF_face import *
+#from RFF_face import *
 #from RFF_rcv import *
 
 
@@ -44,6 +44,6 @@ from RFF_face import *
 #	Program Run
 code = test_code()
 #code.run_10_fold()
-code.run_batch()
+#code.run_batch()
 #code.run_train_test_batch(0.2)
-#code.run_subset_and_rest_batch()
+code.run_subset_and_rest_batch()

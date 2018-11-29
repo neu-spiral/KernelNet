@@ -56,6 +56,7 @@ class test_parent():
 		every_combination = list(itertools.product(*output_list))
 
 		dataset_manipulate.gen_subset_and_rest(db)
+		import pdb; pdb.set_trace()
 		for count, single_instance in enumerate(every_combination):
 			[output_dim, kernel_net_depth, σ_ratio, extra_repeat, λ_ratio, id_10_fold] = single_instance
 
@@ -68,8 +69,10 @@ class test_parent():
 			db['data_folder']  = db['data_path'] 
 			db['train_data_file_name']  = ('%s/subset_rest/train.csv'%(db['data_path']))
 			db['train_label_file_name']  = ('%s/subset_rest/train_label.csv'%(db['data_path']))
-			db['test_data_file_name']  = ('%s/subset_rest/test.csv'%(db['data_path']))
-			db['test_label_file_name']  = ('%s/subset_rest/test_label.csv'%(db['data_path']))
+			#db['test_data_file_name']  = ('%s/subset_rest/test.csv'%(db['data_path']))
+			#db['test_label_file_name']  = ('%s/subset_rest/test_label.csv'%(db['data_path']))
+			db['test_data_file_name']  = db['orig_data_file_name']
+			db['test_label_file_name']  = db['orig_label_file_name']
 
 			self.execute(db, id_10_fold, count)
 

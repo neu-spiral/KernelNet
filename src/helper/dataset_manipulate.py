@@ -55,7 +55,7 @@ def gen_subset_and_rest(db):
 				test_set_indx = list(set(rp) - set(best_test_sample_id))
 	
 		avg_kd = np.mean(kd_list)
-		if avg_kd < 0.005: break
+		if avg_kd < 0.01: break
 
 
 	new_X = orig_data.X[best_test_sample_id,:]
