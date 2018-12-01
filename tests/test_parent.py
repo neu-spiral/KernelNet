@@ -56,7 +56,6 @@ class test_parent():
 		every_combination = list(itertools.product(*output_list))
 
 		dataset_manipulate.gen_subset_and_rest(db)
-		import pdb; pdb.set_trace()
 		for count, single_instance in enumerate(every_combination):
 			[output_dim, kernel_net_depth, σ_ratio, extra_repeat, λ_ratio, id_10_fold] = single_instance
 

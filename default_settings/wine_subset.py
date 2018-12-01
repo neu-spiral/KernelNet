@@ -5,6 +5,7 @@ from AE_validate import *
 from storage import *
 from DManager import *
 from opt_Kernel import *
+from sm_opt_Kernel import *
 
 
 
@@ -36,7 +37,7 @@ def wine_subset():
 	db["kernel_net_depth"]=3
 	db["mlp_width"]=1
 	db["σ_ratio"]=1
-	db["λ_ratio"]=2
+	db["λ_ratio"]=1
 	db['pretrain_repeats'] = 4
 	db['batch_size'] = 5
 	db['num_of_clusters'] = 3
