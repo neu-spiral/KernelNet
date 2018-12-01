@@ -22,7 +22,7 @@ class test_code(test_parent):
 		#	Data settings
 		db['data_name'] = 'wine'
 		db['center_and_scale'] = True
-		db['recompute_data_split'] = True
+		db['recompute_data_split'] = False
 		db['use_Degree_matrix'] = True
 		db['pretrain_repeats'] = 4
 		db['cuda'] = False
