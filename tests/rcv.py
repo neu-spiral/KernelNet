@@ -22,7 +22,7 @@ class test_code(test_parent):
 		db['data_name'] = 'rcv'
 		db['center_and_scale'] = True
 		db['use_Degree_matrix'] = True
-		db['recompute_data_split'] = False
+		db['recompute_data_split'] = True
 		db['pretrain_repeats'] = 4
 		db['cuda'] = False
 
