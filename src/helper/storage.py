@@ -31,10 +31,16 @@ def import_pretrained_network(db, keyVal, stage_name, ignore_in_batch=False):
 	if path_list_exists(path_list):
 		saved_networks = pickle.load( open( path_list[0], "rb" ) )
 		
-		test1 = saved_networks.input_size == db[keyVal].input_size
-		test2 = saved_networks.output_dim == db[keyVal].output_dim
-		test3 = saved_networks.net_depth == db[keyVal].net_depth
-		test4 = saved_networks.__class__.__name__ == db[keyVal].__class__.__name__
+		if keyVal not in db:
+			test1 = True
+			test2 = True
+			test3 = True
+			test4 = True
+		else:
+			test1 = saved_networks.input_size == db[keyVal].input_size
+			test2 = saved_networks.output_dim == db[keyVal].output_dim
+			test3 = saved_networks.net_depth == db[keyVal].net_depth
+			test4 = saved_networks.__class__.__name__ == db[keyVal].__class__.__name__
 
 		if test1 and test2 and test3 and test4:
 			db[keyVal] = saved_networks

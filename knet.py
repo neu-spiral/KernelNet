@@ -210,10 +210,11 @@ def define_settings():
 	#db = spiral_80_20()
 	#db = spiral_80_20_sm()
 	#db = wine_sm()
-	db = wine_subset()
+	#db = wine_subset()
 	#db = face_8020()
 	#db = face_raw_data_sm()
 	#db = rcv_8020()
+	db = rcv_subset()
 
 	db['use_delta_kernel_for_U'] = False
 	db = load_db(db)

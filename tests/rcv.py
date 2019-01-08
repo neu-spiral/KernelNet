@@ -40,12 +40,12 @@ class test_code(test_parent):
 		test_parent.__init__(self, db)
 
 	def parameter_ranges(self):
-		output_dim = [5]
+		output_dim = [10]
 		kernel_net_depth = [3]
 		σ_ratio = [1]
 		extra_repeat = range(100)
 		id_10_fold = [0] #range(10)
-		lambda_ratio = [2]
+		lambda_ratio = [1]
 
 		random.shuffle(output_dim)
 		random.shuffle(kernel_net_depth)

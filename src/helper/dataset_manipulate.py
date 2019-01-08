@@ -23,9 +23,10 @@ def gen_subset_and_rest(db):
 	σ = median_of_pairwise_distance(orig_data.X)
 	K_orig = rbk_sklearn(orig_data.X, σ)
 	[D,V] = np.linalg.eigh(K_orig)
-	scaled_cumsum_D = np.cumsum(np.flip(D)/np.sum(D))
+
+	scaled_cumsum_D = np.cumsum(np.flip(D,0)/np.sum(D))
 	eigLen = len(scaled_cumsum_D[scaled_cumsum_D < 0.95])
-	largest_eigs = np.flip(D)[0:eigLen]
+	largest_eigs = np.flip(D,0)[0:eigLen]
 	largest_eigs = largest_eigs/np.sum(largest_eigs)
 
 	N = orig_data.N
@@ -43,7 +44,7 @@ def gen_subset_and_rest(db):
 	
 			K_new = rbk_sklearn(sample_X, σ)
 			[D,V] = np.linalg.eigh(K_new)
-			small_eigs = np.flip(D)[0:eigLen]
+			small_eigs = np.flip(D,0)[0:eigLen]
 			small_eigs = small_eigs/np.sum(small_eigs)
 	
 			Kd = np.max(np.absolute(largest_eigs - small_eigs))
@@ -61,7 +62,7 @@ def gen_subset_and_rest(db):
 	new_X = orig_data.X[best_test_sample_id,:]
 	K_new = rbk_sklearn(new_X, σ)
 	[D,V] = np.linalg.eigh(K_new)
-	small_eigs = np.flip(D)[0:eigLen]
+	small_eigs = np.flip(D,0)[0:eigLen]
 	small_eigs = small_eigs/np.sum(small_eigs)
 	Kd = np.max(np.absolute(largest_eigs - small_eigs))
 	print('\t%.3f percent was chosen with kernel divergence error of %.3f'%(test_percent, Kd))
