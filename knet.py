@@ -41,6 +41,7 @@ from face_raw_data_sm import *
 from face_8020 import *
 from rcv_raw_data import *
 from rcv_8020 import *
+from rcv_subset import *
 from cancer_raw_data import *
 from cancer_raw_data_RFF import *
 from cancer_raw_data_sm import *
@@ -89,12 +90,19 @@ def initialize_embedding(db):
 	X = db['train_data'].X
 	db['x_mpd'] = float(median_of_pairwise_distance(X))
 
+
+	#for m in np.arange(0.1,3,0.1):
+	#db["σ_ratio"] = m
 	σ = float(db['x_mpd']*db["σ_ratio"])
 	[L, db['D_inv']] = getLaplacian(db, X, σ, H=H)	
 	[db['U'], db['U_normalized']] = L_to_U(db, L)
 	
 	[allocation, db['init_spectral_nmi']] = kmeans(db['num_of_clusters'], db['U_normalized'], Y=db['train_data'].Y)
-	print('\t\tInitial Spectral Clustering NMI on raw data : %.3f'%db['init_spectral_nmi'])
+	print('\t\tInitial Spectral Clustering NMI on raw data : %.3f, σ: %.3f , σ_ratio: %.3f '%(db['init_spectral_nmi'], σ, db["σ_ratio"]))
+
+	[allocation, km_nmi] = kmeans(db['num_of_clusters'], X, Y=db['train_data'].Y)
+	print('\t\tInitial K-means NMI on raw data : %.3f'%(db['init_spectral_nmi']))
+	#import pdb; pdb.set_trace()
 
 def initialize_network(db, pretrain_knet=True, ignore_in_batch=False):
 	db['net_input_size'] = db['train_data'].d
@@ -158,11 +166,11 @@ def train_kernel_net(db):
 
 	if not import_pretrained_network(db, 'knet', 'last', True):
 		start_time = time.time() 
+
 		for count in np.arange(1,100,1):
 			db['opt_K'].run(count, start_time)
 			db['opt_U'].run(count, start_time)
 			if db['exit_cond'](db, count): break;
-
 
 		db['use_delta_kernel_for_U'] = True
 		db['λ'] = 0
@@ -173,7 +181,9 @@ def train_kernel_net(db):
 			if db['exit_cond'](db, count): break;
 
 		db['knet'].train_time = time.time() - start_time
-		db['knet'].itr_til_converge = float(count + count2)
+		#db['knet'].itr_til_converge = float(count + count2)
+		db['knet'].itr_til_converge = float(count)
+
 		if 'objective_tracker' in db: db['knet'].objective_tracker = db['objective_tracker']
 		if 'constraint_tracker' in db: db['knet'].constraint_tracker = db['constraint_tracker']
 
@@ -191,7 +201,7 @@ def train_kernel_net(db):
 def define_settings():
 	#db = moon_raw_data()
 	#db = spiral_raw_data()
-	#db = wine_raw_data()
+	db = wine_raw_data()
 	#db = cancer_raw_data()
 	#db = face_raw_data()
 	#db = rcv_raw_data()
@@ -214,7 +224,7 @@ def define_settings():
 	#db = face_8020()
 	#db = face_raw_data_sm()
 	#db = rcv_8020()
-	db = rcv_subset()
+	#db = rcv_subset()
 
 	db['use_delta_kernel_for_U'] = False
 	db = load_db(db)
@@ -241,7 +251,7 @@ def default_run():
 	db = define_settings()
 	initialize_data(db)
 	initialize_embedding(db)
-	initialize_network(db, pretrain_knet=True)
+	initialize_network(db, pretrain_knet=True, ignore_in_batch=True)
 	train_kernel_net(db)
 
 	#debug.plot_Objective_trajectories(db)

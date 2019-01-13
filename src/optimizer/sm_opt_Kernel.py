@@ -39,7 +39,7 @@ class sm_opt_U():
 		db = self.db
 
 		φ_x = ensure_matrix_is_numpy(db['ϕ_x'])
-		[DKxD, Dinv] = normalized_rbk_sklearn(φ_x, db['knet'].σ)
+		[DKxD, db['D_inv']] = normalized_rbk_sklearn(φ_x, db['knet'].σ)
 		HDKxDH = center_matrix(db, DKxD)
 
 		u_cost = U_optimize_cost(db['train_data'].X, HDKxDH, db['knet'].σ)

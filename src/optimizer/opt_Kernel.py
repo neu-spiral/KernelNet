@@ -10,6 +10,7 @@ class opt_K():
 	def __init__(self, db):
 		self.db = db
 
+
 	def run(self, count, start_time):
 		print('\t' + str(count) + ' : Computing K...')
 
@@ -36,7 +37,7 @@ class opt_U():
 		db = self.db
 
 		φ_x = ensure_matrix_is_numpy(db['ϕ_x'])
-		[DKxD, Dinv] = normalized_rbk_sklearn(φ_x, db['knet'].σ)
+		[DKxD, db['D_inv']] = normalized_rbk_sklearn(φ_x, db['knet'].σ)
 		HDKxDH = center_matrix(db, DKxD)
 
 		if db['use_delta_kernel_for_U']: 

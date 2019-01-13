@@ -25,10 +25,10 @@ os.system('tabs -4')
 #	This controls which dataset to run
 #from moon import *
 #from spiral import *
-#from wine import *
+from wine import *
 #from cancer import *
 #from face import *
-from rcv import *
+#from rcv import *
 #from car import *
 
 #from RFF_moon import *
@@ -44,6 +44,6 @@ from rcv import *
 #	Program Run
 code = test_code()
 #code.run_10_fold()
-#code.run_batch()
+code.run_batch()
 #code.run_train_test_batch(0.2)
-code.run_subset_and_rest_batch()
+#code.run_subset_and_rest_batch()

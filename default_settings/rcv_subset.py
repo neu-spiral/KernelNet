@@ -1,5 +1,6 @@
 
 from AE import *
+from AE_RFF import *
 from MLP import *
 from AE_validate import *
 from storage import *
@@ -8,11 +9,11 @@ from opt_Kernel import *
 
 
 
-def rcv_8020():
+def rcv_subset():
 	db = {}
 	# Data info
 	dn = db["data_name"]="rcv"
-	db["center_and_scale"]=True
+	db["center_and_scale"]=False
 	db["data_path"]="./datasets/" + dn + "/"
 	db["orig_data_file_name"]="./datasets/" + dn + "/" + dn + ".csv"
 	db["orig_label_file_name"]="./datasets/" + dn + "/" + dn + "_label.csv"
@@ -42,7 +43,7 @@ def rcv_8020():
 	db['use_U_normalize'] = False
 	
 	# code
-	db['kernel_model'] = AE
+	db['kernel_model'] = AE_RFF
 	db['opt_K_class'] = opt_K
 	db['opt_U_class'] = opt_U
 	db['exit_cond'] = exit_cond

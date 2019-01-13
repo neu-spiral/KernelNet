@@ -33,7 +33,7 @@ class test_code(test_parent):
 		# objs
 		db['kernel_model'] = AE
 		db['opt_K_class'] = opt_K
-		db['opt_U_class'] = opt_U
+		db['opt_U_class'] = sm_opt_U
 		db['exit_cond'] = exit_cond
 		db['validate_function'] = AE_validate
 
