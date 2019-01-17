@@ -74,11 +74,11 @@ def normalized_rbk_sklearn(X, σ):
 	np.fill_diagonal(Kx, 0)			#	Set diagonal of adjacency matrix to 0
 	Dinv = compute_inverted_Degree_matrix(Kx)
 
-	KD = Kx - Dinv
-	return [KD, Dinv]
+	#KD = Kx - Dinv
+	#return [KD, Dinv]
 
-	#DKD = Dinv.dot(Kx).dot(Dinv)
-	#return [DKD, Dinv]
+	DKD = Dinv.dot(Kx).dot(Dinv)
+	return [DKD, Dinv]
 
 
 def rbk_sklearn(data, σ):
