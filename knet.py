@@ -91,7 +91,6 @@ def initialize_embedding(db):
 	X = db['train_data'].X
 	db['x_mpd'] = float(median_of_pairwise_distance(X))
 
-
 	#for m in np.arange(0.1,3,0.1):
 	#db["σ_ratio"] = m
 	σ = float(db['x_mpd']*db["σ_ratio"])

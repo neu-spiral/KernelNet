@@ -72,14 +72,18 @@ def normalized_rbk_sklearn(X, σ):
 	X = ensure_matrix_is_numpy(X)
 	Kx = rbk_sklearn(X, σ)       	
 	np.fill_diagonal(Kx, 0)			#	Set diagonal of adjacency matrix to 0
-	D = compute_inverted_Degree_matrix(Kx)
-	DKD = D.dot(Kx).dot(D)
-	return [DKD, D]
-	#return [Kx, D]
+	Dinv = compute_inverted_Degree_matrix(Kx)
 
-def rbk_sklearn(data, sigma):
-	gammaV = 1.0/(2*sigma*sigma)
-	rbk = sklearn.metrics.pairwise.rbf_kernel(data, gamma=gammaV)
+	KD = Kx - Dinv
+	return [KD, Dinv]
+
+	#DKD = Dinv.dot(Kx).dot(Dinv)
+	#return [DKD, Dinv]
+
+
+def rbk_sklearn(data, σ):
+	γ = 1.0/(2*σ*σ)
+	rbk = sklearn.metrics.pairwise.rbf_kernel(data, gamma=γ)
 	return rbk
 
 def Ku_kernel(labels):
