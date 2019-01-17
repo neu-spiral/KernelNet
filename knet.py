@@ -90,7 +90,6 @@ def initialize_embedding(db):
 	X = db['train_data'].X
 	db['x_mpd'] = float(median_of_pairwise_distance(X))
 
-
 	#for m in np.arange(0.1,3,0.1):
 	#db["σ_ratio"] = m
 	σ = float(db['x_mpd']*db["σ_ratio"])
@@ -172,13 +171,13 @@ def train_kernel_net(db):
 			db['opt_U'].run(count, start_time)
 			if db['exit_cond'](db, count): break;
 
-		db['use_delta_kernel_for_U'] = True
-		db['λ'] = 0
-		db['λ_ratio'] = 0
-		for count2 in np.arange(1,10,1):
-			db['opt_K'].run(count2, start_time)
-			db['opt_U'].run(count2, start_time)
-			if db['exit_cond'](db, count): break;
+		#db['use_delta_kernel_for_U'] = True
+		#db['λ'] = 0
+		#db['λ_ratio'] = 0
+		#for count2 in np.arange(1,10,1):
+		#	db['opt_K'].run(count2, start_time)
+		#	db['opt_U'].run(count2, start_time)
+		#	if db['exit_cond'](db, count): break;
 
 		db['knet'].train_time = time.time() - start_time
 		#db['knet'].itr_til_converge = float(count + count2)
