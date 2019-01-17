@@ -32,7 +32,7 @@ def spiral_raw_data():
 	db["kernel_net_depth"]=3
 	db["mlp_width"]= 20
 	db["σ_ratio"]=0.1
-	db["λ_ratio"]=2
+	db["λ_ratio"]=1
 	db['pretrain_repeats'] = 4
 	db['batch_size'] = 5
 	db['num_of_clusters'] = 3

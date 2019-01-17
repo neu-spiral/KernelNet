@@ -84,6 +84,7 @@ def initialize_data(db):
 
 def initialize_embedding(db):
 	print('\tComputing initial U for Spectral Clustering...')
+	start_time = time.time() 
 	N = db['train_data'].N
 	H = np.eye(N) - (1.0/N)*np.ones((N, N))
 
@@ -95,13 +96,16 @@ def initialize_embedding(db):
 	#db["σ_ratio"] = m
 	σ = float(db['x_mpd']*db["σ_ratio"])
 	[L, db['D_inv']] = getLaplacian(db, X, σ, H=H)	
-	[db['U'], db['U_normalized']] = L_to_U(db, L)
-	
+	[db['U'], db['U_normalized']] = L_to_U(db, L)	
 	[allocation, db['init_spectral_nmi']] = kmeans(db['num_of_clusters'], db['U_normalized'], Y=db['train_data'].Y)
-	print('\t\tInitial Spectral Clustering NMI on raw data : %.3f, σ: %.3f , σ_ratio: %.3f '%(db['init_spectral_nmi'], σ, db["σ_ratio"]))
+	init_spectral_clustering_time = time.time() - start_time
+	print('\t\tInitial Spectral Clustering NMI on raw data : %.3f, σ: %.3f , σ_ratio: %.3f , time : %.3f'%(db['init_spectral_nmi'], σ, db["σ_ratio"], init_spectral_clustering_time))
 
+
+	start_time = time.time() 
 	[allocation, km_nmi] = kmeans(db['num_of_clusters'], X, Y=db['train_data'].Y)
-	print('\t\tInitial K-means NMI on raw data : %.3f'%(db['init_spectral_nmi']))
+	raw_kmeans_time = time.time() - start_time
+	print('\t\tInitial K-means NMI on raw data : %.3f, time : %.3f'%(db['init_spectral_nmi'], raw_kmeans_time))
 	#import pdb; pdb.set_trace()
 
 def initialize_network(db, pretrain_knet=True, ignore_in_batch=False):
@@ -172,13 +176,13 @@ def train_kernel_net(db):
 			db['opt_U'].run(count, start_time)
 			if db['exit_cond'](db, count): break;
 
-		db['use_delta_kernel_for_U'] = True
-		db['λ'] = 0
-		db['λ_ratio'] = 0
-		for count2 in np.arange(1,10,1):
-			db['opt_K'].run(count2, start_time)
-			db['opt_U'].run(count2, start_time)
-			if db['exit_cond'](db, count): break;
+		#db['use_delta_kernel_for_U'] = True
+		#db['λ'] = 0
+		#db['λ_ratio'] = 0
+		#for count2 in np.arange(1,10,1):
+		#	db['opt_K'].run(count2, start_time)
+		#	db['opt_U'].run(count2, start_time)
+		#	if db['exit_cond'](db, count): break;
 
 		db['knet'].train_time = time.time() - start_time
 		#db['knet'].itr_til_converge = float(count + count2)
@@ -200,8 +204,8 @@ def train_kernel_net(db):
 
 def define_settings():
 	#db = moon_raw_data()
-	#db = spiral_raw_data()
-	db = wine_raw_data()
+	db = spiral_raw_data()
+	#db = wine_raw_data()
 	#db = cancer_raw_data()
 	#db = face_raw_data()
 	#db = rcv_raw_data()

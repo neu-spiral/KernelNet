@@ -34,7 +34,7 @@ def wine_sm():
 	db["kernel_net_depth"]=3
 	db["mlp_width"]=None
 	db["σ_ratio"]=1
-	db["λ_ratio"]=2
+	db["λ_ratio"]=1
 	db['pretrain_repeats'] = 4
 	db['batch_size'] = 5
 	db['num_of_clusters'] = 3
