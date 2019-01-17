@@ -18,7 +18,7 @@ class opt_K():
 		if 'Ku' not in db: db['Ku'] = db['U'].dot(db['U'].T)
 	
 		Y = center_matrix(db, db['Ku'])
-		if db['use_Degree_matrix']: Y = db['D_inv'].dot(Y).dot(db['D_inv'])	
+		#if db['use_Degree_matrix']: Y = db['D_inv'].dot(Y).dot(db['D_inv'])	
 		np.fill_diagonal(Y, 0)
 		Y = numpy2Variable(Y, db['dataType'])
 
