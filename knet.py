@@ -84,6 +84,13 @@ def initialize_data(db):
 
 def initialize_embedding(db):
 	print('\tComputing initial U for Spectral Clustering...')
+
+	start_time = time.time() 
+	[allocation, km_nmi] = kmeans(db['num_of_clusters'], db['train_data'].X, Y=db['train_data'].Y)
+	raw_kmeans_time = time.time() - start_time
+	print('\t\tInitial K-means NMI on raw data : %.3f, time : %.3f'%(km_nmi, raw_kmeans_time))
+
+	# -----------------------
 	start_time = time.time() 
 	N = db['train_data'].N
 	H = np.eye(N) - (1.0/N)*np.ones((N, N))
@@ -101,10 +108,6 @@ def initialize_embedding(db):
 	print('\t\tInitial Spectral Clustering NMI on raw data : %.3f, σ: %.3f , σ_ratio: %.3f , time : %.3f'%(db['init_spectral_nmi'], σ, db["σ_ratio"], init_spectral_clustering_time))
 
 
-	start_time = time.time() 
-	[allocation, km_nmi] = kmeans(db['num_of_clusters'], X, Y=db['train_data'].Y)
-	raw_kmeans_time = time.time() - start_time
-	print('\t\tInitial K-means NMI on raw data : %.3f, time : %.3f'%(db['init_spectral_nmi'], raw_kmeans_time))
 	#import pdb; pdb.set_trace()
 
 def initialize_network(db, pretrain_knet=True, ignore_in_batch=False):
@@ -142,6 +145,7 @@ def initialize_network(db, pretrain_knet=True, ignore_in_batch=False):
 
 	db['knet'].initialize_variables(db)
 	[db['initial_loss'], db['initial_hsic'], db['initial_AE_loss'], ψ_x, U, U_normalized] = db['knet'].get_current_state(db, db['train_data'].X_Var)
+	
 	[allocation, db['init_Kmeans_nmi']] = kmeans(db['num_of_clusters'], db['train_data'].X, Y=db['train_data'].Y)
 	[allocation, db['init_AE+Kmeans_nmi']] = kmeans(db['num_of_clusters'], ψ_x, Y=db['train_data'].Y)
 	[allocation, db['init_AE+Spectral_nmi']] = kmeans(db['num_of_clusters'], U_normalized, Y=db['train_data'].Y)
@@ -202,7 +206,7 @@ def train_kernel_net(db):
 
 
 def define_settings():
-	db = moon_raw_data()
+	#db = moon_raw_data()
 	#db = spiral_raw_data()
 	#db = wine_raw_data()
 	#db = cancer_raw_data()

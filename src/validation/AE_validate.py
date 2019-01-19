@@ -199,6 +199,21 @@ def AE_validate(db):
 
 	result = {**packet_1, **packet_2, **packet_3, **packet_4, **packet_5, **packet_6, **packet_7}
 
+
+	output_str += '\n\n'
+	output_str += '\tData'
+	output_str += '\tClass'
+	output_str += '\titr_til_converge'
+	output_str += '\ttrain_time'
+	output_str += '\ttrain_hsic'
+	output_str += '\ttrain_AE_loss'
+	output_str += '\ttrain_loss'
+	output_str += '\ttrain_nmi'
+	output_str += '\tfinal_AE_Kmeans'
+	try: output_str += '\ttest_nmi'
+	except: pass
+
+
 	output_str += '\n\n'
 	output_str += '\t%s'%str(db['data_name'] )
 	output_str += '\t%s'%str(db['opt_K_class'].__name__ )

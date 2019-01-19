@@ -226,6 +226,8 @@ class test_parent():
 		#cmd += "\n#SBATCH --partition=general"
 		cmd += "\n#SBATCH --partition=ioannidis"	
 		cmd += "\n#SBATCH --constraint=E5-2680v2@2.80GHz"		# 20 cores	
+		cmd += "\n#SBATCH --exclude=c3096"
+		#cmd += "\n#SBATCH --nodelist c3097,c3098,c3099,c3100,c3101,c3102,c3103"
 		#cmd += "\n#SBATCH --constraint=E5-2690v3@2.60GHz"		# 24 cores
 		cmd += "\n#SBATCH --mem=120Gb"
 		cmd += "\n#################"

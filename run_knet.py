@@ -63,7 +63,10 @@ for i in range(repeat_count):
 	cmd += "\n#SBATCH --exclusive"
 	cmd += "\n#################"
 	cmd += "\n#partition to use"
-	cmd += "\n#SBATCH --partition=general"
+	#cmd += "\n#SBATCH --partition=general"
+	cmd += "\n#SBATCH --partition=ioannidis"	
+	cmd += "\n#SBATCH --constraint=E5-2680v2@2.80GHz"		# 20 cores	
+	#cmd += "\n#SBATCH --constraint=E5-2690v3@2.60GHz"		# 24 cores
 	cmd += "\n#SBATCH --mem=120Gb"
 	cmd += "\n#################"
 	cmd += "\n#number of nodes to distribute n tasks across"

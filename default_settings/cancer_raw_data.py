@@ -33,8 +33,8 @@ def cancer_raw_data():
 	db["kernel_net_depth"]=3
 	db["mlp_width"]=1
 	db["σ_ratio"]=1
-	db["λ_ratio"]=2
-	db['pretrain_repeats'] = 4
+	db["λ_ratio"]=0
+	db['pretrain_repeats'] = 10
 	db['batch_size'] = 5
 	db['num_of_clusters'] = 2
 	db['use_Degree_matrix'] = True
