@@ -19,7 +19,9 @@ def gen_subset_and_rest(db):
 	test_label_path = ('%s/subset_rest/test_label.csv'%(db['data_path']))
 	if (db['recompute_data_split'] == False) and os.path.exists(train_path): return
 
-	orig_data = DManager(db['orig_data_file_name'], db['orig_label_file_name'], torch.FloatTensor)
+
+	orig_data = DManager(db['orig_data_file_name'], db['orig_label_file_name'], db['dataType'])
+
 	σ = median_of_pairwise_distance(orig_data.X)
 	K_orig = rbk_sklearn(orig_data.X, σ)
 	[D,V] = np.linalg.eigh(K_orig)
@@ -114,7 +116,7 @@ def gen_training_and_test(db, test_percent):
 	if (db['recompute_data_split'] == False) and os.path.exists(train_path): return
 
 
-	orig_data = DManager(db['orig_data_file_name'], db['orig_label_file_name'], torch.FloatTensor)
+	orig_data = DManager(db['orig_data_file_name'], db['orig_label_file_name'], db['dataType'])
 
 	N = orig_data.N
 	loc = 0

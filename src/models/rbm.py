@@ -7,7 +7,7 @@ import torch.nn.functional as F
 
 
 class rbm(torch.nn.Module):
-	def __init__(self, num_input, num_hidden, activation, use_denoising=False, sparse=False, learning_rate=0.001):
+	def __init__(self, num_input, num_hidden, activation, use_denoising=False, sparse=False, learning_rate=0.001, use_cuda=False):
 		super(rbm, self).__init__()
 
 		self.l1 = torch.nn.Linear(num_input, num_hidden, bias=True)
@@ -29,10 +29,15 @@ class rbm(torch.nn.Module):
 				pass
 				#param.data = torch.zeros(param.data.size())
 		self.activation = activation
+		self.use_cuda = use_cuda
 
 	def set_ratio(self, ratio):
 		self.beta = torch.from_numpy(np.array([ratio]))
-		self.beta = Variable(self.beta.type(torch.FloatTensor), requires_grad=False)
+
+		if self.use_cuda:
+			self.beta = Variable(self.beta.type(torch.cuda.FloatTensor), requires_grad=False)
+		else:
+			self.beta = Variable(self.beta.type(torch.FloatTensor), requires_grad=False)
 
 	def compute_ratio(self, inputs, labels, indices):
 		if self.activation == 'relu':
