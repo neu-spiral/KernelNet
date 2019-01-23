@@ -20,7 +20,7 @@ def ensure_matrix_is_numpy(U):
 		elif U.device.type == 'cpu':
 			U = U.data.numpy()
 	elif type(U) == torch.cuda.FloatTensor:
-		import pdb; pdb.set_trace()
+		U = U.data.cpu().numpy()
 	elif type(U) == torch.FloatTensor:
 		U = U.numpy()
 	elif type(U) == torch.autograd.variable.Variable:

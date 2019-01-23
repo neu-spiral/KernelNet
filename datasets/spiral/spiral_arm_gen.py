@@ -18,8 +18,8 @@ def gen_spiral(N,D,K, valid):
 	
 	
 	labels = np.vstack((np.ones((N,1)), 2*np.ones((N,1)), 3*np.ones((N,1))))
-	np.savetxt('spiral_arm' + valid + '.csv', X, delimiter=',', fmt='%.3f') 
-	np.savetxt('spiral_arm_label' + valid + '.csv', labels, delimiter=',', fmt='%d') 
+	np.savetxt('spiral_' + valid + '.csv', X, delimiter=',', fmt='%.3f') 
+	np.savetxt('spiral_label' + valid + '.csv', labels, delimiter=',', fmt='%d') 
 	
 	plt.scatter(X[0:N, 0], X[0:N, 1], c='blue')
 	plt.scatter(X[N:2*N, 0], X[N:2*N, 1], c='green')

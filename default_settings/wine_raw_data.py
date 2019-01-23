@@ -24,7 +24,7 @@ def wine_raw_data():
 	db['test_data_file_name']  = ''
 	db['test_label_file_name']  = ''
 	db['10_fold_id'] = 0
-	db['cuda'] = False #torch.cuda.is_available()
+	db['cuda'] = False 	#torch.cuda.is_available()
 	
 	# debug tracking
 	db['objective_tracker'] = []

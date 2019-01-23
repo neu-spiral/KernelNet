@@ -24,7 +24,7 @@ class test_code(test_parent):
 		db['use_Degree_matrix'] = True
 		db['recompute_data_split'] = False
 		db['pretrain_repeats'] = 4
-		db['cuda'] = False
+		db['cuda'] = True
 
 		#	hyperparams
 		db['batch_size'] = 5
@@ -33,7 +33,7 @@ class test_code(test_parent):
 		# objs
 		db['kernel_model'] = AE
 		db['opt_K_class'] = opt_K
-		db['opt_U_class'] = sm_opt_U
+		db['opt_U_class'] = opt_U
 		db['exit_cond'] = exit_cond
 		db['validate_function'] = AE_validate
 
@@ -43,7 +43,7 @@ class test_code(test_parent):
 		output_dim = [10]
 		kernel_net_depth = [3]
 		σ_ratio = [1]
-		extra_repeat = range(100)
+		extra_repeat = range(1)
 		id_10_fold = [0] #range(10)
 		lambda_ratio = [1]
 

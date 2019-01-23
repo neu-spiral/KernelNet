@@ -19,6 +19,7 @@ class test_parent():
 		db['data_path'] = './datasets/' + db['data_name'] + '/'
 		db['orig_data_file_name']  = db['data_path'] +  db['data_name'] + '.csv'
 		db['orig_label_file_name'] = db['data_path'] +  db['data_name'] + '_label.csv'
+		db['use_rbm'] = False
 
 
 		tmp_path = './tmp/' + db['data_name'] + '/'

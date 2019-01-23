@@ -23,7 +23,7 @@ def cancer_raw_data():
 	db['test_data_file_name']  = ''
 	db['test_label_file_name']  = ''
 	db['10_fold_id'] = 0
-	db['cuda'] = False #torch.cuda.is_available()
+	db['cuda'] = False 		#torch.cuda.is_available()
 	
 	# debug tracking
 	db['objective_tracker'] = []
@@ -33,7 +33,7 @@ def cancer_raw_data():
 	db["kernel_net_depth"]=3
 	db["mlp_width"]=1
 	db["σ_ratio"]=1
-	db["λ_ratio"]=0
+	db["λ_ratio"]=0.000001
 	db['pretrain_repeats'] = 10
 	db['batch_size'] = 5
 	db['num_of_clusters'] = 2

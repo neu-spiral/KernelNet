@@ -22,7 +22,7 @@ def face_raw_data():
 	db['test_data_file_name']  = ''
 	db['test_label_file_name']  = ''
 	db['10_fold_id'] = 0
-	db['cuda'] = False #torch.cuda.is_available()
+	db['cuda'] = False		#torch.cuda.is_available()
 	
 	# debug tracking
 	db['objective_tracker'] = []
@@ -40,7 +40,7 @@ def face_raw_data():
 	db['use_U_normalize'] = True
 	
 	# code
-	db['kernel_model'] = AE
+	db['kernel_model'] = MLP
 	db['opt_K_class'] = opt_K
 	db['opt_U_class'] = opt_U
 	db['exit_cond'] = exit_cond

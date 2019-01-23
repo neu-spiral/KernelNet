@@ -30,16 +30,20 @@ from wine_raw_data import *
 from wine_raw_data_RFF import *
 from wine_sm import *
 from wine_subset import *
+from wine_subset_sm import *
 from moon_raw_data import *
 from moon_raw_data_RFF import *
 from moon_raw_data_sm import *
 from moon_80_20 import *
 from moon_80_20_sm import *
+from moon_subset import *
+from spiral_subset import *
 from face_raw_data import *
 from face_raw_data_RFF import *
 from face_raw_data_sm import *
 from face_8020 import *
 from rcv_raw_data import *
+from rcv_raw_data_sm import *
 from rcv_8020 import *
 from rcv_subset import *
 from cancer_raw_data import *
@@ -117,15 +121,16 @@ def initialize_network(db, pretrain_knet=True, ignore_in_batch=False):
 
 	if(db['cuda']): db['knet'] = db['kernel_model'](db).cuda()
 	else: db['knet'] = db['kernel_model'](db)
+	if 'use_rbm' not in db: db['use_rbm'] = False
 
 	if pretrain_knet:
 		dataLoader = 'train_loader'
-		if not import_pretrained_network(db, 'knet', 'rbm', ignore_in_batch):
-			start_time = time.time() 
-			pretrain(db['knet'], db, dataLoader)
-			db['knet'].pretrain_time = time.time() - start_time
-			export_pretrained_network(db, 'knet', 'rbm', ignore_in_batch)
-	
+		if db['use_rbm']:
+			if not import_pretrained_network(db, 'knet', 'rbm', ignore_in_batch):
+				start_time = time.time() 
+				pretrain(db['knet'], db, dataLoader)
+				db['knet'].pretrain_time = time.time() - start_time
+				export_pretrained_network(db, 'knet', 'rbm', ignore_in_batch)
 	
 		if not import_pretrained_network(db, 'knet', 'end2end', ignore_in_batch):
 			print('\tRunning End to End Autoencoder training...')
@@ -138,11 +143,12 @@ def initialize_network(db, pretrain_knet=True, ignore_in_batch=False):
 			db['knet'].end2end_error = (db['knet'].autoencoder_loss(db['train_data'].X_Var, None, None)).item()
 			print('\n\tError of End to End AE , Before %.3f, After %.3f'%(prev_loss.item(), db['knet'].end2end_error))
 			export_pretrained_network(db, 'knet', 'end2end', ignore_in_batch)
-		else:
-			print('\t\tError of End to End AE : %.3f'%(db['knet'].end2end_error))
 
-		#debug.end2end(db)
 
+	#debug.end2end(db)
+	print('\t\tError of End to End AE : %.3f'%(db['knet'].end2end_error))
+
+	db['knet'].pretrain_time = 1.2
 	db['knet'].initialize_variables(db)
 	[db['initial_loss'], db['initial_hsic'], db['initial_AE_loss'], ψ_x, U, U_normalized] = db['knet'].get_current_state(db, db['train_data'].X_Var)
 	
@@ -179,13 +185,13 @@ def train_kernel_net(db):
 			db['opt_U'].run(count, start_time)
 			if db['exit_cond'](db, count): break;
 
-		#db['use_delta_kernel_for_U'] = True
-		#db['λ'] = 0
-		#db['λ_ratio'] = 0
-		#for count2 in np.arange(1,10,1):
-		#	db['opt_K'].run(count2, start_time)
-		#	db['opt_U'].run(count2, start_time)
-		#	if db['exit_cond'](db, count): break;
+		db['use_delta_kernel_for_U'] = True
+		db['λ'] = 0
+		db['λ_ratio'] = 0
+		for count2 in np.arange(1,10,1):
+			db['opt_K'].run(count2, start_time)
+			db['opt_U'].run(count2, start_time)
+			if db['exit_cond'](db, count): break;
 
 		db['knet'].train_time = time.time() - start_time
 		#db['knet'].itr_til_converge = float(count + count2)
@@ -206,7 +212,7 @@ def train_kernel_net(db):
 
 
 def define_settings():
-	#db = moon_raw_data()
+	db = moon_raw_data()
 	#db = spiral_raw_data()
 	#db = wine_raw_data()
 	#db = cancer_raw_data()
@@ -227,7 +233,11 @@ def define_settings():
 	#db = spiral_80_20()
 	#db = spiral_80_20_sm()
 	#db = wine_sm()
+	#db = rcv_raw_data_sm()
 	#db = wine_subset()
+	#db = wine_subset_sm()
+	#db = moon_subset()
+	#db = spiral_subset()
 	#db = face_8020()
 	#db = face_raw_data_sm()
 	#db = rcv_8020()

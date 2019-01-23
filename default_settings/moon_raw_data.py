@@ -22,13 +22,13 @@ def moon_raw_data():
 	db['test_data_file_name']  = ''
 	db['test_label_file_name']  = ''
 	db['10_fold_id'] = 0
-	db['cuda'] = False #torch.cuda.is_available()
+	db['cuda'] = False		 #torch.cuda.is_available()
 	
 	# debug tracking
 	db['objective_tracker'] = []
 	
 	# hyperparams
-	db["output_dim"]=13
+	db["output_dim"]=2
 	db["kernel_net_depth"]=3
 	db["mlp_width"]= 20
 	db["σ_ratio"]=0.1
