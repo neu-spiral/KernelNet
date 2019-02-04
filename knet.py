@@ -28,6 +28,7 @@ from DManager import *
 from opt_Kernel import *
 from wine_raw_data import *
 from wine_raw_data_RFF import *
+from identity_wine_raw_data import *
 from wine_sm import *
 from wine_subset import *
 from wine_subset_sm import *
@@ -113,6 +114,31 @@ def initialize_embedding(db):
 
 
 	#import pdb; pdb.set_trace()
+
+def initialize_identity_network(db):
+	db['net_input_size'] = db['train_data'].d
+
+	if(db['cuda']): db['knet'] = db['kernel_model'](db).cuda()
+	else: db['knet'] = db['kernel_model'](db)
+
+	db['knet'].initialize_variables(db)
+	[db['initial_loss'], db['initial_hsic'], db['initial_AE_loss'], ψ_x, U, U_normalized] = db['knet'].get_current_state(db, db['train_data'].X_Var)
+	
+	[allocation, db['init_Kmeans_nmi']] = kmeans(db['num_of_clusters'], db['train_data'].X, Y=db['train_data'].Y)
+	[allocation, db['init_AE+Kmeans_nmi']] = kmeans(db['num_of_clusters'], ψ_x, Y=db['train_data'].Y)
+	[allocation, db['init_AE+Spectral_nmi']] = kmeans(db['num_of_clusters'], U_normalized, Y=db['train_data'].Y)
+
+	if db['use_delta_kernel_for_U']: db['U'] = Allocation_2_Y(allocation)
+	else: db['U'] = U
+
+	extra_info = ''
+	if 'test_data' in db:
+		[db['test_initial_loss'], db['test_initial_hsic'], db['test_initial_AE_loss'], test_ψ_x, test_U, test_U_normalized] = db['knet'].get_current_state(db, db['test_data'].X_Var)
+		[allocation, db['init_AE+Kmeans_nmi_onTest']] = kmeans(db['num_of_clusters'], test_U_normalized, Y=db['test_data'].Y)
+		extra_info = ', AE+Kmeans on Test NMI : %.3f'%db['init_AE+Kmeans_nmi_onTest']
+
+	print('\t\tInitial Objective : %.3f = %.3f + λ (%.3f)'%(db['initial_loss'], db['initial_hsic'], db['initial_AE_loss']))
+	print('\t\tInitial AE + Kmeans NMI : %.3f, AE + Spectral : %.3f%s'%(db['init_AE+Kmeans_nmi'], db['init_AE+Spectral_nmi'], extra_info))
 
 def initialize_network(db, pretrain_knet=True, ignore_in_batch=False):
 	db['net_input_size'] = db['train_data'].d
@@ -212,12 +238,15 @@ def train_kernel_net(db):
 
 
 def define_settings():
-	db = moon_raw_data()
+	#db = moon_raw_data()
 	#db = spiral_raw_data()
 	#db = wine_raw_data()
 	#db = cancer_raw_data()
 	#db = face_raw_data()
 	#db = rcv_raw_data()
+
+
+	db = identity_wine_raw_data()
 
 	#db = moon_raw_data_RFF()
 	#db = spiral_raw_data_RFF()
@@ -268,7 +297,8 @@ def default_run():
 	db = define_settings()
 	initialize_data(db)
 	initialize_embedding(db)
-	initialize_network(db, pretrain_knet=True, ignore_in_batch=True)
+	initialize_identity_network(db)
+	#initialize_network(db, pretrain_knet=True, ignore_in_batch=True)
 	train_kernel_net(db)
 
 	#debug.plot_Objective_trajectories(db)
