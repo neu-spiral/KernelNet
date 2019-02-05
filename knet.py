@@ -101,10 +101,13 @@ def initialize_identity_embedding(db):
 	σ = float(db['x_mpd']*db["σ_ratio"])
 	[L, db['D_inv']] = getLaplacian(db, X, σ, H=H)	
 	[db['U'], db['U_normalized']] = L_to_U(db, L)	
+	db['Ku'] = db['U'].dot(db['U'].T)
+
 
 	if db['train_data'].label_path == '': return
 	[allocation, db['init_spectral_nmi']] = kmeans(db['num_of_clusters'], db['U_normalized'], Y=db['train_data'].Y)
 	[allocation, km_nmi] = kmeans(db['num_of_clusters'], db['train_data'].X, Y=db['train_data'].Y)
+	#print('\t\t%.3f + %.3f'%(init_HSIC, AE_error))
 	print('\t\tInitial Spectral Clustering NMI on raw data : %.3f, σ: %.3f , σ_ratio: %.3f'%(db['init_spectral_nmi'], σ, db["σ_ratio"]))
 	print('\t\tInitial K-means NMI on raw data : %.3f'%(km_nmi))
 	#import pdb; pdb.set_trace()
@@ -150,20 +153,22 @@ def initialize_identity_network(db):
 	if db['use_delta_kernel_for_U']: db['U'] = Allocation_2_Y(allocation)
 	else: db['U'] = U
 
-	if 'running_pure_clustering' not in db:
-		[allocation, db['init_Kmeans_nmi']] = kmeans(db['num_of_clusters'], db['train_data'].X, Y=db['train_data'].Y)
-		[allocation, db['init_AE+Kmeans_nmi']] = kmeans(db['num_of_clusters'], ψ_x, Y=db['train_data'].Y)
-		[allocation, db['init_AE+Spectral_nmi']] = kmeans(db['num_of_clusters'], U_normalized, Y=db['train_data'].Y)
-
-
-		extra_info = ''
-		if 'test_data' in db:
-			[db['test_initial_loss'], db['test_initial_hsic'], db['test_initial_AE_loss'], test_ψ_x, test_U, test_U_normalized] = db['knet'].get_current_state(db, db['test_data'].X_Var)
-			[allocation, db['init_AE+Kmeans_nmi_onTest']] = kmeans(db['num_of_clusters'], test_U_normalized, Y=db['test_data'].Y)
-			extra_info = ', AE+Kmeans on Test NMI : %.3f'%db['init_AE+Kmeans_nmi_onTest']
+	if db['train_data'].label_path == '': return
 	
-		print('\t\tInitial Objective : %.3f = %.3f + λ (%.3f)'%(db['initial_loss'], db['initial_hsic'], db['initial_AE_loss']))
-		print('\t\tInitial AE + Kmeans NMI : %.3f, AE + Spectral : %.3f%s'%(db['init_AE+Kmeans_nmi'], db['init_AE+Spectral_nmi'], extra_info))
+	[allocation, db['init_Kmeans_nmi']] = kmeans(db['num_of_clusters'], db['train_data'].X, Y=db['train_data'].Y)
+	[allocation, db['init_AE+Kmeans_nmi']] = kmeans(db['num_of_clusters'], ψ_x, Y=db['train_data'].Y)
+	[allocation, db['init_AE+Spectral_nmi']] = kmeans(db['num_of_clusters'], U_normalized, Y=db['train_data'].Y)
+
+
+	extra_info = ''
+	if 'test_data' in db:
+		[db['test_initial_loss'], db['test_initial_hsic'], db['test_initial_AE_loss'], test_ψ_x, test_U, test_U_normalized] = db['knet'].get_current_state(db, db['test_data'].X_Var)
+		[allocation, db['init_AE+Kmeans_nmi_onTest']] = kmeans(db['num_of_clusters'], test_U_normalized, Y=db['test_data'].Y)
+		extra_info = ', AE+Kmeans on Test NMI : %.3f'%db['init_AE+Kmeans_nmi_onTest']
+
+	print('\t\tInitial Objective : %.3f = %.3f + λ (%.3f)'%(db['initial_loss'], db['initial_hsic'], db['initial_AE_loss']))
+	print('\t\tInitial AE + Kmeans NMI : %.3f, AE + Spectral : %.3f%s'%(db['init_AE+Kmeans_nmi'], db['init_AE+Spectral_nmi'], extra_info))
+	#import pdb; pdb.set_trace()
 
 def initialize_network(db, pretrain_knet=True, ignore_in_batch=False):
 	db['net_input_size'] = db['train_data'].d
