@@ -34,9 +34,10 @@ def identity_wine_raw_data():
 	db["output_dim"]=13
 	db["kernel_net_depth"]=3
 	db["mlp_width"]=1
-	db['width_scale'] = 3
+	db['width_scale'] = 1
 	db["σ_ratio"]=1
 	db["λ_ratio"]=1
+	db['λ_obj_ratio'] = 1000
 	db['pretrain_repeats'] = 4
 	db['batch_size'] = 5
 	db['num_of_clusters'] = 3

@@ -91,14 +91,14 @@ class identity_net(torch.nn.Module):
 		current_hsic = -float(np.sum(HDKxDH*Ku))
 		current_AE_loss = float(ensure_matrix_is_numpy(self.autoencoder_loss(in_x, None, None)))
 
-		db['λ_obj_ratio'] = 0
+		#db['λ'] = float(db["λ_ratio"]*db['λ_obj_ratio'])
+		#current_loss = float(current_hsic + db['λ']*current_AE_loss)
+
+		if 'λ_obj_ratio' not in db:
+			db['λ_obj_ratio'] = float(np.abs(current_hsic/current_AE_loss))
+
 		db['λ'] = float(db["λ_ratio"]*db['λ_obj_ratio'])
 		current_loss = float(current_hsic + db['λ']*current_AE_loss)
-
-		#if 'λ_obj_ratio' not in db:
-		#	db['λ_obj_ratio'] = float(np.abs(current_hsic/current_AE_loss))
-		#	db['λ'] = float(db["λ_ratio"]*db['λ_obj_ratio'])
-		#current_loss = float(current_hsic + db['λ']*current_AE_loss)
 
 		return [current_loss, current_hsic, current_AE_loss, φ_x, U, U_normalized]
 
@@ -121,8 +121,11 @@ class identity_net(torch.nn.Module):
 		Ysmall = PP[:, indices]
 		obj_loss = -torch.sum(Kx*Ysmall)
 		AE_loss = self.mse_loss(x_hat, x)
-		loss = obj_loss + db['λ']*AE_loss
 
+		#loss2 = self.mse_loss(φ_x, x)
+		#loss = obj_loss + db['λ']*(AE_loss+loss2)
+
+		loss = obj_loss + db['λ']*(AE_loss)
 		return loss
 
 	def initialize_network(self):

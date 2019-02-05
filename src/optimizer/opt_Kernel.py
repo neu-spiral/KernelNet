@@ -1,6 +1,7 @@
 
 import torch
 import debug
+from sklearn.cluster import KMeans
 from format_conversion import *
 from kernel_lib import *
 from basic_optimizer import *
@@ -42,17 +43,22 @@ class opt_U():
 
 		if db['use_delta_kernel_for_U']: 
 			[U, U_normalized] = L_to_U(db, HDKxDH)
-			[allocation, train_nmi] = kmeans(db['num_of_clusters'], U_normalized, Y=db['train_data'].Y)
+			#[allocation, train_nmi] = kmeans(db['num_of_clusters'], U_normalized, Y=db['train_data'].Y)
+			allocation = KMeans(db['num_of_clusters'], n_init=10).fit_predict(U_normalized)
+
 			db['U'] = Allocation_2_Y(allocation)
 		else:
 			[U, db['U_normalized']] = L_to_U(db, HDKxDH)
-			[allocation, train_nmi] = kmeans(db['num_of_clusters'], db['U_normalized'], Y=db['train_data'].Y)
+			#[allocation, train_nmi] = kmeans(db['num_of_clusters'], db['U_normalized'], Y=db['train_data'].Y)
+			allocation = KMeans(db['num_of_clusters'], n_init=10).fit_predict(db['U_normalized'])
 			db['U'] = U
 		
 		db['prev_Ku'] = db['Ku']
 		db['Ku'] = db['U'].dot(db['U'].T)
 
-		debug.print_opt_U_status(db, HDKxDH, train_nmi, U, start_time)
+		debug.print_opt_U_status(db, HDKxDH, allocation, U, start_time)
+
+		return allocation
 	
 
 def exit_cond(db, count):

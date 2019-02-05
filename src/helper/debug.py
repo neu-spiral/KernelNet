@@ -67,6 +67,8 @@ def layer_wise(db, rbm):
 
 
 def print_opt_K_status(db, start_time):
+	if db['train_data'].label_path == '': return
+
 	if 'objective_tracker' in db:
 		if 'running_batch_mode' in db: return
 		if 'constraint_tracker' not in db: db['constraint_tracker'] = []
@@ -83,13 +85,19 @@ def print_opt_K_status(db, start_time):
 		db['objective_tracker'] = np.append(db['objective_tracker'], current_loss)
 		db['time_tracker'].append(time.time() - start_time)
 		#[allocation, train_nmi] = kmeans(db['num_of_clusters'], db['U_normalized'], Y=db['train_data'].Y)
-		[allocation, train_nmi] = kmeans(db['num_of_clusters'], db['U'], Y=db['train_data'].Y)
+
+
+		[U, U_normalized] = L_to_U(db, HDKxDH)
+		[allocation, train_nmi] = kmeans(db['num_of_clusters'], U_normalized, Y=db['train_data'].Y)
+		[allocation2, train_nmi2] = kmeans(db['num_of_clusters'], φ_x, Y=db['train_data'].Y)
 
 		print('\t\tCurrent obj loss : %.5f from %.5f +  (%.3f)(%.3f)[%.5f]'%(current_loss, current_hsic, db["λ_ratio"], db['λ_obj_ratio'], current_AE_loss))
-		print('\t\tTrain NMI after optimizing θ : %.3f'%(train_nmi))
+		print('\t\tTrain NMI on U after optimizing θ : %.3f, on φ_x : %.3f'%(train_nmi, train_nmi2))
 
 
-def print_opt_U_status(db, HDKxDH, train_nmi, U, start_time):
+def print_opt_U_status(db, HDKxDH, allocation, U, start_time):
+	if db['train_data'].label_path == '': return
+
 	if 'objective_tracker' in db:
 		if 'running_batch_mode' in db: return
 
@@ -104,7 +112,7 @@ def print_opt_U_status(db, HDKxDH, train_nmi, U, start_time):
 		db['objective_tracker'] = np.append(db['objective_tracker'], current_loss)
 		db['time_tracker'].append(time.time() - start_time)
 
-		#[allocation, train_nmi] = kmeans(db['num_of_clusters'], db['U_normalized'] , Y=db['train_data'].Y)
+		train_nmi = normalized_mutual_info_score(allocation, db['train_data'].Y)
 		print('\t\tCurrent obj loss : %.5f from %.5f +  (%.3f)(%.3f)[%.5f]'%(current_loss, current_hsic, db["λ_ratio"], db['λ_obj_ratio'], current_AE_loss))
 		print('\t\tTrain NMI after optimizing U : %.3f'%(train_nmi))
 
