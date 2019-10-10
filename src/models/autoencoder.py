@@ -13,9 +13,9 @@ class autoencoder(torch.nn.Module):
 		self.add_decoder = add_decoder
 		self.learning_rate = learning_rate
 		self.input_size = db['net_input_size']
-		self.output_dim = db['net_output_dim']
+		self.output_dim = db["output_dim"]
 		self.mlp_width = db['mlp_width']
-		self.net_depth = db['net_depth']
+		self.net_depth = db['kernel_net_depth']
 		self.dataType = db['dataType']
 
 		diff = float(self.input_size - self.output_dim)/self.net_depth

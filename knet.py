@@ -387,5 +387,5 @@ def default_db_settings(db2):
 	return db
 
 #check_σ()
-#default_run()
+default_run()
 #discover_lowest_end2end_error()
